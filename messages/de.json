@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "overview": "Übersicht",
+    "children": "Kinder",
+    "newSession": "Neue Einheit",
+    "history": "Verlauf",
+    "settings": "Einstellungen",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "signupCta": "Kostenlos starten"
+  },
+  "common": {
+    "appName": "BrainForge Kids",
+    "loading": "Wird geladen…",
+    "comingSoon": "Demnächst.",
+    "language": "Sprache"
+  },
+  "footer": {
+    "tagline": "Druckbare Förder-Arbeitsblätter, jeden Tag.",
+    "rights": "Alle Rechte vorbehalten."
+  },
+  "account": {
+    "parentPlaceholder": "Elternteil"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "overview": "Áttekintés",
+    "children": "Gyerekek",
+    "newSession": "Új foglalkozás",
+    "history": "Előzmények",
+    "settings": "Beállítások",
+    "login": "Bejelentkezés",
+    "logout": "Kijelentkezés",
+    "signupCta": "Kezdjük el ingyen"
+  },
+  "common": {
+    "appName": "BrainForge Kids",
+    "loading": "Betöltés…",
+    "comingSoon": "Hamarosan.",
+    "language": "Nyelv"
+  },
+  "footer": {
+    "tagline": "Nyomtatható fejlesztő feladatlapok minden napra.",
+    "rights": "Minden jog fenntartva."
+  },
+  "account": {
+    "parentPlaceholder": "Szülő"
+  }
+}

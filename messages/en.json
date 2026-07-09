@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "overview": "Overview",
+    "children": "Children",
+    "newSession": "New session",
+    "history": "History",
+    "settings": "Settings",
+    "login": "Log in",
+    "logout": "Log out",
+    "signupCta": "Start for free"
+  },
+  "common": {
+    "appName": "BrainForge Kids",
+    "loading": "Loading…",
+    "comingSoon": "Coming soon.",
+    "language": "Language"
+  },
+  "footer": {
+    "tagline": "Printable developmental worksheets, every day.",
+    "rights": "All rights reserved."
+  },
+  "account": {
+    "parentPlaceholder": "Parent"
+  }
+}

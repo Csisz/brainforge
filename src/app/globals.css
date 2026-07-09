@@ -1,12 +1,13 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 /*
- * BrainForge design tokens — Sprint 2 will build the UI on these.
- * Direction (PRD design principles): calm, premium, playful-but-uncluttered.
- * Not the default cream+serif+terracotta AI look: we anchor on a paper-white
- * canvas (this is a *print-first* product), a deep forest-ink text color,
- * and a single warm "crayon coral" action color that echoes the crayon
- * marks children make on the sheets. Rounded, soft, lots of air.
+ * BrainForge design tokens — locked direction (see CLAUDE.md / SPRINT2 brief).
+ * Print-first, calm, premium (Apple/Notion polish) with one warm accent.
+ * Anchor: paper-white canvas, deep forest-ink text, single "crayon coral"
+ * action color. Explicitly NOT the generic AI look (cream+serif+terracotta,
+ * or dark+acid-green). Rounded, soft, lots of air.
  */
 @theme {
   --color-paper: #fdfdfb;
@@ -17,9 +18,96 @@
   --color-mint: #d9f0e4;       /* success / progress fills */
   --color-line: #e8e8e3;
 
-  --font-display: "Nunito", system-ui, sans-serif;   /* rounded warmth for headings */
-  --font-body: "Inter", system-ui, sans-serif;
+  /* Small, controlled extensions — same family, never ad-hoc. */
+  --color-card: #ffffff;       /* card surface: a hair whiter than paper, lifts w/ --shadow-soft */
+  --color-mist: #f4f3ef;       /* subtle panel / muted fill, between paper and line */
+  --color-danger: #d64545;     /* destructive actions — distinct from the crayon CTA color */
+
+  --font-display: var(--font-nunito), system-ui, sans-serif;   /* rounded warmth for headings */
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace; /* seed chips & generator metadata ONLY */
 
   --radius-card: 1.25rem;
   --shadow-soft: 0 2px 16px rgb(31 42 36 / 0.06);
+}
+
+/* Map the shadcn/ui primitive contract onto our tokens (no separate palette). */
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+  --card: var(--color-card);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-card);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-crayon);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-mist);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-mist);
+  --muted-foreground: var(--color-ink-soft);
+  --accent: var(--color-crayon-soft);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-danger);
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-crayon);
+  --radius: 1.25rem;
+  --sidebar: var(--color-paper);
+  --sidebar-foreground: var(--color-ink);
+  --sidebar-primary: var(--color-crayon-soft);
+  --sidebar-primary-foreground: var(--color-ink);
+  --sidebar-accent: var(--color-crayon-soft);
+  --sidebar-accent-foreground: var(--color-ink);
+  --sidebar-border: var(--color-line);
+  --sidebar-ring: var(--color-crayon);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
