@@ -18,11 +18,11 @@ export default async function PublicLayout({
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="font-display text-lg font-extrabold tracking-tight text-ink">
+          <Link href="/" className="whitespace-nowrap font-display text-base font-extrabold tracking-tight text-ink sm:text-lg">
             {t("common.appName")}
           </Link>
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link href="/app">{t("nav.login")}</Link>
             </Button>
             <Button asChild size="sm">

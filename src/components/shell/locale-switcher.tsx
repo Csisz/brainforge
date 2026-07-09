@@ -38,7 +38,7 @@ export function LocaleSwitcher() {
             key={loc}
             onSelect={() => router.replace(pathname, { locale: loc })}
             data-active={loc === locale}
-            className="data-[active=true]:font-medium data-[active=true]:text-crayon"
+            className="data-[active=true]:font-medium data-[active=true]:text-crayon-text"
           >
             {LOCALE_LABELS[loc]}
           </DropdownMenuItem>

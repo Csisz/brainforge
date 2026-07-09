@@ -21,5 +21,87 @@
   },
   "account": {
     "parentPlaceholder": "Parent"
+  },
+  "worksheet": {
+    "seedLabel": "seed"
+  },
+  "hero": {
+    "headline": "A new worksheet every day. Never the same one twice.",
+    "subline": "BrainForge generates printable, personalized developmental worksheets for every child — endless variety, in seconds.",
+    "regenerate": "Generate a new one"
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "step1": {
+      "title": "Profile",
+      "body": "Tell us your child's age and interests — 30 seconds."
+    },
+    "step2": {
+      "title": "Daily plan",
+      "body": "Pick a development goal, theme and duration; we assemble the session."
+    },
+    "step3": {
+      "title": "Print",
+      "body": "Print the worksheet and answer key — ready for a screen-free session."
+    }
+  },
+  "gallery": {
+    "eyebrow": "Worksheet gallery",
+    "title": "Six worksheet types, endless variation",
+    "body": "Every worksheet is algorithmically generated and unique — it never repeats.",
+    "regenerateAll": "Regenerate all"
+  },
+  "generators": {
+    "maze": "Maze",
+    "tracing": "Tracing",
+    "pattern_completion": "Patterns",
+    "mirror_drawing": "Mirror Drawing",
+    "grid_copy": "Grid Copy",
+    "arrow_board": "Arrow Board"
+  },
+  "pitch": {
+    "eyebrow": "Screen-free",
+    "title": "30 minutes of movement, memory games and creativity",
+    "body": "Every daily plan mixes movement, memory and creative tasks around the worksheets — your child grows without ever needing a screen."
+  },
+  "pricing": {
+    "eyebrow": "Pricing",
+    "title": "Simple pricing, per child",
+    "free": { "name": "Free", "price": "€0", "body": "3 worksheets / week" },
+    "premium": { "name": "Premium", "price": "€9 / mo", "body": "Unlimited worksheets, every theme", "badge": "Most popular" },
+    "family": { "name": "Family", "body": "Premium for multiple children, one subscription" },
+    "school": { "name": "School", "body": "For institutions, custom terms — get in touch" },
+    "cta": { "contact": "Get in touch" }
+  },
+  "activity": {
+    "warmup": {
+      "simon_says": "Simon says",
+      "finger_gym": "Finger gym",
+      "rhythm_copy": "Rhythm copy"
+    },
+    "movement": {
+      "cross_crawl": "Cross-crawl",
+      "ball_target": "Ball target toss",
+      "obstacle_course": "Obstacle course",
+      "animal_walks": "Animal walks"
+    },
+    "memory": {
+      "cup_shuffle": "Cup shuffle",
+      "whats_missing": "What's missing?",
+      "sound_sequence": "Sound sequence"
+    },
+    "creative": {
+      "build_story": "Build a story",
+      "draw_theme": "Draw the theme",
+      "cut_collage": "Cut & paste collage"
+    },
+    "reward": {
+      "sticker_moment": "Sticker moment",
+      "victory_dance": "Victory dance"
+    },
+    "reflection": {
+      "favorite_part": "Favorite part",
+      "show_and_tell": "Show and tell"
+    }
   }
 }

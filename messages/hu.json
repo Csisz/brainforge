@@ -21,5 +21,87 @@
   },
   "account": {
     "parentPlaceholder": "Szülő"
+  },
+  "worksheet": {
+    "seedLabel": "seed"
+  },
+  "hero": {
+    "headline": "Minden nap új feladatlap. Sosem ugyanaz.",
+    "subline": "A BrainForge minden gyerek fejlődéséhez személyre szabott, nyomtatható feladatlapokat generál — végtelen mennyiségben, másodpercek alatt.",
+    "regenerate": "Új feladatlap"
+  },
+  "howItWorks": {
+    "eyebrow": "Hogyan működik",
+    "step1": {
+      "title": "Profil",
+      "body": "Add meg gyermeked életkorát és érdeklődését — 30 másodperc."
+    },
+    "step2": {
+      "title": "Napi terv",
+      "body": "Válassz fejlesztési célt, témát és időtartamot; a rendszer összeállítja a foglalkozást."
+    },
+    "step3": {
+      "title": "Nyomtatás",
+      "body": "Nyomtasd ki a feladatlapot és a megoldókulcsot — kész a képernyőmentes foglalkozás."
+    }
+  },
+  "gallery": {
+    "eyebrow": "Feladatlap-galéria",
+    "title": "Hat feladattípus, végtelen variáció",
+    "body": "Minden feladatlap egyedi, az algoritmus generálja — soha nem ismétlődik.",
+    "regenerateAll": "Összes újragenerálása"
+  },
+  "generators": {
+    "maze": "Labirintus",
+    "tracing": "Vonalvezetés",
+    "pattern_completion": "Sorminták",
+    "mirror_drawing": "Tükörrajz",
+    "grid_copy": "Rácsmásolás",
+    "arrow_board": "Nyilas tábla"
+  },
+  "pitch": {
+    "eyebrow": "Képernyőmentes",
+    "title": "30 perc mozgással, játékkal és alkotással",
+    "body": "Minden napi terv váltogatja a mozgásos, memória- és kreatív feladatokat a feladatlapok mellett — a gyerek nem ül képernyő előtt, mégis fejlődik."
+  },
+  "pricing": {
+    "eyebrow": "Árazás",
+    "title": "Egyszerű árazás, gyerekenként",
+    "free": { "name": "Ingyenes", "price": "0 €", "body": "3 feladatlap / hét" },
+    "premium": { "name": "Premium", "price": "9 € / hó", "body": "Korlátlan feladatlap, minden téma", "badge": "Legnépszerűbb" },
+    "family": { "name": "Family", "body": "Premium több gyermeknek, egy előfizetésben" },
+    "school": { "name": "Iskola", "body": "Intézményeknek, egyedi keretek — kérj ajánlatot" },
+    "cta": { "contact": "Kapcsolatfelvétel" }
+  },
+  "activity": {
+    "warmup": {
+      "simon_says": "Simon mondja",
+      "finger_gym": "Ujjtorna",
+      "rhythm_copy": "Ritmus-utánzás"
+    },
+    "movement": {
+      "cross_crawl": "Keresztmászás",
+      "ball_target": "Labdacélzás",
+      "obstacle_course": "Akadálypálya",
+      "animal_walks": "Állat-járások"
+    },
+    "memory": {
+      "cup_shuffle": "Pohár-keverés",
+      "whats_missing": "Mi hiányzik?",
+      "sound_sequence": "Hangsorozat"
+    },
+    "creative": {
+      "build_story": "Épített történet",
+      "draw_theme": "Témarajzolás",
+      "cut_collage": "Vágott kollázs"
+    },
+    "reward": {
+      "sticker_moment": "Matrica-pillanat",
+      "victory_dance": "Győzelmi tánc"
+    },
+    "reflection": {
+      "favorite_part": "Kedvenc rész",
+      "show_and_tell": "Megmutatom, elmesélem"
+    }
   }
 }

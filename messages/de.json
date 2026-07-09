@@ -21,5 +21,87 @@
   },
   "account": {
     "parentPlaceholder": "Elternteil"
+  },
+  "worksheet": {
+    "seedLabel": "seed"
+  },
+  "hero": {
+    "headline": "Jeden Tag ein neues Arbeitsblatt. Nie dasselbe zweimal.",
+    "subline": "BrainForge erstellt druckbare, personalisierte Förder-Arbeitsblätter für jedes Kind — endlose Vielfalt, in Sekunden.",
+    "regenerate": "Neues Blatt erzeugen"
+  },
+  "howItWorks": {
+    "eyebrow": "So funktioniert's",
+    "step1": {
+      "title": "Profil",
+      "body": "Alter und Interessen deines Kindes angeben — 30 Sekunden."
+    },
+    "step2": {
+      "title": "Tagesplan",
+      "body": "Wähle Förderziel, Thema und Dauer; wir stellen die Einheit zusammen."
+    },
+    "step3": {
+      "title": "Drucken",
+      "body": "Arbeitsblatt und Lösung ausdrucken — bereit für eine bildschirmfreie Einheit."
+    }
+  },
+  "gallery": {
+    "eyebrow": "Arbeitsblatt-Galerie",
+    "title": "Sechs Arbeitsblatt-Typen, endlose Variation",
+    "body": "Jedes Arbeitsblatt wird algorithmisch erzeugt und ist einzigartig — es wiederholt sich nie.",
+    "regenerateAll": "Alle neu erzeugen"
+  },
+  "generators": {
+    "maze": "Labyrinth",
+    "tracing": "Schwungübung",
+    "pattern_completion": "Muster",
+    "mirror_drawing": "Spiegelzeichnen",
+    "grid_copy": "Gitter kopieren",
+    "arrow_board": "Pfeiltafel"
+  },
+  "pitch": {
+    "eyebrow": "Bildschirmfrei",
+    "title": "30 Minuten mit Bewegung, Gedächtnisspielen und Kreativität",
+    "body": "Jeder Tagesplan kombiniert Bewegung, Gedächtnis- und Kreativaufgaben mit den Arbeitsblättern — dein Kind wächst, ganz ohne Bildschirm."
+  },
+  "pricing": {
+    "eyebrow": "Preise",
+    "title": "Einfache Preise, pro Kind",
+    "free": { "name": "Kostenlos", "price": "0 €", "body": "3 Arbeitsblätter / Woche" },
+    "premium": { "name": "Premium", "price": "9 € / Monat", "body": "Unbegrenzt Arbeitsblätter, alle Themen", "badge": "Am beliebtesten" },
+    "family": { "name": "Family", "body": "Premium für mehrere Kinder, ein Abo" },
+    "school": { "name": "Schule", "body": "Für Einrichtungen, individuelle Konditionen — Kontakt aufnehmen" },
+    "cta": { "contact": "Kontakt aufnehmen" }
+  },
+  "activity": {
+    "warmup": {
+      "simon_says": "Simon sagt",
+      "finger_gym": "Fingergymnastik",
+      "rhythm_copy": "Rhythmus nachmachen"
+    },
+    "movement": {
+      "cross_crawl": "Überkreuz-Krabbeln",
+      "ball_target": "Ball-Zielwurf",
+      "obstacle_course": "Hindernisparcours",
+      "animal_walks": "Tiergänge"
+    },
+    "memory": {
+      "cup_shuffle": "Becher-Mischen",
+      "whats_missing": "Was fehlt?",
+      "sound_sequence": "Klangfolge"
+    },
+    "creative": {
+      "build_story": "Geschichte bauen",
+      "draw_theme": "Thema zeichnen",
+      "cut_collage": "Schneide-Collage"
+    },
+    "reward": {
+      "sticker_moment": "Sticker-Moment",
+      "victory_dance": "Siegestanz"
+    },
+    "reflection": {
+      "favorite_part": "Lieblingsteil",
+      "show_and_tell": "Zeig und erzähl"
+    }
   }
 }
