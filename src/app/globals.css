@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/*
+ * BrainForge design tokens — Sprint 2 will build the UI on these.
+ * Direction (PRD design principles): calm, premium, playful-but-uncluttered.
+ * Not the default cream+serif+terracotta AI look: we anchor on a paper-white
+ * canvas (this is a *print-first* product), a deep forest-ink text color,
+ * and a single warm "crayon coral" action color that echoes the crayon
+ * marks children make on the sheets. Rounded, soft, lots of air.
+ */
+@theme {
+  --color-paper: #fdfdfb;
+  --color-ink: #1f2a24;        /* deep forest-ink */
+  --color-ink-soft: #5c6b62;
+  --color-crayon: #ff6b5e;     /* single action color */
+  --color-crayon-soft: #ffe9e6;
+  --color-mint: #d9f0e4;       /* success / progress fills */
+  --color-line: #e8e8e3;
+
+  --font-display: "Nunito", system-ui, sans-serif;   /* rounded warmth for headings */
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 2px 16px rgb(31 42 36 / 0.06);
+}
