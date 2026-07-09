@@ -200,5 +200,18 @@
     "submit": "Foglalkozás indítása",
     "submitting": "Összeállítás…",
     "errorGeneric": "Nem sikerült elindítani a foglalkozást. Próbáld újra."
+  },
+  "print": {
+    "printButton": "Nyomtatás"
+  },
+  "sessionView": {
+    "doneToggle": "Kész",
+    "enjoymentStar": "{star}. csillag",
+    "finishCta": "Kész vagyunk",
+    "finishing": "Mentés…",
+    "errorGeneric": "Nem sikerült menteni a visszajelzést. Próbáld újra.",
+    "doneTitle": "Szép munka!",
+    "doneBody": "A mai foglalkozást elmentettük.",
+    "backToDashboard": "Vissza az áttekintéshez"
   }
 }

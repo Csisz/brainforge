@@ -1,17 +1,7 @@
 import { getTranslations } from "next-intl/server";
-import { Flame, Footprints, FileText, Brain, Palette, Gift, MessageCircle, type LucideIcon } from "lucide-react";
 import type { SessionPlan, SessionSlot } from "@/lib/activities/engine";
+import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import { cn } from "@/lib/utils";
-
-const SLOT_ICON: Record<SessionSlot["kind"], LucideIcon> = {
-  warmup: Flame,
-  movement: Footprints,
-  worksheet: FileText,
-  memory_game: Brain,
-  creative: Palette,
-  reward: Gift,
-  reflection: MessageCircle,
-};
 
 async function slotLabel(slot: SessionSlot, t: Awaited<ReturnType<typeof getTranslations>>): Promise<string> {
   if (slot.kind === "worksheet") return t(`generators.${slot.recipe.generatorId}`);

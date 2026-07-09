@@ -200,5 +200,18 @@
     "submit": "Einheit starten",
     "submitting": "Wird zusammengestellt…",
     "errorGeneric": "Einheit konnte nicht gestartet werden. Bitte versuche es erneut."
+  },
+  "print": {
+    "printButton": "Drucken"
+  },
+  "sessionView": {
+    "doneToggle": "Erledigt",
+    "enjoymentStar": "Stern {star}",
+    "finishCta": "Wir sind fertig",
+    "finishing": "Wird gespeichert…",
+    "errorGeneric": "Rückmeldung konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "doneTitle": "Gut gemacht!",
+    "doneBody": "Die heutige Einheit wurde gespeichert.",
+    "backToDashboard": "Zurück zur Übersicht"
   }
 }

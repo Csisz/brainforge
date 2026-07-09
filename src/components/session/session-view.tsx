@@ -1,0 +1,151 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter, Link } from "@/i18n/navigation";
+import { Star, Printer, PartyPopper } from "lucide-react";
+import type { SessionSlot } from "@/lib/activities/engine";
+import { SLOT_ICON } from "@/lib/activities/slot-icons";
+import { submitSessionFeedback, type SlotFeedback } from "@/lib/feedback/actions";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
+
+export type WorksheetSlotData = { svg: string; worksheetId: string };
+
+type Entry = { completed: boolean; enjoyment: number };
+
+export function SessionView({
+  sessionId,
+  slots,
+  worksheetData,
+  alreadyCompleted,
+}: {
+  sessionId: string;
+  slots: SessionSlot[];
+  worksheetData: Record<number, WorksheetSlotData>;
+  alreadyCompleted: boolean;
+}) {
+  const t = useTranslations();
+  const router = useRouter();
+
+  const [entries, setEntries] = useState<Record<number, Entry>>(() =>
+    Object.fromEntries(slots.map((_, i) => [i, { completed: false, enjoyment: 0 }])),
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(alreadyCompleted);
+  const [error, setError] = useState(false);
+
+  function setEntry(index: number, patch: Partial<Entry>) {
+    setEntries((prev) => ({ ...prev, [index]: { ...prev[index]!, ...patch } }));
+  }
+
+  function slotLabel(slot: SessionSlot): string {
+    if (slot.kind === "worksheet") return t(`generators.${slot.recipe.generatorId}`);
+    return t(slot.activityKey);
+  }
+
+  async function handleFinish() {
+    setSubmitting(true);
+    setError(false);
+    const payload: SlotFeedback[] = slots.map((slot, i) => ({
+      slotIndex: i,
+      slotKind: slot.kind,
+      completed: entries[i]!.completed,
+      enjoyment: entries[i]!.enjoyment || null,
+    }));
+    const result = await submitSessionFeedback(sessionId, payload);
+    if (result.error) {
+      setError(true);
+      setSubmitting(false);
+      return;
+    }
+    setDone(true);
+    router.refresh();
+  }
+
+  if (done) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-card border border-line bg-card px-6 py-12 text-center shadow-soft">
+        <PartyPopper className="size-10 text-crayon-text" aria-hidden="true" />
+        <p className="font-display text-xl font-extrabold text-ink">{t("sessionView.doneTitle")}</p>
+        <p className="text-ink-soft">{t("sessionView.doneBody")}</p>
+        <Button asChild className="mt-2">
+          <Link href="/app">{t("sessionView.backToDashboard")}</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <ol className="flex flex-col gap-4">
+        {slots.map((slot, i) => {
+          const Icon = SLOT_ICON[slot.kind];
+          const worksheet = slot.kind === "worksheet" ? worksheetData[i] : undefined;
+          return (
+            <li key={i} className="rounded-card border border-line bg-card p-4 shadow-soft">
+              <div className="flex items-center gap-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-crayon-soft text-crayon-text">
+                  <Icon className="size-4.5" aria-hidden="true" />
+                </span>
+                <span className="flex-1 text-sm font-medium text-ink">{slotLabel(slot)}</span>
+                <span className="font-mono text-xs text-ink-soft">{slot.minutes}′</span>
+              </div>
+
+              {worksheet && (
+                <div className="mt-3 flex flex-col items-center gap-2 sm:flex-row sm:items-start">
+                  <div
+                    className="w-full max-w-[220px] overflow-hidden rounded-lg border border-line bg-white [&>svg]:h-auto [&>svg]:w-full"
+                    dangerouslySetInnerHTML={{ __html: worksheet.svg }}
+                  />
+                  <Button asChild variant="outline" size="sm" className="gap-1.5">
+                    <Link href={`/app/worksheets/${worksheet.worksheetId}/print`} target="_blank">
+                      <Printer className="size-3.5" aria-hidden="true" />
+                      {t("print.printButton")}
+                    </Link>
+                  </Button>
+                </div>
+              )}
+
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+                <label className="flex items-center gap-2 text-sm text-ink">
+                  <Checkbox
+                    checked={entries[i]!.completed}
+                    onCheckedChange={(v) => setEntry(i, { completed: v === true })}
+                  />
+                  {t("sessionView.doneToggle")}
+                </label>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      aria-label={t("sessionView.enjoymentStar", { star })}
+                      aria-pressed={entries[i]!.enjoyment >= star}
+                      onClick={() => setEntry(i, { enjoyment: star })}
+                      className="p-0.5"
+                    >
+                      <Star
+                        className={cn(
+                          "size-5",
+                          entries[i]!.enjoyment >= star ? "fill-crayon text-crayon" : "text-line",
+                        )}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+
+      {error && <p className="text-sm text-destructive">{t("sessionView.errorGeneric")}</p>}
+
+      <Button size="lg" className="w-full" onClick={handleFinish} disabled={submitting}>
+        {submitting ? t("sessionView.finishing") : t("sessionView.finishCta")}
+      </Button>
+    </div>
+  );
+}

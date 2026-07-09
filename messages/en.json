@@ -200,5 +200,18 @@
     "submit": "Start session",
     "submitting": "Building…",
     "errorGeneric": "Couldn't start the session. Please try again."
+  },
+  "print": {
+    "printButton": "Print"
+  },
+  "sessionView": {
+    "doneToggle": "Done",
+    "enjoymentStar": "Star {star}",
+    "finishCta": "We're done",
+    "finishing": "Saving…",
+    "errorGeneric": "Couldn't save feedback. Please try again.",
+    "doneTitle": "Nice work!",
+    "doneBody": "Today's session has been saved.",
+    "backToDashboard": "Back to overview"
   }
 }
