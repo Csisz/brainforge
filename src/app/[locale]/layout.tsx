@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Nunito, Inter, IBM_Plex_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
@@ -23,10 +23,19 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
 });
 
-export const metadata: Metadata = {
-  title: "BrainForge Kids AI",
-  description: "Unlimited, personalized developmental activities for every child.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "common" });
+  const tFooter = await getTranslations({ locale, namespace: "footer" });
+  return {
+    title: t("appName"),
+    description: tFooter("tagline"),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

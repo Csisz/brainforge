@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+// Autonyms (each language's own name for itself), not app copy — deliberately
+// NOT routed through next-intl. Translating "Deutsch" into the current locale
+// would defeat the point: a reader scanning for their language needs to
+// recognize it in that language, not in whichever one they're currently on.
 const LOCALE_LABELS: Record<string, string> = {
   hu: "Magyar",
   en: "English",
