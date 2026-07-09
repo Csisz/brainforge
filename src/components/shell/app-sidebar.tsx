@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Users, SquarePlus, History, Settings } from "lucide-react";
+import { LayoutDashboard, Users, SquarePlus, History, Settings, LogOut } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import {
   Sidebar,
@@ -15,6 +15,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { signOut } from "@/lib/auth/actions";
 
 const ITEMS = [
   { href: "/app", key: "overview", icon: LayoutDashboard },
@@ -24,11 +31,10 @@ const ITEMS = [
   { href: "/app/settings", key: "settings", icon: Settings },
 ] as const;
 
-export function AppSidebar() {
+export function AppSidebar({ userEmail, locale }: { userEmail: string; locale: string }) {
   const t = useTranslations("nav");
-  const tAccount = useTranslations("account");
   const pathname = usePathname();
-  const parentLabel = tAccount("parentPlaceholder");
+  const initial = (userEmail || "?").charAt(0).toUpperCase();
 
   return (
     <Sidebar collapsible="icon">
@@ -61,14 +67,24 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <Avatar className="size-7">
-            <AvatarFallback className="bg-crayon-soft text-xs font-semibold text-ink">
-              {parentLabel.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-ink-soft group-data-[collapsible=icon]:hidden">{parentLabel}</span>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-sidebar-accent">
+              <Avatar className="size-7 shrink-0">
+                <AvatarFallback className="bg-crayon-soft text-xs font-semibold text-ink">{initial}</AvatarFallback>
+              </Avatar>
+              <span className="truncate text-sm text-ink-soft group-data-[collapsible=icon]:hidden">
+                {userEmail}
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" side="top" className="w-56">
+            <DropdownMenuItem onSelect={() => signOut(locale)} className="gap-2 text-destructive">
+              <LogOut className="size-4" aria-hidden="true" />
+              {t("logout")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
     </Sidebar>
   );

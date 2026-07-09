@@ -23,10 +23,10 @@ export default async function PublicLayout({
           </Link>
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/app">{t("nav.login")}</Link>
+              <Link href="/login">{t("nav.login")}</Link>
             </Button>
             <Button asChild size="sm">
-              <Link href="/app">{t("nav.signupCta")}</Link>
+              <Link href="/login">{t("nav.signupCta")}</Link>
             </Button>
           </div>
         </div>

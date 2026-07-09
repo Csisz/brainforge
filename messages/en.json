@@ -19,9 +19,6 @@
     "tagline": "Printable developmental worksheets, every day.",
     "rights": "All rights reserved."
   },
-  "account": {
-    "parentPlaceholder": "Parent"
-  },
   "worksheet": {
     "seedLabel": "seed"
   },
@@ -103,5 +100,60 @@
       "favorite_part": "Favorite part",
       "show_and_tell": "Show and tell"
     }
+  },
+  "auth": {
+    "title": "Log in",
+    "subtitle": "Sign in to start today's session.",
+    "continueWithGoogle": "Continue with Google",
+    "orDivider": "or",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "submitMagicLink": "Send magic link",
+    "checkEmailTitle": "Check your email",
+    "checkEmailBody": "We sent a sign-in link to {email}.",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
+  "onboarding": {
+    "title": "Let's meet your child",
+    "subtitle": "This is what we'll base the daily worksheets on.",
+    "nicknameLabel": "Nickname",
+    "nicknamePlaceholder": "e.g. Mia",
+    "birthMonthLabel": "Birth month",
+    "avatarLabel": "Pick a character",
+    "themesLabel": "Favorite themes",
+    "accessibilityLabel": "Accessibility options",
+    "accessibility": {
+      "lowInk": "Low ink",
+      "lowInkDesc": "Less filled area — easier on the printer",
+      "highContrast": "High contrast",
+      "highContrastDesc": "Thicker, darker lines",
+      "motorSupport": "Motor support",
+      "motorSupportDesc": "Larger targets, thicker strokes"
+    },
+    "submit": "Add child",
+    "submitting": "Saving…",
+    "errorGeneric": "Couldn't save. Please try again."
+  },
+  "themes": {
+    "dinosaurs": "Dinosaurs",
+    "princesses": "Princesses",
+    "space": "Space",
+    "ocean": "Ocean",
+    "farm": "Farm",
+    "cars": "Cars",
+    "robots": "Robots",
+    "unicorns": "Unicorns",
+    "nature": "Nature",
+    "magic": "Magic",
+    "blocks": "Blocks",
+    "custom": "Other"
+  },
+  "avatars": {
+    "cat": "Cat",
+    "dog": "Dog",
+    "rabbit": "Rabbit",
+    "bird": "Bird",
+    "fish": "Fish",
+    "turtle": "Turtle"
   }
 }

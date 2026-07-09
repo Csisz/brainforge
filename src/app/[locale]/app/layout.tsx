@@ -1,7 +1,10 @@
+import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { AppSidebar } from "@/components/shell/app-sidebar";
+import { createClient } from "@/lib/supabase/server";
+import { getChildren } from "@/lib/children/queries";
 
 export default async function AppShellLayout({
   children,
@@ -13,9 +16,18 @@ export default async function AppShellLayout({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // Middleware already gates unauthenticated requests; user is non-null here.
+
+  const kids = await getChildren();
+  if (kids.length === 0) redirect(`/${locale}/onboarding`);
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar userEmail={user?.email ?? ""} locale={locale} />
       <SidebarInset>
         <header className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-4">
           <SidebarTrigger />

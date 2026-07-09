@@ -19,9 +19,6 @@
     "tagline": "Druckbare Förder-Arbeitsblätter, jeden Tag.",
     "rights": "Alle Rechte vorbehalten."
   },
-  "account": {
-    "parentPlaceholder": "Elternteil"
-  },
   "worksheet": {
     "seedLabel": "seed"
   },
@@ -103,5 +100,60 @@
       "favorite_part": "Lieblingsteil",
       "show_and_tell": "Zeig und erzähl"
     }
+  },
+  "auth": {
+    "title": "Anmelden",
+    "subtitle": "Melde dich an, um die heutige Einheit zu starten.",
+    "continueWithGoogle": "Mit Google fortfahren",
+    "orDivider": "oder",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "du@beispiel.de",
+    "submitMagicLink": "Anmeldelink senden",
+    "checkEmailTitle": "Überprüfe deine E-Mails",
+    "checkEmailBody": "Wir haben einen Anmeldelink an {email} gesendet.",
+    "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+  },
+  "onboarding": {
+    "title": "Lern dein Kind kennen lassen",
+    "subtitle": "Danach richten wir die täglichen Arbeitsblätter aus.",
+    "nicknameLabel": "Spitzname",
+    "nicknamePlaceholder": "z. B. Mia",
+    "birthMonthLabel": "Geburtsmonat",
+    "avatarLabel": "Wähle eine Figur",
+    "themesLabel": "Lieblingsthemen",
+    "accessibilityLabel": "Zusätzliche Einstellungen",
+    "accessibility": {
+      "lowInk": "Tintensparend",
+      "lowInkDesc": "Weniger Füllfläche — schont den Drucker",
+      "highContrast": "Hoher Kontrast",
+      "highContrastDesc": "Dickere, dunklere Linien",
+      "motorSupport": "Motorik-Unterstützung",
+      "motorSupportDesc": "Größere Ziele, dickere Linien"
+    },
+    "submit": "Kind hinzufügen",
+    "submitting": "Speichern…",
+    "errorGeneric": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
+  },
+  "themes": {
+    "dinosaurs": "Dinosaurier",
+    "princesses": "Prinzessinnen",
+    "space": "Weltraum",
+    "ocean": "Ozean",
+    "farm": "Bauernhof",
+    "cars": "Autos",
+    "robots": "Roboter",
+    "unicorns": "Einhörner",
+    "nature": "Natur",
+    "magic": "Magie",
+    "blocks": "Bauklötze",
+    "custom": "Sonstiges"
+  },
+  "avatars": {
+    "cat": "Katze",
+    "dog": "Hund",
+    "rabbit": "Hase",
+    "bird": "Vogel",
+    "fish": "Fisch",
+    "turtle": "Schildkröte"
   }
 }

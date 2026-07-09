@@ -19,9 +19,6 @@
     "tagline": "Nyomtatható fejlesztő feladatlapok minden napra.",
     "rights": "Minden jog fenntartva."
   },
-  "account": {
-    "parentPlaceholder": "Szülő"
-  },
   "worksheet": {
     "seedLabel": "seed"
   },
@@ -103,5 +100,60 @@
       "favorite_part": "Kedvenc rész",
       "show_and_tell": "Megmutatom, elmesélem"
     }
+  },
+  "auth": {
+    "title": "Bejelentkezés",
+    "subtitle": "Jelentkezz be, hogy elkezdhesd a mai foglalkozást.",
+    "continueWithGoogle": "Folytatás Google-lal",
+    "orDivider": "vagy",
+    "emailLabel": "E-mail cím",
+    "emailPlaceholder": "te@pelda.hu",
+    "submitMagicLink": "Belépési link küldése",
+    "checkEmailTitle": "Nézd meg az e-mailjeidet",
+    "checkEmailBody": "Küldtünk egy belépési linket ide: {email}.",
+    "errorGeneric": "Hiba történt. Próbáld újra."
+  },
+  "onboarding": {
+    "title": "Ismerkedjünk meg gyermekeddel",
+    "subtitle": "Ez alapján állítjuk össze a napi feladatlapokat.",
+    "nicknameLabel": "Becenév",
+    "nicknamePlaceholder": "pl. Zsófi",
+    "birthMonthLabel": "Születési hónap",
+    "avatarLabel": "Válassz egy figurát",
+    "themesLabel": "Kedvenc témák",
+    "accessibilityLabel": "Kiegészítő beállítások",
+    "accessibility": {
+      "lowInk": "Tinta-takarékos",
+      "lowInkDesc": "Kevesebb kitöltött terület — kíméli a nyomtatót",
+      "highContrast": "Erős kontraszt",
+      "highContrastDesc": "Vastagabb, sötétebb vonalak",
+      "motorSupport": "Mozgáskoordinációs segítség",
+      "motorSupportDesc": "Nagyobb célpontok, vastagabb vonalak"
+    },
+    "submit": "Gyermek hozzáadása",
+    "submitting": "Mentés…",
+    "errorGeneric": "Nem sikerült menteni. Próbáld újra."
+  },
+  "themes": {
+    "dinosaurs": "Dinoszauruszok",
+    "princesses": "Hercegnők",
+    "space": "Világűr",
+    "ocean": "Óceán",
+    "farm": "Farm",
+    "cars": "Autók",
+    "robots": "Robotok",
+    "unicorns": "Unikornisok",
+    "nature": "Természet",
+    "magic": "Varázslat",
+    "blocks": "Kockák",
+    "custom": "Egyéb"
+  },
+  "avatars": {
+    "cat": "Macska",
+    "dog": "Kutya",
+    "rabbit": "Nyuszi",
+    "bird": "Madár",
+    "fish": "Hal",
+    "turtle": "Teknős"
   }
 }

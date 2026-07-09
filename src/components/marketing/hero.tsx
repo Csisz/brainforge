@@ -14,7 +14,7 @@ export async function Hero({ locale, initial }: { locale: string; initial: HeroW
         </h1>
         <p className="mt-5 max-w-md text-lg text-ink-soft">{t("hero.subline")}</p>
         <Button asChild size="lg" className="mt-8">
-          <Link href="/app">{t("nav.signupCta")}</Link>
+          <Link href="/login">{t("nav.signupCta")}</Link>
         </Button>
       </div>
       <div className="flex min-w-0 justify-center md:justify-end">

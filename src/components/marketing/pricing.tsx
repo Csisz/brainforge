@@ -43,7 +43,7 @@ export async function Pricing() {
                 {t(`${tier}.body`)}
               </p>
               <Button asChild variant={isPremium ? "default" : "outline"} className="mt-6">
-                <Link href="/app">{isSchool ? t("cta.contact") : tNav("signupCta")}</Link>
+                <Link href="/login">{isSchool ? t("cta.contact") : tNav("signupCta")}</Link>
               </Button>
             </div>
           );
