@@ -204,6 +204,43 @@
   "print": {
     "printButton": "Drucken"
   },
+  "settings": {
+    "profileTitle": "Profil",
+    "emailLabel": "E-Mail-Adresse",
+    "displayNameLabel": "Anzeigename",
+    "displayNamePlaceholder": "Dein Name",
+    "paperSizeTitle": "Papierformat",
+    "paperSizeA4": "A4",
+    "paperSizeLetter": "Letter",
+    "saveButton": "Speichern",
+    "saving": "Wird gespeichert…",
+    "savedConfirmation": "Gespeichert.",
+    "errorGeneric": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "subscriptionTitle": "Abonnement",
+    "currentPlanLabel": "Aktueller Plan",
+    "upgradeCta": "Auf Premium upgraden",
+    "upgradeComingSoon": "Demnächst verfügbar."
+  },
+  "planTiers": {
+    "free": "Kostenlos",
+    "premium": "Premium",
+    "family": "Family",
+    "school": "Schule",
+    "therapist": "Therapeut"
+  },
+  "history": {
+    "title": "Verlauf",
+    "emptyTitle": "Noch keine Einheiten",
+    "emptyBody": "Abgeschlossene Einheiten erscheinen hier.",
+    "emptyCta": "Einheit starten",
+    "viewCta": "Ansehen",
+    "status": {
+      "planned": "Geplant",
+      "active": "Läuft",
+      "completed": "Fertig",
+      "abandoned": "Abgebrochen"
+    }
+  },
   "sessionView": {
     "doneToggle": "Erledigt",
     "enjoymentStar": "Stern {star}",

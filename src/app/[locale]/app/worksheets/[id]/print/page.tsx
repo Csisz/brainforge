@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getWorksheet } from "@/lib/worksheet-records/queries";
 import { getSession } from "@/lib/sessions/queries";
 import { getChild } from "@/lib/children/queries";
+import { getProfile } from "@/lib/profile/queries";
 import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-context";
 import { composeWorksheet } from "@/lib/worksheets/page";
 import { PrintButton } from "@/components/print/print-button";
@@ -19,10 +20,15 @@ export default async function WorksheetPrintPage({
   const worksheet = await getWorksheet(id);
   if (!worksheet || !worksheet.session_id) notFound();
 
-  const [session, child] = await Promise.all([getSession(worksheet.session_id), getChild(worksheet.child_id)]);
+  const [session, child, profile] = await Promise.all([
+    getSession(worksheet.session_id),
+    getChild(worksheet.child_id),
+    getProfile(),
+  ]);
   if (!session || !child) notFound();
 
-  const ctx = buildWorksheetRenderContext(child, session, locale);
+  const paperSize = profile?.paper_size ?? "a4";
+  const ctx = buildWorksheetRenderContext(child, session, locale, paperSize);
   const { svg, answerKeySvg } = composeWorksheet(
     {
       generatorId: worksheet.generator_id,
@@ -37,7 +43,7 @@ export default async function WorksheetPrintPage({
   return (
     <div className="bg-paper">
       <style>{`
-        @page { size: A4; margin: 0; }
+        @page { size: ${paperSize === "letter" ? "letter" : "A4"}; margin: 0; }
         @media print {
           html, body { margin: 0; padding: 0; }
         }

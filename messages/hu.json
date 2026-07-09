@@ -204,6 +204,43 @@
   "print": {
     "printButton": "Nyomtatás"
   },
+  "settings": {
+    "profileTitle": "Profil",
+    "emailLabel": "E-mail cím",
+    "displayNameLabel": "Megjelenített név",
+    "displayNamePlaceholder": "A neved",
+    "paperSizeTitle": "Papírméret",
+    "paperSizeA4": "A4",
+    "paperSizeLetter": "Letter",
+    "saveButton": "Mentés",
+    "saving": "Mentés…",
+    "savedConfirmation": "Mentve.",
+    "errorGeneric": "Nem sikerült menteni. Próbáld újra.",
+    "subscriptionTitle": "Előfizetés",
+    "currentPlanLabel": "Jelenlegi csomag",
+    "upgradeCta": "Frissítés Premiumra",
+    "upgradeComingSoon": "Hamarosan elérhető."
+  },
+  "planTiers": {
+    "free": "Ingyenes",
+    "premium": "Premium",
+    "family": "Family",
+    "school": "Iskola",
+    "therapist": "Terapeuta"
+  },
+  "history": {
+    "title": "Előzmények",
+    "emptyTitle": "Még nincs foglalkozás",
+    "emptyBody": "Az elkészült foglalkozások itt fognak megjelenni.",
+    "emptyCta": "Foglalkozás indítása",
+    "viewCta": "Megtekintés",
+    "status": {
+      "planned": "Tervezett",
+      "active": "Folyamatban",
+      "completed": "Kész",
+      "abandoned": "Megszakítva"
+    }
+  },
   "sessionView": {
     "doneToggle": "Kész",
     "enjoymentStar": "{star}. csillag",

@@ -204,6 +204,43 @@
   "print": {
     "printButton": "Print"
   },
+  "settings": {
+    "profileTitle": "Profile",
+    "emailLabel": "Email address",
+    "displayNameLabel": "Display name",
+    "displayNamePlaceholder": "Your name",
+    "paperSizeTitle": "Paper size",
+    "paperSizeA4": "A4",
+    "paperSizeLetter": "Letter",
+    "saveButton": "Save",
+    "saving": "Saving…",
+    "savedConfirmation": "Saved.",
+    "errorGeneric": "Couldn't save. Please try again.",
+    "subscriptionTitle": "Subscription",
+    "currentPlanLabel": "Current plan",
+    "upgradeCta": "Upgrade to Premium",
+    "upgradeComingSoon": "Coming soon."
+  },
+  "planTiers": {
+    "free": "Free",
+    "premium": "Premium",
+    "family": "Family",
+    "school": "School",
+    "therapist": "Therapist"
+  },
+  "history": {
+    "title": "History",
+    "emptyTitle": "No sessions yet",
+    "emptyBody": "Completed sessions will show up here.",
+    "emptyCta": "Start a session",
+    "viewCta": "View",
+    "status": {
+      "planned": "Planned",
+      "active": "In progress",
+      "completed": "Done",
+      "abandoned": "Abandoned"
+    }
+  },
   "sessionView": {
     "doneToggle": "Done",
     "enjoymentStar": "Star {star}",

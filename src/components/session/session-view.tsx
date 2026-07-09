@@ -33,7 +33,11 @@ export function SessionView({
     Object.fromEntries(slots.map((_, i) => [i, { completed: false, enjoyment: 0 }])),
   );
   const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(alreadyCompleted);
+  // Distinct from `alreadyCompleted` (server state as of page load): this is the
+  // transient "just clicked Kész vagyunk in this visit" confirmation. A session
+  // that was already completed on an earlier visit (e.g. reopened from History
+  // to re-print a worksheet) must still show the full timeline, not this screen.
+  const [justFinished, setJustFinished] = useState(false);
   const [error, setError] = useState(false);
 
   function setEntry(index: number, patch: Partial<Entry>) {
@@ -60,11 +64,11 @@ export function SessionView({
       setSubmitting(false);
       return;
     }
-    setDone(true);
+    setJustFinished(true);
     router.refresh();
   }
 
-  if (done) {
+  if (justFinished) {
     return (
       <div className="flex flex-col items-center gap-3 rounded-card border border-line bg-card px-6 py-12 text-center shadow-soft">
         <PartyPopper className="size-10 text-crayon-text" aria-hidden="true" />
@@ -108,44 +112,49 @@ export function SessionView({
                 </div>
               )}
 
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
-                <label className="flex items-center gap-2 text-sm text-ink">
-                  <Checkbox
-                    checked={entries[i]!.completed}
-                    onCheckedChange={(v) => setEntry(i, { completed: v === true })}
-                  />
-                  {t("sessionView.doneToggle")}
-                </label>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      aria-label={t("sessionView.enjoymentStar", { star })}
-                      aria-pressed={entries[i]!.enjoyment >= star}
-                      onClick={() => setEntry(i, { enjoyment: star })}
-                      className="p-0.5"
-                    >
-                      <Star
-                        className={cn(
-                          "size-5",
-                          entries[i]!.enjoyment >= star ? "fill-crayon text-crayon" : "text-line",
-                        )}
-                      />
-                    </button>
-                  ))}
+              {!alreadyCompleted && (
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+                  <label className="flex items-center gap-2 text-sm text-ink">
+                    <Checkbox
+                      checked={entries[i]!.completed}
+                      onCheckedChange={(v) => setEntry(i, { completed: v === true })}
+                    />
+                    {t("sessionView.doneToggle")}
+                  </label>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        aria-label={t("sessionView.enjoymentStar", { star })}
+                        aria-pressed={entries[i]!.enjoyment >= star}
+                        onClick={() => setEntry(i, { enjoyment: star })}
+                        className="p-0.5"
+                      >
+                        <Star
+                          className={cn(
+                            "size-5",
+                            entries[i]!.enjoyment >= star ? "fill-crayon text-crayon" : "text-line",
+                          )}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </li>
           );
         })}
       </ol>
 
-      {error && <p className="text-sm text-destructive">{t("sessionView.errorGeneric")}</p>}
-
-      <Button size="lg" className="w-full" onClick={handleFinish} disabled={submitting}>
-        {submitting ? t("sessionView.finishing") : t("sessionView.finishCta")}
-      </Button>
+      {!alreadyCompleted && (
+        <>
+          {error && <p className="text-sm text-destructive">{t("sessionView.errorGeneric")}</p>}
+          <Button size="lg" className="w-full" onClick={handleFinish} disabled={submitting}>
+            {submitting ? t("sessionView.finishing") : t("sessionView.finishCta")}
+          </Button>
+        </>
+      )}
     </div>
   );
 }

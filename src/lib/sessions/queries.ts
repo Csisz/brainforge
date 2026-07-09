@@ -33,3 +33,16 @@ export async function getSession(id: string): Promise<SessionRow | null> {
   const { data } = await supabase.from("sessions").select("*").eq("id", id).single();
   return data;
 }
+
+export type SessionListItem = SessionRow & {
+  children: { nickname: string; avatar: string } | null;
+};
+
+export async function getSessions(): Promise<SessionListItem[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("sessions")
+    .select("*, children(nickname, avatar)")
+    .order("created_at", { ascending: false });
+  return (data ?? []) as SessionListItem[];
+}

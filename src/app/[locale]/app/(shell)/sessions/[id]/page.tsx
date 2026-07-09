@@ -4,6 +4,7 @@ import { getSession } from "@/lib/sessions/queries";
 import { getChild } from "@/lib/children/queries";
 import { getSessionWorksheets } from "@/lib/worksheet-records/queries";
 import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-context";
+import { getProfile } from "@/lib/profile/queries";
 import { composeWorksheet } from "@/lib/worksheets/page";
 import type { SessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
@@ -23,8 +24,8 @@ export default async function SessionViewPage({
   if (!child) notFound();
 
   const plan = session.plan as SessionPlan;
-  const worksheetRecords = await getSessionWorksheets(id);
-  const ctx = buildWorksheetRenderContext(child, session, locale);
+  const [worksheetRecords, profile] = await Promise.all([getSessionWorksheets(id), getProfile()]);
+  const ctx = buildWorksheetRenderContext(child, session, locale, profile?.paper_size ?? "a4");
 
   const worksheetData: Record<number, WorksheetSlotData> = {};
   plan.slots.forEach((slot, i) => {
