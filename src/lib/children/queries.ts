@@ -17,3 +17,13 @@ export async function getChildren(): Promise<ChildRow[]> {
     .order("created_at", { ascending: true });
   return data ?? [];
 }
+
+export async function getChild(id: string): Promise<ChildRow | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("children")
+    .select("id, nickname, birth_month, avatar, preferred_themes, accessibility")
+    .eq("id", id)
+    .single();
+  return data;
+}

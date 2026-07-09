@@ -13,7 +13,8 @@
     "appName": "BrainForge Kids",
     "loading": "Betöltés…",
     "comingSoon": "Hamarosan.",
-    "language": "Nyelv"
+    "language": "Nyelv",
+    "minutes": "{count} perc"
   },
   "footer": {
     "tagline": "Nyomtatható fejlesztő feladatlapok minden napra.",
@@ -155,5 +156,49 @@
     "bird": "Madár",
     "fish": "Hal",
     "turtle": "Teknős"
+  },
+  "dashboard": {
+    "todaySessionCta": "Mai foglalkozás",
+    "ageSuffix": "{age} éves",
+    "streakDays": "{count} napos sorozat"
+  },
+  "goals": {
+    "attention": "Figyelem",
+    "working_memory": "Munkamemória",
+    "executive_function": "Végrehajtó funkciók",
+    "visual_perception": "Vizuális észlelés",
+    "bilateral_coordination": "Kétoldali koordináció",
+    "fine_motor": "Finommotorika",
+    "pre_writing": "Előírás-készség",
+    "pre_reading": "Előolvasás-készség",
+    "math_thinking": "Matematikai gondolkodás",
+    "creativity": "Kreativitás",
+    "problem_solving": "Problémamegoldás"
+  },
+  "materials": {
+    "pencil": "Ceruza",
+    "crayons": "Zsírkréta",
+    "scissors": "Olló",
+    "glue": "Ragasztó",
+    "paper": "Papír",
+    "ball": "Labda",
+    "cups": "Poharak",
+    "blocks": "Kockák",
+    "tape": "Ragasztószalag",
+    "dice": "Dobókocka"
+  },
+  "wizard": {
+    "title": "Mai foglalkozás összeállítása",
+    "subtitle": "Válaszd ki, mire fókuszáljon a mai feladatlap és program.",
+    "childLabel": "Gyerek",
+    "goalsLabel": "Fejlesztési célok",
+    "themeLabel": "Téma",
+    "durationLabel": "Időtartam",
+    "materialsLabel": "Elérhető eszközök",
+    "difficultyLabel": "Nehézség",
+    "difficultyManualHint": "Alapértelmezés a gyerek életkora alapján — igény szerint módosítható.",
+    "submit": "Foglalkozás indítása",
+    "submitting": "Összeállítás…",
+    "errorGeneric": "Nem sikerült elindítani a foglalkozást. Próbáld újra."
   }
 }

@@ -13,7 +13,8 @@
     "appName": "BrainForge Kids",
     "loading": "Wird geladen…",
     "comingSoon": "Demnächst.",
-    "language": "Sprache"
+    "language": "Sprache",
+    "minutes": "{count} Min."
   },
   "footer": {
     "tagline": "Druckbare Förder-Arbeitsblätter, jeden Tag.",
@@ -155,5 +156,49 @@
     "bird": "Vogel",
     "fish": "Fisch",
     "turtle": "Schildkröte"
+  },
+  "dashboard": {
+    "todaySessionCta": "Heutige Einheit",
+    "ageSuffix": "{age} Jahre alt",
+    "streakDays": "{count}-Tage-Serie"
+  },
+  "goals": {
+    "attention": "Aufmerksamkeit",
+    "working_memory": "Arbeitsgedächtnis",
+    "executive_function": "Exekutive Funktionen",
+    "visual_perception": "Visuelle Wahrnehmung",
+    "bilateral_coordination": "Bilaterale Koordination",
+    "fine_motor": "Feinmotorik",
+    "pre_writing": "Vorschreibfertigkeit",
+    "pre_reading": "Vorlesefertigkeit",
+    "math_thinking": "Mathematisches Denken",
+    "creativity": "Kreativität",
+    "problem_solving": "Problemlösen"
+  },
+  "materials": {
+    "pencil": "Bleistift",
+    "crayons": "Wachsmalstifte",
+    "scissors": "Schere",
+    "glue": "Klebstoff",
+    "paper": "Papier",
+    "ball": "Ball",
+    "cups": "Becher",
+    "blocks": "Bauklötze",
+    "tape": "Klebeband",
+    "dice": "Würfel"
+  },
+  "wizard": {
+    "title": "Heutige Einheit zusammenstellen",
+    "subtitle": "Wähle, worauf sich das heutige Arbeitsblatt und Programm konzentrieren soll.",
+    "childLabel": "Kind",
+    "goalsLabel": "Förderziele",
+    "themeLabel": "Thema",
+    "durationLabel": "Dauer",
+    "materialsLabel": "Vorhandene Materialien",
+    "difficultyLabel": "Schwierigkeit",
+    "difficultyManualHint": "Standardmäßig nach Alter des Kindes — bei Bedarf anpassbar.",
+    "submit": "Einheit starten",
+    "submitting": "Wird zusammengestellt…",
+    "errorGeneric": "Einheit konnte nicht gestartet werden. Bitte versuche es erneut."
   }
 }

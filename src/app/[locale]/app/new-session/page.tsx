@@ -1,14 +1,18 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
+import { getChildren } from "@/lib/children/queries";
+import { SessionWizard } from "@/components/wizard/session-wizard";
 
-export default async function NewSessionPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function NewSessionPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ child?: string }>;
+}) {
   const { locale } = await params;
+  const { child } = await searchParams;
   setRequestLocale(locale);
-  const t = await getTranslations();
+  const children = await getChildren();
 
-  return (
-    <div className="space-y-2">
-      <h1 className="font-display text-2xl font-extrabold text-ink">{t("nav.newSession")}</h1>
-      <p className="text-ink-soft">{t("common.comingSoon")}</p>
-    </div>
-  );
+  return <SessionWizard children={children} defaultChildId={child} />;
 }

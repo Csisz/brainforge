@@ -13,7 +13,8 @@
     "appName": "BrainForge Kids",
     "loading": "Loading…",
     "comingSoon": "Coming soon.",
-    "language": "Language"
+    "language": "Language",
+    "minutes": "{count} min"
   },
   "footer": {
     "tagline": "Printable developmental worksheets, every day.",
@@ -155,5 +156,49 @@
     "bird": "Bird",
     "fish": "Fish",
     "turtle": "Turtle"
+  },
+  "dashboard": {
+    "todaySessionCta": "Today's session",
+    "ageSuffix": "{age} years old",
+    "streakDays": "{count}-day streak"
+  },
+  "goals": {
+    "attention": "Attention",
+    "working_memory": "Working memory",
+    "executive_function": "Executive function",
+    "visual_perception": "Visual perception",
+    "bilateral_coordination": "Bilateral coordination",
+    "fine_motor": "Fine motor",
+    "pre_writing": "Pre-writing",
+    "pre_reading": "Pre-reading",
+    "math_thinking": "Math thinking",
+    "creativity": "Creativity",
+    "problem_solving": "Problem solving"
+  },
+  "materials": {
+    "pencil": "Pencil",
+    "crayons": "Crayons",
+    "scissors": "Scissors",
+    "glue": "Glue",
+    "paper": "Paper",
+    "ball": "Ball",
+    "cups": "Cups",
+    "blocks": "Blocks",
+    "tape": "Tape",
+    "dice": "Dice"
+  },
+  "wizard": {
+    "title": "Build today's session",
+    "subtitle": "Pick what today's worksheet and plan should focus on.",
+    "childLabel": "Child",
+    "goalsLabel": "Development goals",
+    "themeLabel": "Theme",
+    "durationLabel": "Duration",
+    "materialsLabel": "Materials on hand",
+    "difficultyLabel": "Difficulty",
+    "difficultyManualHint": "Defaults to the child's age — adjust if needed.",
+    "submit": "Start session",
+    "submitting": "Building…",
+    "errorGeneric": "Couldn't start the session. Please try again."
   }
 }
