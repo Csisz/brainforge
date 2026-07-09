@@ -65,11 +65,28 @@
   "pricing": {
     "eyebrow": "Árazás",
     "title": "Egyszerű árazás, gyerekenként",
-    "free": { "name": "Ingyenes", "price": "0 €", "body": "3 feladatlap / hét" },
-    "premium": { "name": "Premium", "price": "9 € / hó", "body": "Korlátlan feladatlap, minden téma", "badge": "Legnépszerűbb" },
-    "family": { "name": "Family", "body": "Premium több gyermeknek, egy előfizetésben" },
-    "school": { "name": "Iskola", "body": "Intézményeknek, egyedi keretek — kérj ajánlatot" },
-    "cta": { "contact": "Kapcsolatfelvétel" }
+    "free": {
+      "name": "Ingyenes",
+      "price": "0 €",
+      "body": "3 feladatlap / hét"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "9 € / hó",
+      "body": "Korlátlan feladatlap, minden téma",
+      "badge": "Legnépszerűbb"
+    },
+    "family": {
+      "name": "Family",
+      "body": "Premium több gyermeknek, egy előfizetésben"
+    },
+    "school": {
+      "name": "Iskola",
+      "body": "Intézményeknek, egyedi keretek — kérj ajánlatot"
+    },
+    "cta": {
+      "contact": "Kapcsolatfelvétel"
+    }
   },
   "activity": {
     "warmup": {
@@ -112,7 +129,9 @@
     "submitMagicLink": "Belépési link küldése",
     "checkEmailTitle": "Nézd meg az e-mailjeidet",
     "checkEmailBody": "Küldtünk egy belépési linket ide: {email}.",
-    "errorGeneric": "Hiba történt. Próbáld újra."
+    "errorGeneric": "Hiba történt. Próbáld újra.",
+    "checkEmailLocalHint": "Lokális fejlesztésben a levél nem a valódi postafiókodba érkezik — nyisd meg a Mailpitet: {url}",
+    "errorWithReason": "Nem sikerült elküldeni a belépő linket: {reason}"
   },
   "onboarding": {
     "title": "Ismerkedjünk meg gyermekeddel",

@@ -65,11 +65,28 @@
   "pricing": {
     "eyebrow": "Preise",
     "title": "Einfache Preise, pro Kind",
-    "free": { "name": "Kostenlos", "price": "0 €", "body": "3 Arbeitsblätter / Woche" },
-    "premium": { "name": "Premium", "price": "9 € / Monat", "body": "Unbegrenzt Arbeitsblätter, alle Themen", "badge": "Am beliebtesten" },
-    "family": { "name": "Family", "body": "Premium für mehrere Kinder, ein Abo" },
-    "school": { "name": "Schule", "body": "Für Einrichtungen, individuelle Konditionen — Kontakt aufnehmen" },
-    "cta": { "contact": "Kontakt aufnehmen" }
+    "free": {
+      "name": "Kostenlos",
+      "price": "0 €",
+      "body": "3 Arbeitsblätter / Woche"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "9 € / Monat",
+      "body": "Unbegrenzt Arbeitsblätter, alle Themen",
+      "badge": "Am beliebtesten"
+    },
+    "family": {
+      "name": "Family",
+      "body": "Premium für mehrere Kinder, ein Abo"
+    },
+    "school": {
+      "name": "Schule",
+      "body": "Für Einrichtungen, individuelle Konditionen — Kontakt aufnehmen"
+    },
+    "cta": {
+      "contact": "Kontakt aufnehmen"
+    }
   },
   "activity": {
     "warmup": {
@@ -112,7 +129,9 @@
     "submitMagicLink": "Anmeldelink senden",
     "checkEmailTitle": "Überprüfe deine E-Mails",
     "checkEmailBody": "Wir haben einen Anmeldelink an {email} gesendet.",
-    "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "checkEmailLocalHint": "In der lokalen Entwicklung landet die E-Mail im Mailpit-Testpostfach, nicht in deinem echten — öffne {url}",
+    "errorWithReason": "Anmeldelink konnte nicht gesendet werden: {reason}"
   },
   "onboarding": {
     "title": "Lern dein Kind kennen lassen",

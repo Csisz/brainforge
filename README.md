@@ -64,6 +64,19 @@ scripts/demo-worksheets.ts            engine proof + determinism test
 `npm run demo:worksheets` generates sample sheets into `demo-output/` and
 asserts that identical seeds produce identical output.
 
+## Local auth quickstart
+
+1. Docker Desktop running → `supabase start` (after any config.toml change:
+   `supabase stop && supabase start`).
+2. `npm run dev`, open http://localhost:3000, sign in with any email.
+3. **The magic link lands in Mailpit, not your real inbox:**
+   http://localhost:54324 — open it there and click the link.
+4. Google login is hidden by default locally (`NEXT_PUBLIC_AUTH_GOOGLE=0`);
+   enabling it requires real OAuth credentials — see the commented
+   `[auth.external.google]` block in `supabase/config.toml`.
+5. If magic links stop arriving, check the auth rate limits in
+   `supabase/config.toml` (`email_sent`, raised to 100/h for local dev).
+
 ## Sprint roadmap
 
 - **Sprint 1 (done):** engine core, 3 generators, session composer, schema, AI layer contract.

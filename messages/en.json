@@ -65,11 +65,28 @@
   "pricing": {
     "eyebrow": "Pricing",
     "title": "Simple pricing, per child",
-    "free": { "name": "Free", "price": "€0", "body": "3 worksheets / week" },
-    "premium": { "name": "Premium", "price": "€9 / mo", "body": "Unlimited worksheets, every theme", "badge": "Most popular" },
-    "family": { "name": "Family", "body": "Premium for multiple children, one subscription" },
-    "school": { "name": "School", "body": "For institutions, custom terms — get in touch" },
-    "cta": { "contact": "Get in touch" }
+    "free": {
+      "name": "Free",
+      "price": "€0",
+      "body": "3 worksheets / week"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€9 / mo",
+      "body": "Unlimited worksheets, every theme",
+      "badge": "Most popular"
+    },
+    "family": {
+      "name": "Family",
+      "body": "Premium for multiple children, one subscription"
+    },
+    "school": {
+      "name": "School",
+      "body": "For institutions, custom terms — get in touch"
+    },
+    "cta": {
+      "contact": "Get in touch"
+    }
   },
   "activity": {
     "warmup": {
@@ -112,7 +129,9 @@
     "submitMagicLink": "Send magic link",
     "checkEmailTitle": "Check your email",
     "checkEmailBody": "We sent a sign-in link to {email}.",
-    "errorGeneric": "Something went wrong. Please try again."
+    "errorGeneric": "Something went wrong. Please try again.",
+    "checkEmailLocalHint": "In local development the email lands in the Mailpit test inbox, not your real one — open {url}",
+    "errorWithReason": "Couldn't send the sign-in link: {reason}"
   },
   "onboarding": {
     "title": "Let's meet your child",

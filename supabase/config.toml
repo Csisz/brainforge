@@ -193,8 +193,9 @@ password_requirements = ""
 # rp_origins = ["http://127.0.0.1:3000"]
 
 [auth.rate_limit]
-# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+# Number of emails that can be sent per hour. Local dev sends to Mailpit, so a
+# high limit is safe; the default of 2 silently blocks magic-link testing.
+email_sent = 100
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -251,6 +252,18 @@ otp_expiry = 3600
 # enabled = true
 # subject = "Your password has been changed"
 # content_path = "./templates/password_changed_notification.html"
+
+# Google OAuth — OFF locally by default. To enable:
+#  1. Create OAuth credentials at https://console.cloud.google.com (redirect URI:
+#     http://127.0.0.1:54321/auth/v1/callback)
+#  2. Put GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET into .env.local
+#  3. Uncomment this block, run `supabase stop && supabase start`
+#  4. Set NEXT_PUBLIC_AUTH_GOOGLE=1 in .env.local to show the button
+# [auth.external.google]
+# enabled = true
+# client_id = "env(GOOGLE_CLIENT_ID)"
+# secret = "env(GOOGLE_CLIENT_SECRET)"
+# redirect_uri = "http://127.0.0.1:54321/auth/v1/callback"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.

@@ -12,6 +12,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 type Status = "idle" | "sending" | "sent" | "error";
 
+const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "1";
+const MAILPIT_URL = "http://localhost:54324";
+
+/** True when running against a local dev origin — used only for dev hints. */
+function isLocalhost(): boolean {
+  return typeof window !== "undefined" && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+}
+
 export function LoginForm() {
   const t = useTranslations("auth");
   const locale = useLocale();
@@ -20,6 +28,7 @@ export function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
+  const [errorReason, setErrorReason] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleMagicLink(e: FormEvent) {
@@ -32,6 +41,7 @@ export function LoginForm() {
         emailRedirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
+    setErrorReason(error?.message ?? "");
     setStatus(error ? "error" : "sent");
   }
 
@@ -53,6 +63,19 @@ export function LoginForm() {
           <CardTitle>{t("checkEmailTitle")}</CardTitle>
           <CardDescription>{t("checkEmailBody", { email })}</CardDescription>
         </CardHeader>
+        {isLocalhost() && (
+          <CardContent>
+            <p className="text-sm text-ink-soft">
+              {t.rich("checkEmailLocalHint", {
+                url: () => (
+                  <a href={MAILPIT_URL} target="_blank" rel="noreferrer" className="font-medium text-crayon underline underline-offset-2">
+                    {MAILPIT_URL}
+                  </a>
+                ),
+              })}
+            </p>
+          </CardContent>
+        )}
       </Card>
     );
   }
@@ -64,22 +87,26 @@ export function LoginForm() {
         <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full gap-2"
-          onClick={handleGoogle}
-          disabled={googleLoading}
-        >
-          {googleLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <GoogleIcon />}
-          {t("continueWithGoogle")}
-        </Button>
+        {GOOGLE_ENABLED && (
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full gap-2"
+              onClick={handleGoogle}
+              disabled={googleLoading}
+            >
+              {googleLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <GoogleIcon />}
+              {t("continueWithGoogle")}
+            </Button>
 
-        <div className="flex items-center gap-3 text-xs text-ink-soft">
-          <span className="h-px flex-1 bg-line" />
-          {t("orDivider")}
-          <span className="h-px flex-1 bg-line" />
-        </div>
+            <div className="flex items-center gap-3 text-xs text-ink-soft">
+              <span className="h-px flex-1 bg-line" />
+              {t("orDivider")}
+              <span className="h-px flex-1 bg-line" />
+            </div>
+          </>
+        )}
 
         <form onSubmit={handleMagicLink} className="space-y-3">
           <div className="space-y-1.5">
@@ -102,7 +129,11 @@ export function LoginForm() {
             )}
             {t("submitMagicLink")}
           </Button>
-          {status === "error" && <p className="text-sm text-destructive">{t("errorGeneric")}</p>}
+          {status === "error" && (
+            <p className="text-sm text-destructive">
+              {errorReason ? t("errorWithReason", { reason: errorReason }) : t("errorGeneric")}
+            </p>
+          )}
         </form>
       </CardContent>
     </Card>
