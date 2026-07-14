@@ -4,12 +4,22 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoalBadges } from "@/components/dashboard/goal-badges";
+import { AchievementBadges } from "@/components/achievements/achievement-badges";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import type { ChildRow } from "@/lib/children/queries";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
+import type { AchievementKind } from "@/lib/achievements";
 
-export async function ChildCard({ child, nudgeGoals }: { child: ChildRow; nudgeGoals: DevelopmentGoal[] }) {
+export async function ChildCard({
+  child,
+  nudgeGoals,
+  achievements,
+}: {
+  child: ChildRow;
+  nudgeGoals: DevelopmentGoal[];
+  achievements: AchievementKind[];
+}) {
   const t = await getTranslations("dashboard");
   const Icon = getAvatarIcon(child.avatar);
   const age = ageFromBirthMonth(child.birth_month);
@@ -31,6 +41,11 @@ export async function ChildCard({ child, nudgeGoals }: { child: ChildRow; nudgeG
         <Button asChild className="mt-2 w-full">
           <Link href={{ pathname: "/app/new-session", query: { child: child.id } }}>{t("todaySessionCta")}</Link>
         </Button>
+        {achievements.length > 0 && (
+          <div className="mt-1">
+            <AchievementBadges kinds={achievements} />
+          </div>
+        )}
         {nudgeGoals.length > 0 && (
           <div className="mt-1 flex flex-col items-center gap-1.5">
             <span className="text-xs text-ink-soft">{t("nudgeLabel")}</span>

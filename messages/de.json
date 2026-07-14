@@ -374,5 +374,32 @@
     "noChildren": "Füge zuerst ein Kind hinzu, um zu drucken.",
     "addChildCta": "Kind hinzufügen",
     "error": "Das Arbeitsblatt konnte nicht vorbereitet werden. Bitte versuche es erneut."
+  },
+  "achievements": {
+    "sectionTitle": "Auszeichnungen",
+    "first_session": {
+      "name": "Erste Einheit",
+      "description": "Ihr habt eure erste gemeinsame Einheit geschafft!"
+    },
+    "first_print": {
+      "name": "Erster Ausdruck",
+      "description": "Das erste eigene Arbeitsblatt ist fertig."
+    },
+    "streak_3": {
+      "name": "3-Tage-Serie",
+      "description": "Drei Tage in Folge — eine tolle Gewohnheit entsteht!"
+    },
+    "streak_7": {
+      "name": "7-Tage-Serie",
+      "description": "Eine ganze Woche, jeden Tag! Echte Meister."
+    },
+    "explorer_5_types": {
+      "name": "Entdecker",
+      "description": "Ihr habt fünf verschiedene Arbeitsblatt-Typen probiert. Neugieriger Kopf!"
+    },
+    "bilateral_master": {
+      "name": "Beidhändiger Meister",
+      "description": "Fünf beidhändige Arbeitsblätter geschafft — beide Hände sind spitze!"
+    }
   }
 }

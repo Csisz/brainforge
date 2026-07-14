@@ -374,5 +374,32 @@
     "noChildren": "Előbb vegyél fel egy gyereket a nyomtatáshoz.",
     "addChildCta": "Gyerek hozzáadása",
     "error": "Nem sikerült előkészíteni a feladatlapot. Próbáld újra."
+  },
+  "achievements": {
+    "sectionTitle": "Kitüntetések",
+    "first_session": {
+      "name": "Első foglalkozás",
+      "description": "Végigcsináltátok az első közös foglalkozást!"
+    },
+    "first_print": {
+      "name": "Első nyomtatás",
+      "description": "Elkészült az első saját feladatlap."
+    },
+    "streak_3": {
+      "name": "3 napos sorozat",
+      "description": "Három napon át kitartottatok — szuper szokás születik!"
+    },
+    "streak_7": {
+      "name": "7 napos sorozat",
+      "description": "Egy teljes hét, minden nap! Igazi bajnokok vagytok."
+    },
+    "explorer_5_types": {
+      "name": "Felfedező",
+      "description": "Ötféle feladatlapot kipróbáltatok. Kíváncsi elme!"
+    },
+    "bilateral_master": {
+      "name": "Kétkezes mester",
+      "description": "Öt kétkezes feladatlap kész — ügyes mindkét kéz!"
+    }
   }
 }

@@ -374,5 +374,32 @@
     "noChildren": "Add a child first to print.",
     "addChildCta": "Add a child",
     "error": "Couldn't prepare the worksheet. Please try again."
+  },
+  "achievements": {
+    "sectionTitle": "Achievements",
+    "first_session": {
+      "name": "First session",
+      "description": "You finished your very first session together!"
+    },
+    "first_print": {
+      "name": "First printout",
+      "description": "Your first personalized worksheet is ready."
+    },
+    "streak_3": {
+      "name": "3-day streak",
+      "description": "Three days in a row — a great habit is forming!"
+    },
+    "streak_7": {
+      "name": "7-day streak",
+      "description": "A whole week, every day! True champions."
+    },
+    "explorer_5_types": {
+      "name": "Explorer",
+      "description": "You tried five different worksheet types. Curious mind!"
+    },
+    "bilateral_master": {
+      "name": "Two-hand master",
+      "description": "Five two-hand worksheets done — both hands rock!"
+    }
   }
 }

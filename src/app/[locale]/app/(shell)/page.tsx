@@ -1,5 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { getChildren } from "@/lib/children/queries";
+import { getChildren, getAchievementsByChild } from "@/lib/children/queries";
 import { getSessions } from "@/lib/sessions/queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { lowestCoverageGoals } from "@/lib/children/goal-nudge";
@@ -10,7 +10,11 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("nav");
-  const [children, sessions] = await Promise.all([getChildren(), getSessions()]);
+  const [children, sessions, achievementsByChild] = await Promise.all([
+    getChildren(),
+    getSessions(),
+    getAchievementsByChild(),
+  ]);
 
   // Tally each child's session goals once, so every card's nudge is derived
   // from real history (or age-typical defaults when there's none).
@@ -30,6 +34,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
             key={child.id}
             child={child}
             nudgeGoals={lowestCoverageGoals(goalsByChild.get(child.id) ?? [], ageFromBirthMonth(child.birth_month))}
+            achievements={achievementsByChild[child.id] ?? []}
           />
         ))}
       </div>

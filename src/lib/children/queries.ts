@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ACHIEVEMENT_KINDS, type AchievementKind } from "@/lib/achievements";
 
 export type ChildRow = {
   id: string;
@@ -26,4 +27,24 @@ export async function getChild(id: string): Promise<ChildRow | null> {
     .eq("id", id)
     .single();
   return data;
+}
+
+/** Earned achievement kinds per child (RLS-scoped to the owner), catalog order. */
+export async function getAchievementsByChild(): Promise<Record<string, AchievementKind[]>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("achievements")
+    .select("child_id, kind")
+    .order("earned_at", { ascending: true });
+  const known = new Set<string>(ACHIEVEMENT_KINDS);
+  const out: Record<string, AchievementKind[]> = {};
+  for (const row of data ?? []) {
+    if (!known.has(row.kind)) continue; // ignore any legacy/unknown kinds
+    (out[row.child_id] ??= []).push(row.kind as AchievementKind);
+  }
+  // Present each child's badges in catalog order for a stable render.
+  for (const id of Object.keys(out)) {
+    out[id] = ACHIEVEMENT_KINDS.filter((k) => out[id]!.includes(k));
+  }
+  return out;
 }
