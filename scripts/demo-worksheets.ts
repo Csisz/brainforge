@@ -23,6 +23,12 @@ const cases = [
   { gen: "visual_search", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
   { gen: "dual_path", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
   { gen: "dual_find", age: 7 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
+  { gen: "memory_cards", age: 5 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
+  { gen: "logic_grid", age: 8 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
+  { gen: "color_by_rule", age: 5 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
+  { gen: "sequencing", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
+  { gen: "cut_and_paste", age: 5 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
+  { gen: "hidden_objects", age: 7 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
 ];
 
 for (const c of cases) {

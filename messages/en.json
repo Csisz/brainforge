@@ -63,7 +63,13 @@
     "symmetry_grid": "Symmetry Grid",
     "visual_search": "Shape Hunt",
     "dual_path": "Two-Hand Trails",
-    "dual_find": "Two-Hand Hunt"
+    "dual_find": "Two-Hand Hunt",
+    "memory_cards": "Memory Cards",
+    "logic_grid": "Logic Grid",
+    "color_by_rule": "Color by Number",
+    "sequencing": "Put in Order",
+    "cut_and_paste": "Cut & Paste",
+    "hidden_objects": "Hidden Shapes"
   },
   "pitch": {
     "eyebrow": "Screen-free",
@@ -318,7 +324,13 @@
     "symmetry_grid": "Colored cells on the left half of a grid; your child colors their mirror image across the axis. The grid-based little sibling of mirror drawing, from age 3–4.",
     "visual_search": "The box shows a target shape; your child finds and circles all of them in a sea of look-alikes. Attention and scanning — the doorstep of letter recognition.",
     "dual_path": "A marker in each hand: following the color sequence in the header, your child connects the dots in the left and right fields simultaneously. Intense hemispheric teamwork — a procedurally generated take on the popular \"here-there\" method.",
-    "dual_find": "The left hand circles the shape, the right hand circles its number — at the same time. Divided attention, visual scanning and bilateral coordination, with fresh grids on every sheet."
+    "dual_find": "The left hand circles the shape, the right hand circles its number — at the same time. Divided attention, visual scanning and bilateral coordination, with fresh grids on every sheet.",
+    "memory_cards": "Cut-out cards with matching picture pairs. The classic memory game builds working memory and visual recall — flip two, find the twins.",
+    "logic_grid": "A picture Sudoku: every row and column needs each shape once. Trains logical elimination and working memory — every puzzle has exactly one solution.",
+    "color_by_rule": "A stained-glass panel where each area is numbered. The child colours by the legend — attention, one-to-one rule following and steady colouring.",
+    "sequencing": "Picture stories shown out of order — a flower growing, a glass filling. The child numbers each step, training cause-and-effect and ordering.",
+    "cut_and_paste": "A pattern with gaps and cut-out pieces at the bottom. The child cuts and pastes each piece into place — pattern logic plus scissor skills.",
+    "hidden_objects": "A tangle of overlapping outlines hides target shapes. The child finds, circles and counts each one — focused attention and figure-ground scanning."
   },
   "activityHowTo": {
     "warmup": {

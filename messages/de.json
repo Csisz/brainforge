@@ -63,7 +63,13 @@
     "symmetry_grid": "Symmetrie-Gitter",
     "visual_search": "Formenjagd",
     "dual_path": "Beidhändige Spuren",
-    "dual_find": "Beidhändige Suche"
+    "dual_find": "Beidhändige Suche",
+    "memory_cards": "Memory-Karten",
+    "logic_grid": "Logikgitter",
+    "color_by_rule": "Malen nach Zahlen",
+    "sequencing": "In die richtige Reihenfolge",
+    "cut_and_paste": "Ausschneiden & Kleben",
+    "hidden_objects": "Versteckte Formen"
   },
   "pitch": {
     "eyebrow": "Bildschirmfrei",
@@ -318,7 +324,13 @@
     "symmetry_grid": "Links im Gitter sind Felder ausgemalt; das Kind malt ihr Spiegelbild jenseits der Achse aus. Die gitterbasierte, einfachere Schwester des Spiegelzeichnens, ab 3–4 Jahren.",
     "visual_search": "Der Kasten zeigt die Zielform; das Kind findet und umkreist alle in einem Meer ähnlicher Formen. Aufmerksamkeit und Absuchen — die Vorstufe der Buchstabenerkennung.",
     "dual_path": "Ein Stift in jeder Hand: Das Kind verbindet die Punkte in der Farbreihenfolge aus der Kopfzeile — links und rechts gleichzeitig. Intensive Teamarbeit der Hirnhälften, prozedural generiert nach der beliebten „Hier-Dort\"-Methode.",
-    "dual_find": "Die linke Hand umkreist die Form, die rechte die passende Zahl — gleichzeitig. Geteilte Aufmerksamkeit, visuelles Suchen und beidhändige Koordination, mit neuen Gittern auf jedem Blatt."
+    "dual_find": "Die linke Hand umkreist die Form, die rechte die passende Zahl — gleichzeitig. Geteilte Aufmerksamkeit, visuelles Suchen und beidhändige Koordination, mit neuen Gittern auf jedem Blatt.",
+    "memory_cards": "Ausschneidbare Karten mit passenden Bildpaaren. Das klassische Memory stärkt Arbeitsgedächtnis und visuelles Erinnern — dreh zwei um, finde die Zwillinge.",
+    "logic_grid": "Ein Bild-Sudoku: Jede Zeile und Spalte braucht jede Form einmal. Trainiert logisches Ausschließen und Arbeitsgedächtnis — jedes Rätsel hat genau eine Lösung.",
+    "color_by_rule": "Ein Buntglas-Muster, in dem jedes Feld nummeriert ist. Das Kind malt nach der Legende — Aufmerksamkeit, Regelbefolgung und ruhiges Ausmalen.",
+    "sequencing": "Bildgeschichten in falscher Reihenfolge — eine wachsende Blume, ein sich füllendes Glas. Das Kind nummeriert die Schritte und übt Ursache-Wirkung und Reihenfolge.",
+    "cut_and_paste": "Ein Muster mit Lücken und Ausschneideteilen unten. Das Kind schneidet und klebt jedes Teil an seinen Platz — Musterlogik und Scherenübung.",
+    "hidden_objects": "Ein Gewirr überlappender Umrisse verbirgt Zielformen. Das Kind findet, umkreist und zählt jede — konzentrierte Aufmerksamkeit und Figur-Grund-Wahrnehmung."
   },
   "activityHowTo": {
     "warmup": {

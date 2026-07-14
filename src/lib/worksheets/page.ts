@@ -93,6 +93,36 @@ const INSTRUCTIONS: Record<string, Record<string, string>> = {
     hu: "Bal kézzel a formát, jobb kézzel a számot karikázd be — egyszerre!",
     de: "Die linke Hand umkreist die Form, die rechte die Zahl — gleichzeitig!",
   },
+  "worksheet.memorycards.instruction": {
+    en: "Cut out the cards and find the matching pairs.",
+    hu: "Vágd ki a kártyákat, és keresd meg a párokat!",
+    de: "Schneide die Karten aus und finde die Paare.",
+  },
+  "worksheet.logicgrid.instruction": {
+    en: "Each shape once in every row and column.",
+    hu: "Minden sorba és oszlopba minden forma egyszer kerüljön!",
+    de: "Jede Form einmal pro Zeile und Spalte.",
+  },
+  "worksheet.colorrule.instruction": {
+    en: "Color each area using the number key at the top.",
+    hu: "Színezd ki a mezőket a fenti számkód szerint!",
+    de: "Male jedes Feld nach dem Zahlenschlüssel oben aus.",
+  },
+  "worksheet.sequencing.instruction": {
+    en: "What happens first? Number the pictures in order.",
+    hu: "Mi történik előbb? Számozd meg a képeket 1-től sorban!",
+    de: "Was zuerst? Nummeriere die Bilder der Reihe nach.",
+  },
+  "worksheet.cutpaste.instruction": {
+    en: "Cut out the pieces below and paste them in the gaps.",
+    hu: "Vágd ki az alsó darabokat, és ragaszd a helyükre!",
+    de: "Schneide die Teile unten aus und klebe sie in die Lücken.",
+  },
+  "worksheet.hidden.instruction": {
+    en: "Find and circle the shapes from the top. Count each kind.",
+    hu: "Keresd meg és karikázd be a fenti formákat! Számold meg őket.",
+    de: "Finde und umkreise die Formen von oben. Zähle sie.",
+  },
   "worksheet.arrows.instruction": {
     en: "Hang it up! Say each arrow's direction out loud, fast.",
     hu: "Tedd ki a falra! Mondd ki hangosan és gyorsan a nyilak irányát!",
@@ -114,6 +144,12 @@ const TITLES: Record<string, Record<string, string>> = {
   visual_search: { en: "Shape Hunt", hu: "Formavadászat", de: "Formenjagd" },
   dual_path: { en: "Two-Hand Trails", hu: "Kétkezes útvonal", de: "Beidhändige Spuren" },
   dual_find: { en: "Two-Hand Hunt", hu: "Kétkezes kereső", de: "Beidhändige Suche" },
+  memory_cards: { en: "Memory Cards", hu: "Memóriakártyák", de: "Memory-Karten" },
+  logic_grid: { en: "Logic Grid", hu: "Logikai rács", de: "Logikgitter" },
+  color_by_rule: { en: "Color by Number", hu: "Színezz szám szerint", de: "Malen nach Zahlen" },
+  sequencing: { en: "Put in Order", hu: "Sorba rendezés", de: "In die richtige Reihenfolge" },
+  cut_and_paste: { en: "Cut & Paste", hu: "Vágd és ragaszd", de: "Ausschneiden & Kleben" },
+  hidden_objects: { en: "Hidden Shapes", hu: "Rejtett formák", de: "Versteckte Formen" },
 };
 
 function t(table: Record<string, Record<string, string>>, key: string, locale: string): string {

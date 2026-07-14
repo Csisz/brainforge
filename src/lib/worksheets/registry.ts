@@ -12,6 +12,12 @@ import { symmetryGridGenerator } from "./generators/symmetry-grid";
 import { visualSearchGenerator } from "./generators/visual-search";
 import { dualPathGenerator } from "./generators/dual-path";
 import { dualFindGenerator } from "./generators/dual-find";
+import { memoryCardsGenerator } from "./generators/memory-cards";
+import { logicGridGenerator } from "./generators/logic-grid";
+import { colorByRuleGenerator } from "./generators/color-by-rule";
+import { sequencingGenerator } from "./generators/sequencing";
+import { cutAndPasteGenerator } from "./generators/cut-and-paste";
+import { hiddenObjectsGenerator } from "./generators/hidden-objects";
 
 /**
  * GENERATOR REGISTRY
@@ -19,9 +25,7 @@ import { dualFindGenerator } from "./generators/dual-find";
  * The single place a new worksheet type is wired in. The activity engine
  * queries this by goal + age; the render pipeline looks up by id.
  *
- * Roadmap (from PRD §4 — do NOT invent beyond this list):
- * TODO: hidden_objects (scene-based), memory_cards, logic_grid,
- *       color_by_rule, cut_and_paste, sequencing
+ * All PRD §4 worksheet types are now implemented (19 generators).
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,6 +43,12 @@ const generators: ReadonlyArray<WorksheetGenerator<any>> = [
   visualSearchGenerator,
   dualPathGenerator,
   dualFindGenerator,
+  memoryCardsGenerator,
+  logicGridGenerator,
+  colorByRuleGenerator,
+  sequencingGenerator,
+  cutAndPasteGenerator,
+  hiddenObjectsGenerator,
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
