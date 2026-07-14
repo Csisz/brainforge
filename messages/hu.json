@@ -55,7 +55,14 @@
     "pattern_completion": "Sorminták",
     "mirror_drawing": "Tükörrajz",
     "grid_copy": "Rácsmásolás",
-    "arrow_board": "Nyilas tábla"
+    "arrow_board": "Nyilas tábla",
+    "connect_the_dots": "Pontösszekötő",
+    "counting": "Számolás",
+    "matching": "Párosítás",
+    "symmetry_grid": "Tükrös rács",
+    "visual_search": "Formavadászat",
+    "dual_path": "Kétkezes útvonal",
+    "dual_find": "Kétkezes kereső"
   },
   "pitch": {
     "eyebrow": "Képernyőmentes",
@@ -130,7 +137,7 @@
     "checkEmailTitle": "Nézd meg az e-mailjeidet",
     "checkEmailBody": "Küldtünk egy belépési linket ide: {email}.",
     "errorGeneric": "Hiba történt. Próbáld újra.",
-    "checkEmailLocalHint": "Lokális fejlesztésben a levél nem a valódi postafiókodba érkezik — nyisd meg a Mailpitet: {url}",
+    "checkEmailLocalHint": "Lokális fejlesztésben a levél nem a valódi postafiókodba érkezik — nyisd meg a Mailpitet: <url>http://localhost:54324</url>",
     "errorWithReason": "Nem sikerült elküldeni a belépő linket: {reason}"
   },
   "onboarding": {
@@ -269,5 +276,64 @@
     "doneTitle": "Szép munka!",
     "doneBody": "A mai foglalkozást elmentettük.",
     "backToDashboard": "Vissza az áttekintéshez"
+  },
+  "goalDescriptions": {
+    "attention": "Mennyi ideig tud egy dologra figyelni, és mennyire tudja kizárni a zavaró ingereket.",
+    "working_memory": "Fejben tartani és használni az információt — pl. megjegyezni, mit látott, amíg lemásolja.",
+    "executive_function": "Tervezés, szabálykövetés és a késztetések gátlása — az „állj meg, gondolkodj, csak utána csináld\" képessége.",
+    "visual_perception": "Formák, minták és térbeli viszonyok felismerése — az olvasás és írás vizuális alapja.",
+    "bilateral_coordination": "A két testfél (és a két agyfélteke) összehangolt munkája — pl. az egyik kéz tart, a másik dolgozik.",
+    "fine_motor": "A kéz és az ujjak apró, pontos mozgásai — a ceruzafogástól a cipőkötésig.",
+    "pre_writing": "Az íráshoz szükséges vonalvezetés és ceruzakontroll, még betűk nélkül.",
+    "pre_reading": "Betű- és formafelismerés, balról jobbra haladás — az olvasás előszobája.",
+    "math_thinking": "Számolás, sorozatok, logikai szabályok felismerése játékos formában.",
+    "creativity": "Saját ötletek kitalálása és megvalósítása — nyitott végű, „nincs rossz megoldás\" feladatok.",
+    "problem_solving": "Kitartás és stratégia, amikor nem látszik azonnal a megoldás."
+  },
+  "generatorDescriptions": {
+    "maze": "A gyerek ceruzával megkeresi az utat a ponttól a csillagig. Előre kell gondolkodnia és követnie a folyosókat — tervezést, vizuális letapogatást és ceruzakontrollt gyakorol.",
+    "tracing": "Szaggatott vonalakat rajzol át a zöld ponttól indulva. Ez a klasszikus írás-előkészítő: a hullámok, cikkcakkok és hurkok a betűelemek mozdulatait építik.",
+    "pattern_completion": "Ismétlődő sorminták egy-egy eleme hiányzik — a gyerek berajzolja, mi következik. A szabályfelismerés a korai matematikai gondolkodás alapja.",
+    "mirror_drawing": "A lap bal felén egy ábra fele látszik; a gyerek a szaggatott tengely túloldalára rajzolja a tükörképét. A két agyfélteke együttműködését és a térlátást fejleszti.",
+    "grid_copy": "A felső rácsban jelek vannak; a gyerek pontosan ugyanoda másolja őket az alsó üres rácsba. Munkamemóriát és figyelmet gyakorol — mint a tábláról másolás az iskolában.",
+    "arrow_board": "Nyilakkal teli tábla a falra. A gyerek sorban, hangosan mondja az irányokat — nehezítésként az ellenkezőjét kell mondania. Reakció- és gátlásgyakorlat.",
+    "connect_the_dots": "Számozott pontokat köt össze 1-től sorban, a végén kirajzolódik egy forma. Számsorrendet, számolást és vonalvezetést gyakorol egyszerre.",
+    "counting": "Minden sorban meg kell számolni a formákat, és a számot a dobozba írni. Az egy-az-egyhez megfeleltetés és a számjegyírás alapgyakorlata.",
+    "matching": "A bal oldali formákat kell vonallal összekötni a jobb oldali árnyékukkal. A formaállandóság felismerése — nehezebb szinten becsapós, pár nélküli árnyék is kerül a lapra.",
+    "symmetry_grid": "A rács bal felén színezett négyzetek; a gyerek a tengely túloldalán színezi ki a tükörképüket. A tükörrajz egyszerűbb, rács-alapú változata már 3-4 éveseknek.",
+    "visual_search": "A doboz mutatja a célformát; a gyerek megkeresi és bekarikázza az összeset a hasonló formák tengerében. Figyelem- és letapogatás-gyakorlat — a betűfelismerés előszobája.",
+    "dual_path": "Mindkét kézben egy-egy filc: a gyerek a fejlécben mutatott színsorrendet követve köti össze a pontokat, egyszerre a bal és a jobb mezőben. A két agyfélteke intenzív együttműködése — a népszerű „Itt-Ott\" módszer digitálisan generált változata.",
+    "dual_find": "Bal kézzel a formát, jobb kézzel a hozzá tartozó számot karikázza be — egyszerre. Osztott figyelmet, vizuális keresést és kétoldali koordinációt gyakorol, minden lapon új rácsokkal."
+  },
+  "activityHowTo": {
+    "warmup": {
+      "simon_says": "Állj a gyerekkel szembe, és adj utasításokat: „Simon mondja: érintsd meg az orrod!\" Csak akkor szabad végrehajtani, ha elhangzik a „Simon mondja\" — ha nem, és mégis megmozdul, kezdjétek újra. 5-6 kör elég bemelegítésnek.",
+      "finger_gym": "Üljetek le egymással szemben. Mutasd: érintsd a hüvelykujjad sorban minden ujjadhoz, előbb lassan, majd gyorsabban, aztán mindkét kézzel egyszerre. A gyerek utánozza.",
+      "rhythm_copy": "Tapsolj el egy rövid ritmust (pl. taps-taps-szünet-taps), a gyerek visszatapsolja. Minden körben eggyel hosszabb ritmust adj. Ha megy, válts: taps helyett combra ütés vagy dobbantás."
+    },
+    "movement": {
+      "cross_crawl": "Álljatok fel. A gyerek a jobb könyökével érinti a bal térdét, majd fordítva, lassan, váltakozva. 10-15 ismétlés. A keresztező mozgás a két agyfélteke együttműködését serkenti.",
+      "ball_target": "Tegyél ki egy célt (kosár, edény, párna) pár lépésre. A gyerek labdával célba dob — találat után egy lépéssel hátrébb. Nehezítés: nem domináns kézzel vagy alsó dobással.",
+      "obstacle_course": "Ragasztószalagból készíts vonalat a padlón: egyenes, cikkcakk, csiga. A gyerek végigmegy rajta lábujjhegyen, sarkon, oldalazva vagy ugrálva — te mondod, melyik szakaszon hogyan.",
+      "animal_walks": "Mondj állatokat, a gyerek úgy közlekedik: medvejárás (négykézláb, térd a levegőben), rákjárás (hason felfelé), békaugrás, gólyalépés. Szakaszonként 3-4 méter, 2-3 kör."
+    },
+    "memory": {
+      "cup_shuffle": "Tegyél egy kis tárgyat az egyik felfordított pohár alá (3 pohárból). Lassan cserélgesd a poharakat, a gyerek követi a szemével, majd rámutat, hol a tárgy. Találat után gyorsíts vagy vegyél be negyedik poharat.",
+      "whats_missing": "Tegyél ki 4-6 apró tárgyat az asztalra, a gyerek 10 másodpercig nézi. Takard le, vegyél el egyet, majd mutasd meg újra: mi hiányzik? Egyre több tárggyal nehezíthető.",
+      "sound_sequence": "Csukott szemmel hallgatózik a gyerek, te 2-3 hangot adsz ki sorban (taps, kulcscsörgés, kopogás). Ki kell találnia, mik voltak és milyen sorrendben. Fokozatosan bővítsd a sort."
+    },
+    "creative": {
+      "build_story": "Építsetek együtt kockákból egy helyszínt (vár, tanya, űrállomás), és közben a gyerek meséli, mi történik ott. Te csak kérdezz: „És ki lakik itt? Mi történt tegnap?\"",
+      "draw_theme": "Adj egy témát a mai foglalkozás világából, és hagyd szabadon rajzolni. Ne javíts bele — a végén kérd meg, hogy mesélje el, mit rajzolt.",
+      "cut_collage": "Régi újságból vagy színes papírból a gyerek formákat vág ki, és képpé ragasztja őket. A vágás maga is finommotorika-gyakorlat — a téma lehet a mai foglalkozásé."
+    },
+    "reward": {
+      "sticker_moment": "A foglalkozás végén a gyerek matricát választ és felragasztja a gyűjtőlapjára vagy a kész munkalapjára. Hagyd, hogy ő döntse el, hová.",
+      "victory_dance": "Egy perc szabad örömtánc a gyerek kedvenc zenéjére — vagy zene nélkül, te tapsolod a ritmust. A lényeg a közös ünneplés."
+    },
+    "reflection": {
+      "favorite_part": "Kérdezd meg: „Mi volt ma a kedvenc részed? Mi volt a legnehezebb?\" Hallgasd végig, ne értékeld — a cél, hogy szavakba öntse az élményt.",
+      "show_and_tell": "A gyerek megmutatja a kész lapját valakinek (másik szülő, testvér, akár videóhívásban nagyszülő), és elmondja, mit csinált. A büszkeség rögzíti a tanulást."
+    }
   }
 }

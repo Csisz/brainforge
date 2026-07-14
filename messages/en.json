@@ -55,7 +55,14 @@
     "pattern_completion": "Patterns",
     "mirror_drawing": "Mirror Drawing",
     "grid_copy": "Grid Copy",
-    "arrow_board": "Arrow Board"
+    "arrow_board": "Arrow Board",
+    "connect_the_dots": "Connect the Dots",
+    "counting": "Counting",
+    "matching": "Matching",
+    "symmetry_grid": "Symmetry Grid",
+    "visual_search": "Shape Hunt",
+    "dual_path": "Two-Hand Trails",
+    "dual_find": "Two-Hand Hunt"
   },
   "pitch": {
     "eyebrow": "Screen-free",
@@ -130,7 +137,7 @@
     "checkEmailTitle": "Check your email",
     "checkEmailBody": "We sent a sign-in link to {email}.",
     "errorGeneric": "Something went wrong. Please try again.",
-    "checkEmailLocalHint": "In local development the email lands in the Mailpit test inbox, not your real one — open {url}",
+    "checkEmailLocalHint": "In local development the email lands in the Mailpit test inbox, not your real one — open <url>http://localhost:54324</url>",
     "errorWithReason": "Couldn't send the sign-in link: {reason}"
   },
   "onboarding": {
@@ -269,5 +276,64 @@
     "doneTitle": "Nice work!",
     "doneBody": "Today's session has been saved.",
     "backToDashboard": "Back to overview"
+  },
+  "goalDescriptions": {
+    "attention": "How long they can stay on one task and tune out distractions.",
+    "working_memory": "Holding information in mind while using it — like remembering what they saw while copying it.",
+    "executive_function": "Planning, following rules and inhibiting impulses — the \"stop, think, then act\" skill.",
+    "visual_perception": "Recognizing shapes, patterns and spatial relationships — the visual foundation of reading and writing.",
+    "bilateral_coordination": "Both body sides (and brain halves) working together — one hand holds while the other works.",
+    "fine_motor": "Small, precise hand and finger movements — from pencil grip to tying shoes.",
+    "pre_writing": "The line control and pencil skills writing is built on, before any letters.",
+    "pre_reading": "Letter and shape recognition, left-to-right tracking — the doorstep of reading.",
+    "math_thinking": "Counting, sequences and spotting logical rules, in playful form.",
+    "creativity": "Inventing and realizing their own ideas — open-ended, \"no wrong answers\" tasks.",
+    "problem_solving": "Persistence and strategy when the solution is not immediately visible."
+  },
+  "generatorDescriptions": {
+    "maze": "Your child finds the path from the dot to the star. They must plan ahead and follow corridors — training planning, visual scanning and pencil control.",
+    "tracing": "Tracing dashed lines starting at the green dot. The classic pre-writing drill: waves, zigzags and loops build the strokes letters are made of.",
+    "pattern_completion": "One element of each repeating pattern is missing — your child draws what comes next. Rule-spotting is the root of early math thinking.",
+    "mirror_drawing": "Half a figure is drawn on the left; your child draws its mirror image across the dashed axis. Builds hemispheric cooperation and spatial reasoning.",
+    "grid_copy": "Symbols in the top grid must be copied to the exact same cells below. Trains working memory and attention — like copying from the classroom board.",
+    "arrow_board": "A wall sheet full of arrows. Your child calls out each direction fast — or, as a twist, the opposite. A reaction and inhibition drill.",
+    "connect_the_dots": "Joining numbered dots from 1 reveals a shape. Number order, counting and line control in one.",
+    "counting": "Count the objects in each row, write the number in the box. The core drill of one-to-one correspondence and numeral writing.",
+    "matching": "Draw a line from each outline shape to its solid shadow. Trains form constancy — harder levels add a tricky shadow with no partner.",
+    "symmetry_grid": "Colored cells on the left half of a grid; your child colors their mirror image across the axis. The grid-based little sibling of mirror drawing, from age 3–4.",
+    "visual_search": "The box shows a target shape; your child finds and circles all of them in a sea of look-alikes. Attention and scanning — the doorstep of letter recognition.",
+    "dual_path": "A marker in each hand: following the color sequence in the header, your child connects the dots in the left and right fields simultaneously. Intense hemispheric teamwork — a procedurally generated take on the popular \"here-there\" method.",
+    "dual_find": "The left hand circles the shape, the right hand circles its number — at the same time. Divided attention, visual scanning and bilateral coordination, with fresh grids on every sheet."
+  },
+  "activityHowTo": {
+    "warmup": {
+      "simon_says": "Face your child and give commands: \"Simon says: touch your nose!\" They only act when \"Simon says\" is included — if they move without it, start over. 5-6 rounds warm up nicely.",
+      "finger_gym": "Sit facing each other. Demonstrate: touch your thumb to each finger in turn, slow then faster, then both hands at once. Your child mirrors you.",
+      "rhythm_copy": "Clap a short rhythm (clap-clap-pause-clap); your child claps it back. Add one beat each round. Once easy, switch claps for knee taps or stomps."
+    },
+    "movement": {
+      "cross_crawl": "Standing, your child touches right elbow to left knee, then the reverse, slowly alternating. 10-15 reps. Crossing the midline stimulates the two brain halves to cooperate.",
+      "ball_target": "Set a target (basket, pot, cushion) a few steps away. Your child throws a ball at it — after each hit, one step further back. Harder: non-dominant hand or underarm throw.",
+      "obstacle_course": "Tape lines on the floor: straight, zigzag, spiral. Your child walks them on tiptoe, on heels, sideways or hopping — you call which way per segment.",
+      "animal_walks": "Call out animals; your child moves like them: bear walk (all fours, knees up), crab walk (belly up), frog jumps, stork steps. 3-4 meters per segment, 2-3 rounds."
+    },
+    "memory": {
+      "cup_shuffle": "Hide a small object under one of three upturned cups. Slowly swap the cups while your child watches, then they point to the object. After a hit, speed up or add a fourth cup.",
+      "whats_missing": "Lay out 4-6 small objects; your child studies them for 10 seconds. Cover them, remove one, reveal: what is missing? Add objects to raise difficulty.",
+      "sound_sequence": "Eyes closed, your child listens as you make 2-3 sounds in a row (clap, jingling keys, knocking). They name the sounds and their order. Extend the sequence gradually."
+    },
+    "creative": {
+      "build_story": "Build a scene together from blocks (castle, farm, space station) while your child narrates what happens there. You only ask: \"Who lives here? What happened yesterday?\"",
+      "draw_theme": "Give a topic from today's theme and let them draw freely. No corrections — at the end, ask them to tell you about the drawing.",
+      "cut_collage": "Your child cuts shapes from old magazines or colored paper and glues them into a picture. The cutting itself is fine-motor work — theme it to today's session."
+    },
+    "reward": {
+      "sticker_moment": "At the end, your child picks a sticker and places it on their collection sheet or finished worksheet. Let them decide where.",
+      "victory_dance": "One minute of free celebration dancing to their favorite song — or you clap the beat. What matters is celebrating together."
+    },
+    "reflection": {
+      "favorite_part": "Ask: \"What was your favorite part today? What was hardest?\" Listen without judging — the goal is putting the experience into words.",
+      "show_and_tell": "Your child shows the finished sheet to someone (other parent, sibling, grandparent on a call) and explains what they did. Pride locks in the learning."
+    }
   }
 }

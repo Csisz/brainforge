@@ -55,7 +55,14 @@
     "pattern_completion": "Muster",
     "mirror_drawing": "Spiegelzeichnen",
     "grid_copy": "Gitter kopieren",
-    "arrow_board": "Pfeiltafel"
+    "arrow_board": "Pfeiltafel",
+    "connect_the_dots": "Punkte verbinden",
+    "counting": "Zählen",
+    "matching": "Zuordnen",
+    "symmetry_grid": "Symmetrie-Gitter",
+    "visual_search": "Formenjagd",
+    "dual_path": "Beidhändige Spuren",
+    "dual_find": "Beidhändige Suche"
   },
   "pitch": {
     "eyebrow": "Bildschirmfrei",
@@ -130,7 +137,7 @@
     "checkEmailTitle": "Überprüfe deine E-Mails",
     "checkEmailBody": "Wir haben einen Anmeldelink an {email} gesendet.",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-    "checkEmailLocalHint": "In der lokalen Entwicklung landet die E-Mail im Mailpit-Testpostfach, nicht in deinem echten — öffne {url}",
+    "checkEmailLocalHint": "In der lokalen Entwicklung landet die E-Mail im Mailpit-Testpostfach, nicht in deinem echten — öffne <url>http://localhost:54324</url>",
     "errorWithReason": "Anmeldelink konnte nicht gesendet werden: {reason}"
   },
   "onboarding": {
@@ -269,5 +276,64 @@
     "doneTitle": "Gut gemacht!",
     "doneBody": "Die heutige Einheit wurde gespeichert.",
     "backToDashboard": "Zurück zur Übersicht"
+  },
+  "goalDescriptions": {
+    "attention": "Wie lange das Kind bei einer Sache bleibt und Ablenkungen ausblenden kann.",
+    "working_memory": "Informationen im Kopf behalten und nutzen — z. B. merken, was es gesehen hat, während es kopiert.",
+    "executive_function": "Planen, Regeln folgen, Impulse hemmen — die Fähigkeit zu „Stopp, denken, dann handeln\".",
+    "visual_perception": "Formen, Muster und räumliche Beziehungen erkennen — die visuelle Grundlage von Lesen und Schreiben.",
+    "bilateral_coordination": "Beide Körperhälften (und Hirnhälften) arbeiten zusammen — eine Hand hält, die andere arbeitet.",
+    "fine_motor": "Kleine, präzise Hand- und Fingerbewegungen — vom Stifthalten bis zum Schuhebinden.",
+    "pre_writing": "Linienführung und Stiftkontrolle, auf denen das Schreiben aufbaut — noch ohne Buchstaben.",
+    "pre_reading": "Buchstaben- und Formerkennung, Blickführung von links nach rechts — die Vorstufe des Lesens.",
+    "math_thinking": "Zählen, Reihen und logische Regeln erkennen — in spielerischer Form.",
+    "creativity": "Eigene Ideen erfinden und umsetzen — offene Aufgaben ohne falsche Antworten.",
+    "problem_solving": "Ausdauer und Strategie, wenn die Lösung nicht sofort sichtbar ist."
+  },
+  "generatorDescriptions": {
+    "maze": "Das Kind sucht den Weg vom Punkt zum Stern. Es muss vorausdenken und Gängen folgen — trainiert Planung, visuelles Absuchen und Stiftkontrolle.",
+    "tracing": "Gestrichelte Linien vom grünen Punkt aus nachfahren. Die klassische Schreibvorbereitung: Wellen, Zickzack und Schleifen bilden die Bausteine der Buchstaben.",
+    "pattern_completion": "In jeder Musterreihe fehlt ein Element — das Kind zeichnet, was als Nächstes kommt. Regeln erkennen ist die Wurzel des mathematischen Denkens.",
+    "mirror_drawing": "Links ist die halbe Figur gezeichnet; das Kind zeichnet ihr Spiegelbild über die gestrichelte Achse. Fördert Zusammenspiel der Hirnhälften und Raumvorstellung.",
+    "grid_copy": "Die Symbole im oberen Gitter müssen in genau dieselben Felder unten übertragen werden. Trainiert Arbeitsgedächtnis und Aufmerksamkeit — wie Abschreiben von der Tafel.",
+    "arrow_board": "Ein Wandblatt voller Pfeile. Das Kind sagt jede Richtung schnell laut an — oder als Steigerung das Gegenteil. Eine Reaktions- und Hemmungsübung.",
+    "connect_the_dots": "Nummerierte Punkte ab 1 verbinden — am Ende erscheint eine Form. Zahlenfolge, Zählen und Linienführung in einem.",
+    "counting": "Die Formen in jeder Reihe zählen und die Zahl ins Kästchen schreiben. Die Grundübung für Eins-zu-eins-Zuordnung und Ziffernschreiben.",
+    "matching": "Jede Umrissform mit ihrem Schatten verbinden. Trainiert Formkonstanz — auf höheren Stufen kommt ein Schatten ohne Partner dazu.",
+    "symmetry_grid": "Links im Gitter sind Felder ausgemalt; das Kind malt ihr Spiegelbild jenseits der Achse aus. Die gitterbasierte, einfachere Schwester des Spiegelzeichnens, ab 3–4 Jahren.",
+    "visual_search": "Der Kasten zeigt die Zielform; das Kind findet und umkreist alle in einem Meer ähnlicher Formen. Aufmerksamkeit und Absuchen — die Vorstufe der Buchstabenerkennung.",
+    "dual_path": "Ein Stift in jeder Hand: Das Kind verbindet die Punkte in der Farbreihenfolge aus der Kopfzeile — links und rechts gleichzeitig. Intensive Teamarbeit der Hirnhälften, prozedural generiert nach der beliebten „Hier-Dort\"-Methode.",
+    "dual_find": "Die linke Hand umkreist die Form, die rechte die passende Zahl — gleichzeitig. Geteilte Aufmerksamkeit, visuelles Suchen und beidhändige Koordination, mit neuen Gittern auf jedem Blatt."
+  },
+  "activityHowTo": {
+    "warmup": {
+      "simon_says": "Stell dich vor dein Kind und gib Befehle: „Simon sagt: Fass dir an die Nase!\" Nur ausführen, wenn „Simon sagt\" dabei ist — sonst von vorn. 5-6 Runden reichen zum Aufwärmen.",
+      "finger_gym": "Setzt euch gegenüber. Zeig es vor: Daumen nacheinander an jeden Finger tippen, erst langsam, dann schneller, dann beide Hände gleichzeitig. Das Kind macht es nach.",
+      "rhythm_copy": "Klatsche einen kurzen Rhythmus (klatsch-klatsch-Pause-klatsch); das Kind klatscht ihn nach. Jede Runde einen Schlag länger. Später: Klatschen durch Knietippen oder Stampfen ersetzen."
+    },
+    "movement": {
+      "cross_crawl": "Im Stehen berührt das Kind mit dem rechten Ellbogen das linke Knie, dann umgekehrt, langsam im Wechsel. 10-15 Wiederholungen. Das Überkreuzen aktiviert beide Hirnhälften.",
+      "ball_target": "Stell ein Ziel auf (Korb, Topf, Kissen), ein paar Schritte entfernt. Das Kind wirft einen Ball — nach jedem Treffer einen Schritt weiter zurück. Schwerer: schwache Hand oder von unten.",
+      "obstacle_course": "Klebe Linien auf den Boden: gerade, Zickzack, Schnecke. Das Kind geht sie auf Zehenspitzen, Fersen, seitwärts oder hüpfend entlang — du sagst an, wie.",
+      "animal_walks": "Rufe Tiere; das Kind bewegt sich so: Bärengang (Vierfüßler, Knie hoch), Krebsgang (Bauch nach oben), Froschsprünge, Storchenschritte. 3-4 Meter pro Abschnitt, 2-3 Runden."
+    },
+    "memory": {
+      "cup_shuffle": "Verstecke einen kleinen Gegenstand unter einem von drei umgedrehten Bechern. Vertausche die Becher langsam, das Kind verfolgt sie und zeigt dann auf den richtigen. Nach Treffern: schneller oder vierter Becher.",
+      "whats_missing": "Lege 4-6 kleine Gegenstände aus; das Kind prägt sie sich 10 Sekunden ein. Abdecken, einen wegnehmen, aufdecken: Was fehlt? Mit mehr Gegenständen steigern.",
+      "sound_sequence": "Mit geschlossenen Augen hört das Kind zu, während du 2-3 Geräusche machst (Klatschen, Schlüsselklimpern, Klopfen). Es nennt die Geräusche und ihre Reihenfolge. Schrittweise verlängern."
+    },
+    "creative": {
+      "build_story": "Baut zusammen aus Bausteinen eine Szene (Burg, Bauernhof, Raumstation), während das Kind erzählt, was dort passiert. Du fragst nur: „Wer wohnt hier? Was war gestern los?\"",
+      "draw_theme": "Gib ein Thema aus der heutigen Welt vor und lass frei zeichnen. Nicht korrigieren — am Ende bitten, das Bild zu erklären.",
+      "cut_collage": "Das Kind schneidet Formen aus alten Zeitschriften oder Buntpapier aus und klebt sie zu einem Bild. Das Schneiden selbst ist Feinmotorik — Thema passend zur heutigen Einheit."
+    },
+    "reward": {
+      "sticker_moment": "Am Ende wählt das Kind einen Sticker und klebt ihn auf sein Sammelblatt oder das fertige Arbeitsblatt. Es entscheidet selbst, wohin.",
+      "victory_dance": "Eine Minute freier Freudentanz zum Lieblingslied — oder du klatschst den Takt. Wichtig ist das gemeinsame Feiern."
+    },
+    "reflection": {
+      "favorite_part": "Frag: „Was war heute dein Lieblingsteil? Was war am schwersten?\" Zuhören, nicht bewerten — Ziel ist, das Erlebnis in Worte zu fassen.",
+      "show_and_tell": "Das Kind zeigt jemandem das fertige Blatt (anderes Elternteil, Geschwister, Großeltern per Videoanruf) und erklärt, was es gemacht hat. Stolz verankert das Gelernte."
+    }
   }
 }
