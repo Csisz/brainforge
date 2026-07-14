@@ -238,7 +238,10 @@
   },
   "print": {
     "printButton": "Drucken",
-    "answerKeyNote": "Der Lösungsbogen ist für dich als Elternteil."
+    "answerKeyNote": "Der Lösungsbogen ist für dich als Elternteil.",
+    "dailyPlanTitle": "Tagesplan",
+    "dailyPlanIntro": "Jeder Schritt in Bildern — ausgedruckt brauchst du für die Einheit keinen Bildschirm.",
+    "dailyPlanWorksheetNote": "Drucke dies als eigenes Arbeitsblatt."
   },
   "settings": {
     "profileTitle": "Profil",
@@ -286,7 +289,8 @@
     "doneTitle": "Gut gemacht!",
     "doneBody": "Die heutige Einheit wurde gespeichert.",
     "backToDashboard": "Zurück zur Übersicht",
-    "howToToggle": "Wie spielt ihr?"
+    "howToToggle": "Wie spielt ihr?",
+    "printPlan": "Tagesplan drucken"
   },
   "goalDescriptions": {
     "attention": "Wie lange das Kind bei einer Sache bleibt und Ablenkungen ausblenden kann.",

@@ -238,7 +238,10 @@
   },
   "print": {
     "printButton": "Print",
-    "answerKeyNote": "The answer key is for you, the parent."
+    "answerKeyNote": "The answer key is for you, the parent.",
+    "dailyPlanTitle": "Daily plan",
+    "dailyPlanIntro": "Every step in pictures — print it and you won't need a screen for the session.",
+    "dailyPlanWorksheetNote": "Print this as its own worksheet."
   },
   "settings": {
     "profileTitle": "Profile",
@@ -286,7 +289,8 @@
     "doneTitle": "Nice work!",
     "doneBody": "Today's session has been saved.",
     "backToDashboard": "Back to overview",
-    "howToToggle": "How to play?"
+    "howToToggle": "How to play?",
+    "printPlan": "Print daily plan"
   },
   "goalDescriptions": {
     "attention": "How long they can stay on one task and tune out distractions.",

@@ -238,7 +238,10 @@
   },
   "print": {
     "printButton": "Nyomtatás",
-    "answerKeyNote": "A megoldólap a szülőnek szól."
+    "answerKeyNote": "A megoldólap a szülőnek szól.",
+    "dailyPlanTitle": "Napi terv",
+    "dailyPlanIntro": "Minden lépés képekkel — nyomtasd ki, és nem kell képernyő a foglalkozáshoz.",
+    "dailyPlanWorksheetNote": "Ezt külön feladatlapként nyomtasd ki."
   },
   "settings": {
     "profileTitle": "Profil",
@@ -286,7 +289,8 @@
     "doneTitle": "Szép munka!",
     "doneBody": "A mai foglalkozást elmentettük.",
     "backToDashboard": "Vissza az áttekintéshez",
-    "howToToggle": "Hogyan játsszátok?"
+    "howToToggle": "Hogyan játsszátok?",
+    "printPlan": "Napi terv nyomtatása"
   },
   "goalDescriptions": {
     "attention": "Mennyi ideig tud egy dologra figyelni, és mennyire tudja kizárni a zavaró ingereket.",

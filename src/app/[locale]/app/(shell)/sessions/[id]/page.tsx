@@ -6,6 +6,7 @@ import { getSessionWorksheets } from "@/lib/worksheet-records/queries";
 import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-context";
 import { getProfile } from "@/lib/profile/queries";
 import { composeWorksheet } from "@/lib/worksheets/page";
+import { composePictogram, hasPictogram } from "@/lib/pictograms";
 import type { SessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
 
@@ -28,14 +29,23 @@ export default async function SessionViewPage({
   const ctx = buildWorksheetRenderContext(child, session, locale, profile?.paper_size ?? "a4");
 
   const worksheetData: Record<number, WorksheetSlotData> = {};
+  // Pictogram strips are rendered here (server) so the pictogram library never
+  // ships to the client; SessionView just injects the inline SVG.
+  const pictograms: Record<number, string> = {};
   plan.slots.forEach((slot, i) => {
-    if (slot.kind !== "worksheet") return;
-    const record = worksheetRecords.find(
-      (w) => w.generator_id === slot.recipe.generatorId && w.seed === slot.recipe.seed,
-    );
-    if (!record) return;
-    const { svg } = composeWorksheet(slot.recipe, ctx, { childName: child.nickname });
-    worksheetData[i] = { svg, worksheetId: record.id };
+    if (slot.kind === "worksheet") {
+      const record = worksheetRecords.find(
+        (w) => w.generator_id === slot.recipe.generatorId && w.seed === slot.recipe.seed,
+      );
+      if (!record) return;
+      const { svg } = composeWorksheet(slot.recipe, ctx, { childName: child.nickname });
+      worksheetData[i] = { svg, worksheetId: record.id };
+      return;
+    }
+    if (hasPictogram(slot.activityKey)) {
+      const svg = composePictogram(slot.activityKey);
+      if (svg) pictograms[i] = svg;
+    }
   });
 
   return (
@@ -48,6 +58,7 @@ export default async function SessionViewPage({
         sessionId={session.id}
         slots={plan.slots}
         worksheetData={worksheetData}
+        pictograms={pictograms}
         alreadyCompleted={session.status === "completed"}
       />
     </div>

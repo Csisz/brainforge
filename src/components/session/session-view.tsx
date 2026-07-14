@@ -19,11 +19,14 @@ export function SessionView({
   sessionId,
   slots,
   worksheetData,
+  pictograms,
   alreadyCompleted,
 }: {
   sessionId: string;
   slots: SessionSlot[];
   worksheetData: Record<number, WorksheetSlotData>;
+  /** Server-rendered inline-SVG pictogram strips keyed by slot index (physical slots only). */
+  pictograms: Record<number, string>;
   alreadyCompleted: boolean;
 }) {
   const t = useTranslations();
@@ -90,6 +93,14 @@ export function SessionView({
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button asChild variant="outline" size="sm" className="gap-1.5">
+          <Link href={`/app/sessions/${sessionId}/print`} target="_blank">
+            <Printer className="size-3.5" aria-hidden="true" />
+            {t("sessionView.printPlan")}
+          </Link>
+        </Button>
+      </div>
       <ol className="flex flex-col gap-4">
         {slots.map((slot, i) => {
           const Icon = SLOT_ICON[slot.kind];
@@ -106,6 +117,15 @@ export function SessionView({
                 <span className="flex-1 text-sm font-medium text-ink">{slotLabel(slot)}</span>
                 <span className="font-mono text-xs text-ink-soft">{slot.minutes}′</span>
               </div>
+
+              {pictograms[i] && (
+                // Trusted output: composePictogram() is our own deterministic renderer.
+                <div
+                  className="mt-3 overflow-x-auto [&>svg]:h-14 [&>svg]:w-auto"
+                  aria-hidden="true"
+                  dangerouslySetInnerHTML={{ __html: pictograms[i]! }}
+                />
+              )}
 
               {generatorId && (
                 <p className="mt-2 text-xs leading-snug text-ink-soft">
