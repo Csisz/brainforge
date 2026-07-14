@@ -5,6 +5,13 @@ import { patternGenerator } from "./generators/pattern-completion";
 import { mirrorGenerator } from "./generators/mirror-drawing";
 import { gridCopyGenerator } from "./generators/grid-copy";
 import { arrowBoardGenerator } from "./generators/arrow-board";
+import { connectDotsGenerator } from "./generators/connect-the-dots";
+import { countingGenerator } from "./generators/counting";
+import { matchingGenerator } from "./generators/matching";
+import { symmetryGridGenerator } from "./generators/symmetry-grid";
+import { visualSearchGenerator } from "./generators/visual-search";
+import { dualPathGenerator } from "./generators/dual-path";
+import { dualFindGenerator } from "./generators/dual-find";
 
 /**
  * GENERATOR REGISTRY
@@ -13,8 +20,8 @@ import { arrowBoardGenerator } from "./generators/arrow-board";
  * queries this by goal + age; the render pipeline looks up by id.
  *
  * Roadmap (from PRD §4 — do NOT invent beyond this list):
- * TODO: symmetry, hidden_objects, memory_cards, matching, logic_grid,
- *       color_by_rule, cut_and_paste, counting, sequencing, connect_the_dots
+ * TODO: hidden_objects (scene-based), memory_cards, logic_grid,
+ *       color_by_rule, cut_and_paste, sequencing
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,6 +32,13 @@ const generators: ReadonlyArray<WorksheetGenerator<any>> = [
   mirrorGenerator,
   gridCopyGenerator,
   arrowBoardGenerator,
+  connectDotsGenerator,
+  countingGenerator,
+  matchingGenerator,
+  symmetryGridGenerator,
+  visualSearchGenerator,
+  dualPathGenerator,
+  dualFindGenerator,
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

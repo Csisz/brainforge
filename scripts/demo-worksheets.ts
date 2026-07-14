@@ -16,6 +16,13 @@ const cases = [
   { gen: "mirror_drawing", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
   { gen: "grid_copy", age: 7 as const, difficulty: 4 as const, locale: "hu", name: "Zoé" },
   { gen: "arrow_board", age: 6 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
+  { gen: "connect_the_dots", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
+  { gen: "counting", age: 4 as const, difficulty: 2 as const, locale: "hu", name: "Bence" },
+  { gen: "matching", age: 4 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
+  { gen: "symmetry_grid", age: 5 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
+  { gen: "visual_search", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
+  { gen: "dual_path", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
+  { gen: "dual_find", age: 7 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
 ];
 
 for (const c of cases) {
@@ -44,3 +51,12 @@ const plan = composeSession({
   recentWorksheets: [], locale: "hu",
 });
 console.log("session plan:", plan.slots.map((s) => s.kind).join(" → "), `(${plan.totalMinutes} min)`);
+
+// Pictogram strips
+import("../src/lib/pictograms").then(({ composePictogram, pictogramKeys }) => {
+  for (const key of pictogramKeys()) {
+    const svg = composePictogram(key);
+    if (svg) writeFileSync(`demo-output/picto-${key.replace(/\./g, "_")}.svg`, svg);
+  }
+  console.log("pictograms:", pictogramKeys().join(", "));
+});

@@ -58,6 +58,41 @@ const INSTRUCTIONS: Record<string, Record<string, string>> = {
     hu: "Másold át a felső rácsot az alsó üres rácsba!",
     de: "Übertrage das obere Gitter in das leere Gitter unten.",
   },
+  "worksheet.dots.instruction": {
+    en: "Connect the dots from 1 in order. What do you see?",
+    hu: "Kösd össze a pontokat 1-től sorban! Mit látsz?",
+    de: "Verbinde die Punkte ab 1 der Reihe nach. Was siehst du?",
+  },
+  "worksheet.counting.instruction": {
+    en: "Count the objects in each row and write the number in the box.",
+    hu: "Számold meg a formákat minden sorban, és írd a számot a dobozba!",
+    de: "Zähle die Formen in jeder Reihe und schreibe die Zahl in das Kästchen.",
+  },
+  "worksheet.matching.instruction": {
+    en: "Draw a line from each shape to its shadow.",
+    hu: "Kösd össze a formákat az árnyékukkal!",
+    de: "Verbinde jede Form mit ihrem Schatten.",
+  },
+  "worksheet.symmetry.instruction": {
+    en: "Color the same squares on the other side of the line.",
+    hu: "Színezd ki ugyanazokat a négyzeteket a vonal másik oldalán!",
+    de: "Male die gleichen Kästchen auf der anderen Seite der Linie aus.",
+  },
+  "worksheet.search.instruction": {
+    en: "Find and circle every shape that matches the one in the box.",
+    hu: "Keresd meg és karikázd be az összes olyan formát, mint a dobozban!",
+    de: "Finde und umkreise jede Form, die der im Kasten gleicht.",
+  },
+  "worksheet.dualpath.instruction": {
+    en: "One marker per hand! Connect the colors in order on both sides at the same time.",
+    hu: "Mindkét kezedbe filcet! Kösd össze a színeket sorban, egyszerre mindkét oldalon.",
+    de: "In jede Hand einen Stift! Verbinde die Farben der Reihe nach auf beiden Seiten gleichzeitig.",
+  },
+  "worksheet.dualfind.instruction": {
+    en: "Left hand circles the shape, right hand circles the number — at the same time!",
+    hu: "Bal kézzel a formát, jobb kézzel a számot karikázd be — egyszerre!",
+    de: "Die linke Hand umkreist die Form, die rechte die Zahl — gleichzeitig!",
+  },
   "worksheet.arrows.instruction": {
     en: "Hang it up! Say each arrow's direction out loud, fast.",
     hu: "Tedd ki a falra! Mondd ki hangosan és gyorsan a nyilak irányát!",
@@ -72,6 +107,13 @@ const TITLES: Record<string, Record<string, string>> = {
   mirror_drawing: { en: "Mirror Drawing", hu: "Tükörrajz", de: "Spiegelzeichnen" },
   grid_copy: { en: "Grid Copy", hu: "Rácsmásolás", de: "Gitter kopieren" },
   arrow_board: { en: "Arrow Board", hu: "Nyilas tábla", de: "Pfeiltafel" },
+  connect_the_dots: { en: "Connect the Dots", hu: "Pontösszekötő", de: "Punkte verbinden" },
+  counting: { en: "Counting", hu: "Számolás", de: "Zählen" },
+  matching: { en: "Matching", hu: "Párosítás", de: "Zuordnen" },
+  symmetry_grid: { en: "Symmetry Grid", hu: "Tükrös rács", de: "Symmetrie-Gitter" },
+  visual_search: { en: "Shape Hunt", hu: "Formavadászat", de: "Formenjagd" },
+  dual_path: { en: "Two-Hand Trails", hu: "Kétkezes útvonal", de: "Beidhändige Spuren" },
+  dual_find: { en: "Two-Hand Hunt", hu: "Kétkezes kereső", de: "Beidhändige Suche" },
 };
 
 function t(table: Record<string, Record<string, string>>, key: string, locale: string): string {
