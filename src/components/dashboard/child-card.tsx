@@ -3,11 +3,13 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { GoalBadges } from "@/components/dashboard/goal-badges";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import type { ChildRow } from "@/lib/children/queries";
+import type { DevelopmentGoal } from "@/lib/worksheets/types";
 
-export async function ChildCard({ child }: { child: ChildRow }) {
+export async function ChildCard({ child, nudgeGoals }: { child: ChildRow; nudgeGoals: DevelopmentGoal[] }) {
   const t = await getTranslations("dashboard");
   const Icon = getAvatarIcon(child.avatar);
   const age = ageFromBirthMonth(child.birth_month);
@@ -29,6 +31,12 @@ export async function ChildCard({ child }: { child: ChildRow }) {
         <Button asChild className="mt-2 w-full">
           <Link href={{ pathname: "/app/new-session", query: { child: child.id } }}>{t("todaySessionCta")}</Link>
         </Button>
+        {nudgeGoals.length > 0 && (
+          <div className="mt-1 flex flex-col items-center gap-1.5">
+            <span className="text-xs text-ink-soft">{t("nudgeLabel")}</span>
+            <GoalBadges goals={nudgeGoals} />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

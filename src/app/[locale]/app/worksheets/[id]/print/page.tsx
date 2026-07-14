@@ -6,6 +6,8 @@ import { getChild } from "@/lib/children/queries";
 import { getProfile } from "@/lib/profile/queries";
 import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-context";
 import { composeWorksheet } from "@/lib/worksheets/page";
+import { ageFromBirthMonth } from "@/lib/children/age";
+import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { PrintButton } from "@/components/print/print-button";
 
 export default async function WorksheetPrintPage({
@@ -18,17 +20,25 @@ export default async function WorksheetPrintPage({
   const t = await getTranslations("print");
 
   const worksheet = await getWorksheet(id);
-  if (!worksheet || !worksheet.session_id) notFound();
+  if (!worksheet) notFound();
 
   const [session, child, profile] = await Promise.all([
-    getSession(worksheet.session_id),
+    worksheet.session_id ? getSession(worksheet.session_id) : Promise.resolve(null),
     getChild(worksheet.child_id),
     getProfile(),
   ]);
-  if (!session || !child) notFound();
+  if (!child) notFound();
 
   const paperSize = profile?.paper_size ?? "a4";
-  const ctx = buildWorksheetRenderContext(child, session, locale, paperSize);
+  // Session worksheets freeze their difficulty/theme; catalog worksheets (no
+  // owning session) derive a sensible context from the child at print time.
+  const renderSource = session
+    ? { difficulty: session.difficulty, theme: session.theme }
+    : {
+        difficulty: defaultDifficulty(ageFromBirthMonth(child.birth_month)),
+        theme: child.preferred_themes[0] ?? "nature",
+      };
+  const ctx = buildWorksheetRenderContext(child, renderSource, locale, paperSize);
   const { svg, answerKeySvg } = composeWorksheet(
     {
       generatorId: worksheet.generator_id,
@@ -59,7 +69,11 @@ export default async function WorksheetPrintPage({
           dangerouslySetInnerHTML={{ __html: svg }}
         />
         {answerKeySvg && (
-          <div className="w-full [&>svg]:h-auto [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: answerKeySvg }} />
+          <>
+            {/* Screen-only guidance — kept out of print so the answer page stays A4-exact. */}
+            <p className="w-full text-center text-xs text-ink-soft print:hidden">{t("answerKeyNote")}</p>
+            <div className="w-full [&>svg]:h-auto [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: answerKeySvg }} />
+          </>
         )}
       </div>
     </div>

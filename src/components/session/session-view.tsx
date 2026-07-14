@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
-import { Star, Printer, PartyPopper } from "lucide-react";
+import { Star, Printer, PartyPopper, ChevronDown } from "lucide-react";
 import type { SessionSlot } from "@/lib/activities/engine";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import { submitSessionFeedback, type SlotFeedback } from "@/lib/feedback/actions";
@@ -32,6 +32,7 @@ export function SessionView({
   const [entries, setEntries] = useState<Record<number, Entry>>(() =>
     Object.fromEntries(slots.map((_, i) => [i, { completed: false, enjoyment: 0 }])),
   );
+  const [expandedHowTo, setExpandedHowTo] = useState<Record<number, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   // Distinct from `alreadyCompleted` (server state as of page load): this is the
   // transient "just clicked Kész vagyunk in this visit" confirmation. A session
@@ -47,6 +48,12 @@ export function SessionView({
   function slotLabel(slot: SessionSlot): string {
     if (slot.kind === "worksheet") return t(`generators.${slot.recipe.generatorId}`);
     return t(slot.activityKey);
+  }
+
+  function activityHowTo(activityKey: string): string | undefined {
+    // "activity.warmup.simon_says" → "activityHowTo.warmup.simon_says"
+    const key = activityKey.replace(/^activity\./, "activityHowTo.");
+    return t.has(key) ? t(key) : undefined;
   }
 
   async function handleFinish() {
@@ -87,6 +94,9 @@ export function SessionView({
         {slots.map((slot, i) => {
           const Icon = SLOT_ICON[slot.kind];
           const worksheet = slot.kind === "worksheet" ? worksheetData[i] : undefined;
+          const generatorId = slot.kind === "worksheet" ? slot.recipe.generatorId : undefined;
+          const howTo = slot.kind === "worksheet" ? undefined : activityHowTo(slot.activityKey);
+          const howToOpen = expandedHowTo[i] ?? false;
           return (
             <li key={i} className="rounded-card border border-line bg-card p-4 shadow-soft">
               <div className="flex items-center gap-3">
@@ -96,6 +106,30 @@ export function SessionView({
                 <span className="flex-1 text-sm font-medium text-ink">{slotLabel(slot)}</span>
                 <span className="font-mono text-xs text-ink-soft">{slot.minutes}′</span>
               </div>
+
+              {generatorId && (
+                <p className="mt-2 text-xs leading-snug text-ink-soft">
+                  {t(`generatorDescriptions.${generatorId}`)}
+                </p>
+              )}
+
+              {howTo && (
+                <div className="mt-2">
+                  <p className={cn("text-xs leading-snug text-ink-soft", !howToOpen && "line-clamp-2")}>{howTo}</p>
+                  <button
+                    type="button"
+                    aria-expanded={howToOpen}
+                    onClick={() => setExpandedHowTo((prev) => ({ ...prev, [i]: !howToOpen }))}
+                    className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-crayon-text hover:underline"
+                  >
+                    <ChevronDown
+                      className={cn("size-3.5 transition-transform", howToOpen && "rotate-180")}
+                      aria-hidden="true"
+                    />
+                    {t("sessionView.howToToggle")}
+                  </button>
+                </div>
+              )}
 
               {worksheet && (
                 <div className="mt-3 flex flex-col items-center gap-2 sm:flex-row sm:items-start">

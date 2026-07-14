@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Users, SquarePlus, History, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, SquarePlus, LayoutGrid, History, Settings, LogOut } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import {
   Sidebar,
@@ -27,6 +27,7 @@ const ITEMS = [
   { href: "/app", key: "overview", icon: LayoutDashboard },
   { href: "/app/children", key: "children", icon: Users },
   { href: "/app/new-session", key: "newSession", icon: SquarePlus },
+  { href: "/app/worksheets", key: "worksheets", icon: LayoutGrid },
   { href: "/app/history", key: "history", icon: History },
   { href: "/app/settings", key: "settings", icon: Settings },
 ] as const;

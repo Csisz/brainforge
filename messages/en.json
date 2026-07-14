@@ -7,7 +7,8 @@
     "settings": "Settings",
     "login": "Log in",
     "logout": "Log out",
-    "signupCta": "Start for free"
+    "signupCta": "Start for free",
+    "worksheets": "Worksheets"
   },
   "common": {
     "appName": "BrainForge Kids",
@@ -186,7 +187,8 @@
   "dashboard": {
     "todaySessionCta": "Today's session",
     "ageSuffix": "{age} years old",
-    "streakDays": "{count}-day streak"
+    "streakDays": "{count}-day streak",
+    "nudgeLabel": "Try these next"
   },
   "goals": {
     "attention": "Attention",
@@ -225,10 +227,18 @@
     "difficultyManualHint": "Defaults to the child's age — adjust if needed.",
     "submit": "Start session",
     "submitting": "Building…",
-    "errorGeneric": "Couldn't start the session. Please try again."
+    "errorGeneric": "Couldn't start the session. Please try again.",
+    "difficultyHint": {
+      "1": "Very easy — a confident start.",
+      "2": "Easy — a gentle warm-up.",
+      "3": "An age-appropriate challenge.",
+      "4": "Challenging — for a child who's ready.",
+      "5": "The hardest — for confident kids."
+    }
   },
   "print": {
-    "printButton": "Print"
+    "printButton": "Print",
+    "answerKeyNote": "The answer key is for you, the parent."
   },
   "settings": {
     "profileTitle": "Profile",
@@ -275,7 +285,8 @@
     "errorGeneric": "Couldn't save feedback. Please try again.",
     "doneTitle": "Nice work!",
     "doneBody": "Today's session has been saved.",
-    "backToDashboard": "Back to overview"
+    "backToDashboard": "Back to overview",
+    "howToToggle": "How to play?"
   },
   "goalDescriptions": {
     "attention": "How long they can stay on one task and tune out distractions.",
@@ -335,5 +346,17 @@
       "favorite_part": "Ask: \"What was your favorite part today? What was hardest?\" Listen without judging — the goal is putting the experience into words.",
       "show_and_tell": "Your child shows the finished sheet to someone (other parent, sibling, grandparent on a call) and explains what they did. Pride locks in the learning."
     }
+  },
+  "worksheetsCatalog": {
+    "title": "Worksheets",
+    "subtitle": "Browse every worksheet type — each with a live preview and what it trains.",
+    "trainsLabel": "Trains:",
+    "ageRange": "Ages {from}–{to}",
+    "printForChild": "Print for this child",
+    "preparing": "Preparing…",
+    "chooseChild": "Choose a child",
+    "noChildren": "Add a child first to print.",
+    "addChildCta": "Add a child",
+    "error": "Couldn't prepare the worksheet. Please try again."
   }
 }

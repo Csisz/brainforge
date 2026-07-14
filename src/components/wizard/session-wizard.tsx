@@ -24,6 +24,7 @@ const DURATIONS: SessionRequest["durationMin"][] = [10, 20, 30, 45];
 export function SessionWizard({ children, defaultChildId }: { children: ChildRow[]; defaultChildId?: string }) {
   const t = useTranslations("wizard");
   const tGoals = useTranslations("goals");
+  const tGoalDesc = useTranslations("goalDescriptions");
   const tThemes = useTranslations("themes");
   const tMaterials = useTranslations("materials");
   const tCommon = useTranslations("common");
@@ -111,7 +112,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
         <CardHeader>
           <CardTitle>{t("goalsLabel")}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
+        <CardContent className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {GOALS.map(({ id, icon: Icon }) => {
             const selected = goals.includes(id);
             return (
@@ -121,14 +122,21 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
                 aria-pressed={selected}
                 onClick={() => toggleGoal(id)}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors",
-                  selected
-                    ? "border-crayon bg-crayon-soft text-crayon-text"
-                    : "border-line bg-card text-ink-soft hover:bg-mist",
+                  "flex flex-col gap-1 rounded-card border p-3 text-left transition-colors",
+                  selected ? "border-crayon bg-crayon-soft" : "border-line bg-card hover:bg-mist",
                 )}
               >
-                <Icon className="size-4" aria-hidden="true" />
-                {tGoals(id)}
+                <span className="flex items-center gap-2">
+                  <Icon
+                    className={cn("size-4 shrink-0", selected ? "text-crayon-text" : "text-ink-soft")}
+                    aria-hidden="true"
+                  />
+                  <span className={cn("text-sm font-semibold", selected ? "text-crayon-text" : "text-ink")}>
+                    {tGoals(id)}
+                  </span>
+                  {selected && <Check className="ml-auto size-4 shrink-0 text-crayon-text" aria-hidden="true" />}
+                </span>
+                <span className="text-xs leading-snug text-ink-soft">{tGoalDesc(id)}</span>
               </button>
             );
           })}
@@ -232,6 +240,9 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
             step={1}
             onValueChange={([v]) => setManualDifficulty(v as Difficulty)}
           />
+          <p className="text-sm font-medium text-ink" aria-live="polite">
+            {t(`difficultyHint.${difficulty}`)}
+          </p>
           <p className="text-xs text-ink-soft">{t("difficultyManualHint")}</p>
         </CardContent>
       </Card>

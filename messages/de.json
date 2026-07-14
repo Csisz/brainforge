@@ -7,7 +7,8 @@
     "settings": "Einstellungen",
     "login": "Anmelden",
     "logout": "Abmelden",
-    "signupCta": "Kostenlos starten"
+    "signupCta": "Kostenlos starten",
+    "worksheets": "Arbeitsblätter"
   },
   "common": {
     "appName": "BrainForge Kids",
@@ -186,7 +187,8 @@
   "dashboard": {
     "todaySessionCta": "Heutige Einheit",
     "ageSuffix": "{age} Jahre alt",
-    "streakDays": "{count}-Tage-Serie"
+    "streakDays": "{count}-Tage-Serie",
+    "nudgeLabel": "Als Nächstes probieren"
   },
   "goals": {
     "attention": "Aufmerksamkeit",
@@ -225,10 +227,18 @@
     "difficultyManualHint": "Standardmäßig nach Alter des Kindes — bei Bedarf anpassbar.",
     "submit": "Einheit starten",
     "submitting": "Wird zusammengestellt…",
-    "errorGeneric": "Einheit konnte nicht gestartet werden. Bitte versuche es erneut."
+    "errorGeneric": "Einheit konnte nicht gestartet werden. Bitte versuche es erneut.",
+    "difficultyHint": {
+      "1": "Sehr leicht — für einen sicheren Start.",
+      "2": "Leicht — zum Aufwärmen.",
+      "3": "Eine altersgerechte Herausforderung.",
+      "4": "Herausfordernd — für ein bereites Kind.",
+      "5": "Am schwersten — für sichere Kinder."
+    }
   },
   "print": {
-    "printButton": "Drucken"
+    "printButton": "Drucken",
+    "answerKeyNote": "Der Lösungsbogen ist für dich als Elternteil."
   },
   "settings": {
     "profileTitle": "Profil",
@@ -275,7 +285,8 @@
     "errorGeneric": "Rückmeldung konnte nicht gespeichert werden. Bitte versuche es erneut.",
     "doneTitle": "Gut gemacht!",
     "doneBody": "Die heutige Einheit wurde gespeichert.",
-    "backToDashboard": "Zurück zur Übersicht"
+    "backToDashboard": "Zurück zur Übersicht",
+    "howToToggle": "Wie spielt ihr?"
   },
   "goalDescriptions": {
     "attention": "Wie lange das Kind bei einer Sache bleibt und Ablenkungen ausblenden kann.",
@@ -335,5 +346,17 @@
       "favorite_part": "Frag: „Was war heute dein Lieblingsteil? Was war am schwersten?\" Zuhören, nicht bewerten — Ziel ist, das Erlebnis in Worte zu fassen.",
       "show_and_tell": "Das Kind zeigt jemandem das fertige Blatt (anderes Elternteil, Geschwister, Großeltern per Videoanruf) und erklärt, was es gemacht hat. Stolz verankert das Gelernte."
     }
+  },
+  "worksheetsCatalog": {
+    "title": "Arbeitsblätter",
+    "subtitle": "Durchstöbere alle Arbeitsblatt-Typen — jeweils mit Live-Vorschau und Lernziel.",
+    "trainsLabel": "Fördert:",
+    "ageRange": "Für {from}–{to} Jahre",
+    "printForChild": "Für dieses Kind drucken",
+    "preparing": "Wird vorbereitet…",
+    "chooseChild": "Kind auswählen",
+    "noChildren": "Füge zuerst ein Kind hinzu, um zu drucken.",
+    "addChildCta": "Kind hinzufügen",
+    "error": "Das Arbeitsblatt konnte nicht vorbereitet werden. Bitte versuche es erneut."
   }
 }

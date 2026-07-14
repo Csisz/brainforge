@@ -7,7 +7,8 @@
     "settings": "Beállítások",
     "login": "Bejelentkezés",
     "logout": "Kijelentkezés",
-    "signupCta": "Kezdjük el ingyen"
+    "signupCta": "Kezdjük el ingyen",
+    "worksheets": "Feladatlapok"
   },
   "common": {
     "appName": "BrainForge Kids",
@@ -186,7 +187,8 @@
   "dashboard": {
     "todaySessionCta": "Mai foglalkozás",
     "ageSuffix": "{age} éves",
-    "streakDays": "{count} napos sorozat"
+    "streakDays": "{count} napos sorozat",
+    "nudgeLabel": "Próbáljátok legközelebb"
   },
   "goals": {
     "attention": "Figyelem",
@@ -225,10 +227,18 @@
     "difficultyManualHint": "Alapértelmezés a gyerek életkora alapján — igény szerint módosítható.",
     "submit": "Foglalkozás indítása",
     "submitting": "Összeállítás…",
-    "errorGeneric": "Nem sikerült elindítani a foglalkozást. Próbáld újra."
+    "errorGeneric": "Nem sikerült elindítani a foglalkozást. Próbáld újra.",
+    "difficultyHint": {
+      "1": "Nagyon könnyű — magabiztos kezdéshez.",
+      "2": "Könnyed — ráhangolódáshoz.",
+      "3": "Korának megfelelő kihívás.",
+      "4": "Kihívást jelent — ha már gyakorlott.",
+      "5": "A legnehezebb — magabiztos gyerekeknek."
+    }
   },
   "print": {
-    "printButton": "Nyomtatás"
+    "printButton": "Nyomtatás",
+    "answerKeyNote": "A megoldólap a szülőnek szól."
   },
   "settings": {
     "profileTitle": "Profil",
@@ -275,7 +285,8 @@
     "errorGeneric": "Nem sikerült menteni a visszajelzést. Próbáld újra.",
     "doneTitle": "Szép munka!",
     "doneBody": "A mai foglalkozást elmentettük.",
-    "backToDashboard": "Vissza az áttekintéshez"
+    "backToDashboard": "Vissza az áttekintéshez",
+    "howToToggle": "Hogyan játsszátok?"
   },
   "goalDescriptions": {
     "attention": "Mennyi ideig tud egy dologra figyelni, és mennyire tudja kizárni a zavaró ingereket.",
@@ -335,5 +346,17 @@
       "favorite_part": "Kérdezd meg: „Mi volt ma a kedvenc részed? Mi volt a legnehezebb?\" Hallgasd végig, ne értékeld — a cél, hogy szavakba öntse az élményt.",
       "show_and_tell": "A gyerek megmutatja a kész lapját valakinek (másik szülő, testvér, akár videóhívásban nagyszülő), és elmondja, mit csinált. A büszkeség rögzíti a tanulást."
     }
+  },
+  "worksheetsCatalog": {
+    "title": "Feladatlapok",
+    "subtitle": "Böngéssz az összes feladatlaptípus között — mindegyik élő előnézettel és azzal, mit fejleszt.",
+    "trainsLabel": "Fejleszti:",
+    "ageRange": "{from}–{to} éves korra",
+    "printForChild": "Nyomtatás ehhez a gyerekhez",
+    "preparing": "Előkészítés…",
+    "chooseChild": "Válassz gyereket",
+    "noChildren": "Előbb vegyél fel egy gyereket a nyomtatáshoz.",
+    "addChildCta": "Gyerek hozzáadása",
+    "error": "Nem sikerült előkészíteni a feladatlapot. Próbáld újra."
   }
 }
