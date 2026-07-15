@@ -48,6 +48,7 @@ export async function resolveAdaptivePlan(
   age: Age,
   goals: DevelopmentGoal[],
 ): Promise<AdaptivePlan | undefined> {
+  const supabase = await createClient();
   const rows = await getCalibration(childId);
   const byGoal = new Map(rows.map((r) => [r.goal, r]));
 
@@ -64,7 +65,7 @@ export async function resolveAdaptivePlan(
   // caller; here it is expressed as the goal's 3 most recent generator ids.
   const anchorGoal = goals.find((g) => byGoal.get(g)?.pending_anchor);
   const anchor = anchorGoal
-    ? await bestGeneratorForGoal(childId, anchorGoal).then((generatorId) =>
+    ? await bestGeneratorForGoal(supabase, childId, anchorGoal).then((generatorId) =>
         generatorId ? { goal: anchorGoal, generatorId } : undefined,
       )
     : undefined;
@@ -76,12 +77,16 @@ export async function resolveAdaptivePlan(
  * The generator this child has historically done best at for a goal — the one
  * we lead with after a hard session. "Best" is highest mean success across that
  * goal's worksheet slots; ties break toward the more recent.
+ *
+ * Takes its client rather than reaching for one: this is the anchor rule, and it
+ * must be drivable from a test harness, not only from inside a request.
  */
 export async function bestGeneratorForGoal(
+  supabase: SupabaseClient,
   childId: string,
   goal: DevelopmentGoal,
 ): Promise<string | null> {
-  const outcomes = await goalOutcomesByGenerator(childId, goal);
+  const outcomes = await goalOutcomesByGenerator(supabase, childId, goal);
   let best: { id: string; score: number } | null = null;
   for (const [id, scores] of outcomes) {
     const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
@@ -92,10 +97,10 @@ export async function bestGeneratorForGoal(
 
 /** Per-generator success scores for a goal, newest sessions first. */
 async function goalOutcomesByGenerator(
+  supabase: SupabaseClient,
   childId: string,
   goal: DevelopmentGoal,
 ): Promise<Map<string, number[]>> {
-  const supabase = await createClient();
   const { data: sessions } = await supabase
     .from("sessions")
     .select("id, plan, completed_at")

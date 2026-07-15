@@ -33,18 +33,19 @@ content never mix.
 Pages are `width="210mm" viewBox="0 0 210 297"`, so browser print → PDF is
 dimensionally exact with `@page { size: A4; margin: 0 }`. Server-side batch
 PDF (resvg + pdf-lib in a Supabase Edge Function) will reuse the identical
-SVG contract (deferred to Sprint 4 — not yet built).
+SVG contract (still not built — see the roadmap).
 
 **5. Child data is minimized and locked down.**
 Children are stored as nickname + birth month only. Every table has RLS
 keyed to the owning account. Treat all child rows as GDPR/COPPA-grade data
 from day one.
 
-**6. Rule-based session composer now, adaptive layer later.**
+**6. Rule-based session composer, with an adaptive layer on top.**
 `activities/engine.ts` builds the one-click daily plan from time templates,
-material availability, and goal→generator matching. The `SessionSlot`
-contract is stable so the adaptive layer (PRD §7) can replace the difficulty
-heuristic without touching the composer.
+material availability, and goal→generator matching. The composer stayed pure
+when the adaptive layer landed (Sprint 5): the server resolves calibration into
+an `AdaptivePlan` and passes it in, so the rules live in one testable module and
+the composer still knows nothing about the DB.
 
 **7. The content layer carries the pedagogy, not the components.**
 A parent with no pedagogy background must never meet a bare label. Three
@@ -72,6 +73,21 @@ colors are *meaningful* (they tell each hand where to start), so print paths
 must never grayscale them. `lowInk` already handles this by numbering inside
 the dots.
 
+**10. Adaptive difficulty optimizes for success, not challenge.**
+Calibration is per (child, goal) — a child can be a 4 in fine_motor and a 2 in
+working_memory. Every rule in `src/lib/adaptive/engine.ts` is asymmetric on
+purpose: a step DOWN needs one bad session and no waiting; a step UP needs two
+in a row and a 7-day gate; cold start is the age default MINUS ONE. Getting it
+wrong upward costs a child their confidence, getting it wrong downward costs
+them an easy afternoon — so the rules are not symmetric either. Boredom
+(succeeded, didn't enjoy) rotates the material rather than raising the level:
+bored is not ready. A step down anchors the next session to the generator that
+child does best, because a hard moment should be followed by a guaranteed win.
+
+Consequently a step down is **never** presented as regression: no arrows, no
+red, no "performance", one neutral level indicator labelled "current level".
+The level describes the material, not the child.
+
 ## Layout
 
 ```
@@ -83,10 +99,13 @@ src/lib/worksheets/registry.ts        plugin registry — the only list of types
 src/lib/worksheets/generators/        all 19 PRD §4 types (see below)
 src/lib/pictograms/                   stick-figure strips for physical activities
 src/lib/activities/engine.ts          daily session composer
+src/lib/adaptive/engine.ts            calibration rules (pure, unit-tested)
+src/lib/adaptive/queries.ts           the DB half: load rows, write decisions
 src/lib/achievements.ts               achievement catalog + pure evaluation
 src/lib/ai/provider.ts                LLM abstraction layer (Anthropic adapter)
-supabase/migrations/0001_init.sql     full schema + RLS + signup trigger
-scripts/demo-worksheets.ts            engine proof + determinism test
+supabase/migrations/                  schema + RLS (0003 adds calibration)
+scripts/demo-worksheets.ts            engine proof + golden files
+scripts/verify-worksheets.ts          worksheet composition regression guard
 scripts/flow-test.ts                  headless end-to-end acceptance test
 ```
 
@@ -106,9 +125,14 @@ there with a live preview the moment it registers.
 
 ## Regression guards
 
-There is no test framework here yet; these two scripts are the safety net, and
-both iterate `allGenerators()` so a new worksheet type is covered the moment it
-registers.
+Four commands, in rising order of cost. The worksheet guards iterate
+`allGenerators()`, so a new type is covered the moment it registers.
+
+**`npm run test`** — unit tests (Node's built-in runner via tsx; no framework
+dependency). Covers the adaptive calibration rules exhaustively, including the
+edges that define the product promise: level-1 step-down, level-5 step-up, the
+"exactly 7 days is still too soon" gate, cold-start clamping, and that a
+freshly composed session stamps a goal on every worksheet slot.
 
 **`npm run verify`** — worksheet composition. The catalog and the print route
 share one composer with two modes, so a change made for a thumbnail can wreck a
@@ -174,8 +198,9 @@ idempotent. Each run signs up a fresh throwaway user.
   worksheet and activity to a non-pedagogue parent; worksheet catalog at
   `/app/worksheets`; activity pictograms + screen-free daily-plan print;
   feedback capture and achievements.
-- **Sprint 4:** adaptive difficulty (consuming the Sprint-3 feedback rows);
-  Edge-Function batch PDF; Stripe subscriptions; accessibility modes
+- **Sprint 5 (done):** adaptive difficulty — per (child, goal) calibration,
+  success-first rules, parent-facing framing that never reads as regression.
+- **Next:** Edge-Function batch PDF; Stripe subscriptions; accessibility modes
   (dyslexia/ADHD/autism-friendly rendering).
 
 ## Deliberately deferred (TODO, per PRD roadmap — not invented features)

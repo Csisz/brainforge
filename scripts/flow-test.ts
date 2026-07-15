@@ -11,6 +11,9 @@ import { writeFileSync } from "node:fs";
 import { composeSession, type SessionSlot } from "../src/lib/activities/engine";
 import { composeWorksheet, defaultRenderOptions } from "../src/lib/worksheets/page";
 import { evaluateAchievements, ACHIEVEMENT_KINDS } from "../src/lib/achievements";
+import { runCalibrationForSession, bestGeneratorForGoal } from "../src/lib/adaptive/queries";
+import { coldStartLevel } from "../src/lib/adaptive/engine";
+import { EASE_SUCCESS } from "../src/lib/feedback/actions";
 import { freshSeed } from "../src/lib/random";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -229,6 +232,148 @@ async function main() {
   await award(); // idempotency: re-running must not duplicate
   const second = await readBack();
   ok("re-awarding is idempotent (unique constraint holds)", second.length === first.length, `${first.length} → ${second.length}`);
+
+  // 7 ── ADAPTIVE CALIBRATION (Sprint 5) -----------------------------------
+  // Everything above proves one session. This proves the loop: what a child
+  // does changes what they are given next.
+  step("7. adaptive calibration");
+  const GOAL = "fine_motor" as const;
+
+  /**
+   * Run a whole session for GOAL at a given outcome, through the real code:
+   * compose → persist → feedback → runCalibrationForSession. `at` lets us place
+   * a session in the past to exercise the 7-day gate without waiting a week.
+   */
+  async function playSession(
+    ease: "easy" | "hard",
+    enjoyment: number,
+    goal: "fine_motor" | "math_thinking" = GOAL,
+    at = new Date(),
+  ) {
+    const adaptive = await currentPlan(goal);
+    const plan = composeSession({
+      childId: child!.id,
+      age: 6,
+      goals: [goal],
+      theme: "space",
+      durationMin: 30,
+      materials: ["pencil", "paper", "cups", "ball"],
+      difficulty: 3,
+      recentWorksheets: [],
+      locale: "hu",
+      adaptive,
+    });
+    const { data: s } = await supabase
+      .from("sessions")
+      .insert({
+        child_id: child!.id, owner_id: user.id, goals: [goal], theme: "space",
+        duration_min: 30, materials: ["pencil", "paper"], difficulty: 3,
+        seed: freshSeed(), plan, status: "completed", completed_at: at.toISOString(),
+      })
+      .select("id")
+      .single();
+
+    const rows = plan.slots.map((slot, i) => ({
+      session_id: s!.id, owner_id: user.id, slot_index: i, slot_kind: slot.kind,
+      completed: true, enjoyment,
+      success_rate: slot.kind === "worksheet" ? EASE_SUCCESS[ease] : null,
+    }));
+    await supabase.from("feedback").insert(rows);
+    await runCalibrationForSession(supabase, s!.id, child!.id, user.id, 6, at);
+    return { sessionId: s!.id, plan };
+  }
+
+  const currentPlan = async (goal: "fine_motor" | "math_thinking" = GOAL) => {
+    const { data } = await supabase
+      .from("calibration")
+      .select("goal, level, last_step_up_at, pending_anchor")
+      .eq("child_id", child!.id);
+    const row = (data ?? []).find((r) => r.goal === goal);
+    const anchorGen = row?.pending_anchor ? await bestGeneratorForGoal(supabase, child!.id, goal) : null;
+    return {
+      levelByGoal: { [goal]: row?.level ?? coldStartLevel(6) },
+      avoidByGoal: {},
+      anchor: anchorGen ? { goal, generatorId: anchorGen } : undefined,
+    };
+  };
+  const levelNow = async (goal: "fine_motor" | "math_thinking" = GOAL) => {
+    const { data } = await supabase
+      .from("calibration")
+      .select("level, pending_anchor, last_step_up_at")
+      .eq("child_id", child!.id)
+      .eq("goal", goal)
+      .maybeSingle();
+    return data;
+  };
+
+  // Cold start: a first impression must be winnable (age default 3, minus one).
+  ok("cold start is one below the age default", coldStartLevel(6) === 2, `level ${coldStartLevel(6)}`);
+
+  // --- A hard session drops the level and anchors the next one -------------
+  const hard = await playSession("hard", 3);
+  const afterHard = await levelNow();
+  ok("a hard session steps the level down", afterHard?.level === 1, `level ${afterHard?.level} (from cold start 2)`);
+  ok("...and sets the anchor for the next session", afterHard?.pending_anchor === true);
+
+  const anchorGenerator = await bestGeneratorForGoal(supabase, child.id, GOAL);
+  ok("an anchor generator is identified from history", Boolean(anchorGenerator), anchorGenerator ?? "none");
+
+  const next = await playSession("easy", 5);
+  const usedAnchor = next.plan.slots.some(
+    (s) => s.kind === "worksheet" && s.recipe.generatorId === anchorGenerator,
+  );
+  ok("the next session leads with the anchor generator", usedAnchor, anchorGenerator ?? "");
+  const nextSheet = next.plan.slots.find((s) => s.kind === "worksheet");
+  ok(
+    "the next session's worksheet is composed at the LOWERED level",
+    nextSheet?.kind === "worksheet" && nextSheet.difficulty === 1,
+    nextSheet?.kind === "worksheet" ? `difficulty ${nextSheet.difficulty}` : "no sheet",
+  );
+
+  // --- Idempotency: one bad afternoon must not step a child down twice -----
+  const beforeReplay = (await levelNow())?.level;
+  await runCalibrationForSession(supabase, hard.sessionId, child.id, user.id, 6);
+  ok("re-running calibration for a session changes nothing", (await levelNow())?.level === beforeReplay,
+    `level stayed ${beforeReplay}`);
+
+  // --- Two strong sessions raise the level, once --------------------------
+  // On a goal with NO history: fine_motor already has a strong session (the
+  // anchor one), so a single new success there legitimately completes a streak.
+  const RISE = "math_thinking" as const;
+
+  await playSession("easy", 5, RISE);
+  const afterOne = await levelNow(RISE);
+  ok("one strong session is not enough to rise", afterOne?.level === 2, `level ${afterOne?.level} (cold start 2)`);
+
+  await playSession("easy", 5, RISE);
+  const afterTwo = await levelNow(RISE);
+  ok("two consecutive strong sessions raise the level", afterTwo?.level === 3, `level ${afterTwo?.level}`);
+  ok("...and stamp the step-up clock", Boolean(afterTwo?.last_step_up_at));
+
+  // --- The 7-day gate ------------------------------------------------------
+  await playSession("easy", 5, RISE);
+  const afterThree = await levelNow(RISE);
+  ok(
+    "a third strong session within 7 days does NOT rise again",
+    afterThree?.level === 3,
+    `level ${afterThree?.level} — progress is deliberate`,
+  );
+
+  // Backdate the step-up past the gate; the next strong pair may rise again.
+  await supabase
+    .from("calibration")
+    .update({ last_step_up_at: new Date(Date.now() - 8 * 86_400_000).toISOString() })
+    .eq("child_id", child.id)
+    .eq("goal", RISE);
+  await playSession("easy", 5, RISE);
+  const afterGate = await levelNow(RISE);
+  ok("once the gate has passed, a strong pair rises again", afterGate?.level === 4, `level ${afterGate?.level}`);
+
+  // --- A struggle is heard immediately, even mid-streak --------------------
+  await playSession("hard", 3, RISE);
+  const afterRelapse = await levelNow(RISE);
+  ok("a hard session retreats at once, whatever the streak", afterRelapse?.level === 3, `level ${afterRelapse?.level}`);
+  ok("...and owes the next session a win", afterRelapse?.pending_anchor === true);
 
   console.log(`\n${failures ? `${failures} CHECK(S) FAILED` : "ALL CHECKS PASSED"}`);
   process.exit(failures ? 1 : 0);
