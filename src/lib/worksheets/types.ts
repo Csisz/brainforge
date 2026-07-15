@@ -63,7 +63,18 @@ export type GeneratorContext = {
 export type WorksheetContent = {
   /** Inner SVG markup (no <svg> wrapper — the page composer adds it). */
   body: string;
-  /** Content area the body was drawn for, in mm. */
+  /**
+   * THE CONTENT BOX, in mm: the bounding box of what `body` actually draws,
+   * starting at (0,0). Not a canvas to float the drawing inside.
+   *
+   * Everything downstream sizes from this and cannot tell declared-but-empty
+   * space from real content: the page composer scales the box to the sheet, and
+   * the catalog shapes its card frame to it. So a box bigger than the drawing
+   * becomes a margin nobody authored — on screen *and* in print — and a box
+   * smaller risks clipping. If the drawing is smaller than the area you were
+   * given, shrink the box; do not centre the drawing inside it. `npm run verify`
+   * checks this (drawn extents must fill ≥75% of the box and stay inside it).
+   */
   width: number;
   height: number;
   /** i18n key for the child-facing instruction line. */

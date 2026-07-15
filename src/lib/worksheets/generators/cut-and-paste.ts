@@ -104,7 +104,9 @@ export const cutAndPasteGenerator: WorksheetGenerator<CutPasteParams> = {
     // Cut line with scissors, then the missing pieces as cut-out cards.
     const cutY = topH + gap / 2;
     const cutLine =
-      line(6, cutY, W, cutY, { stroke: "#111", "stroke-width": 0.5, "stroke-dasharray": "3 2" }) + scissors(3, cutY);
+      // The scissors glyph reaches 3.7mm left of its anchor, so anchoring it at
+      // 3 pushed the content 0.7mm outside the declared box.
+      line(6, cutY, W, cutY, { stroke: "#111", "stroke-width": 0.5, "stroke-dasharray": "3 2" }) + scissors(3.7, cutY);
 
     const pieceGlyphs = ctx.rng.shuffle(blanks.map(([row, c]) => seqAt(row, c)));
     const stripY = topH + gap;

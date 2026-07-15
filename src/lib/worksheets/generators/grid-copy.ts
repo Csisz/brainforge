@@ -56,19 +56,20 @@ export const gridCopyGenerator: WorksheetGenerator<GridCopyParams> = {
   },
 
   generate(ctx, params): WorksheetContent {
-    const W = 160;
     const gridW = 120;
     const cell = gridW / params.cols;
     const gridH = cell * params.rows;
     const gap = 14;
+    // The two grids are the content box; the page composer centres it on the
+    // sheet, so declaring side margins here would only double them.
+    const W = gridW;
     const H = gridH * 2 + gap;
-    const gx = (W - gridW) / 2;
 
     const drawGrid = (gy: number, bold: boolean) => {
       const out: string[] = [];
-      out.push(rect(gx, gy, gridW, gridH, { fill: "none", stroke: "#111", "stroke-width": bold ? 0.9 : 0.6 }));
-      for (let c = 1; c < params.cols; c++) out.push(path(`M ${gx + c * cell} ${gy} L ${gx + c * cell} ${gy + gridH}`, { stroke: "#111", "stroke-width": 0.35, fill: "none" }));
-      for (let r = 1; r < params.rows; r++) out.push(path(`M ${gx} ${gy + r * cell} L ${gx + gridW} ${gy + r * cell}`, { stroke: "#111", "stroke-width": 0.35, fill: "none" }));
+      out.push(rect(0, gy, gridW, gridH, { fill: "none", stroke: "#111", "stroke-width": bold ? 0.9 : 0.6 }));
+      for (let c = 1; c < params.cols; c++) out.push(path(`M ${c * cell} ${gy} L ${c * cell} ${gy + gridH}`, { stroke: "#111", "stroke-width": 0.35, fill: "none" }));
+      for (let r = 1; r < params.rows; r++) out.push(path(`M 0 ${gy + r * cell} L ${gridW} ${gy + r * cell}`, { stroke: "#111", "stroke-width": 0.35, fill: "none" }));
       return out.join("");
     };
 
@@ -80,7 +81,7 @@ export const gridCopyGenerator: WorksheetGenerator<GridCopyParams> = {
     const marks: string[] = [];
     for (const i of cells) {
       const c = i % params.cols, r = Math.floor(i / params.cols);
-      const cx = gx + c * cell + cell / 2;
+      const cx = c * cell + cell / 2;
       const cy = r * cell + cell / 2; // relative to grid top
       const rad = cell * 0.32;
       const rng = ctx.rng.fork(`cell-${i}`);

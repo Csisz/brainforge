@@ -34,13 +34,18 @@ export const symmetryGridGenerator: WorksheetGenerator<SymmetryGridParams> = {
   },
 
   generate(ctx, params): WorksheetContent {
-    const W = 160, H = 185;
-    const cell = Math.min((W / 2 - 4) / params.cols, (H - 4) / params.rows);
+    // Available area; the declared box below is what we actually draw into.
+    const MAX_W = 160, MAX_H = 185;
+    const cell = Math.min((MAX_W / 2 - 4) / params.cols, (MAX_H - 4) / params.rows);
     const gridW = cell * params.cols;
     const gridH = cell * params.rows;
-    const axisX = W / 2;
-    const leftX = axisX - gridW;
-    const topY = (H - gridH) / 2;
+    /** The mirror axis is drawn past the grid, so it is part of the content box. */
+    const AXIS_OVERSHOOT = 3;
+    const W = gridW * 2;
+    const H = gridH + AXIS_OVERSHOOT * 2;
+    const leftX = 0;
+    const axisX = gridW;
+    const topY = AXIS_OVERSHOOT;
 
     // Grow a connected blob from a random cell (random BFS frontier).
     const filled = new Set<number>();
@@ -88,7 +93,7 @@ export const symmetryGridGenerator: WorksheetGenerator<SymmetryGridParams> = {
       gridLines.push(path(`M ${leftX} ${y} L ${leftX + gridW * 2} ${y}`, { stroke: "#999", "stroke-width": 0.35, fill: "none" }));
     }
     // Mirror axis.
-    gridLines.push(path(`M ${axisX} ${topY - 3} L ${axisX} ${topY + gridH + 3}`, {
+    gridLines.push(path(`M ${axisX} ${topY - AXIS_OVERSHOOT} L ${axisX} ${topY + gridH + AXIS_OVERSHOOT}`, {
       stroke: "#111", "stroke-width": 0.9, "stroke-dasharray": "3 2", fill: "none",
     }));
 

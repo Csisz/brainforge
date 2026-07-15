@@ -140,10 +140,17 @@ idempotent. Each run signs up a fresh throwaway user.
   Runtime.** It comes from `@supabase/supabase-js` via `src/lib/supabase/
   middleware.ts`, not from our code, and is harmless — the middleware runs fine.
   Only a clean build shows it; incremental builds cache it away.
-- **`maze` and some other generators declare a content box larger than they
-  draw into**, so a catalog preview (which is shaped from the declared box) has
-  whitespace around the task. It shows on the printed sheet too. Fixing it means
-  tightening those generators' `content.width/height`.
+- **Sheets are top-aligned under the header, not vertically centred.** Now that
+  generators declare honest content boxes, a short sheet (e.g. `symmetry_grid`)
+  leaves its slack at the bottom of the page rather than split above and below.
+  The composer pins content to the top; centring it there is a one-line change
+  that would move every golden file, so it is a deliberate open question rather
+  than an oversight.
+- **`npm run verify` skips `arrow_board` and `hidden_objects`** in the
+  content-box check: they emit `transform`, and the extent scan reads absolute
+  coordinates only. It says so when it skips. Both are healthy — verified
+  against real `getBBox` in a browser, which is the tool to reach for if you
+  need exact numbers.
 
 ## Local auth quickstart
 

@@ -99,10 +99,13 @@ export const mazeGenerator: WorksheetGenerator<MazeParams> = {
 
   generate(ctx, params): WorksheetContent {
     const { cols, rows } = params;
-    const W = 160, H = 190; // content mm
-    const cell = Math.min(W / cols, H / rows);
-    const ox = (W - cell * cols) / 2;
-    const oy = (H - cell * rows) / 2;
+    // Available area in mm. The grid keeps square cells, so it rarely fills
+    // both axes — the *declared* box is the grid itself, never this envelope,
+    // or the sheet would carry phantom margins the page composer can't tell
+    // from real content (see the content-box contract in types.ts).
+    const MAX_W = 160, MAX_H = 190;
+    const cell = Math.min(MAX_W / cols, MAX_H / rows);
+    const W = cell * cols, H = cell * rows;
 
     // Quality invariant: winding solution. Re-carve with forked RNG if short.
     let walls = carve(cols, rows, ctx.rng);
@@ -119,7 +122,7 @@ export const mazeGenerator: WorksheetGenerator<MazeParams> = {
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const w = walls[y * cols + x]!;
-        const x0 = ox + x * cell, y0 = oy + y * cell;
+        const x0 = x * cell, y0 = y * cell;
         if (w & 1) parts.push(line(x0, y0, x0 + cell, y0, stroke));
         if (w & 2) parts.push(line(x0 + cell, y0, x0 + cell, y0 + cell, stroke));
         if (w & 4 && y === rows - 1 && x !== cols - 1) parts.push(line(x0, y0 + cell, x0 + cell, y0 + cell, stroke));
@@ -133,11 +136,11 @@ export const mazeGenerator: WorksheetGenerator<MazeParams> = {
     // v1 uses a friendly dot + star that prints well in low ink.
     const s = solution[0]!, g = solution[solution.length - 1]!;
     const mark = cell * 0.28;
-    parts.push(circle(ox + s.x * cell + cell / 2, oy + s.y * cell + cell / 2, mark, { fill: ctx.render.lowInk ? "none" : "#111", stroke: "#111", "stroke-width": 0.8 }));
-    parts.push(star(ox + g.x * cell + cell / 2, oy + g.y * cell + cell / 2, mark * 1.2));
+    parts.push(circle(s.x * cell + cell / 2, s.y * cell + cell / 2, mark, { fill: ctx.render.lowInk ? "none" : "#111", stroke: "#111", "stroke-width": 0.8 }));
+    parts.push(star(g.x * cell + cell / 2, g.y * cell + cell / 2, mark * 1.2));
 
     // Answer key: solution as a smooth polyline on a duplicate.
-    const sol = solution.map((c) => `${ox + c.x * cell + cell / 2},${oy + c.y * cell + cell / 2}`).join(" L ");
+    const sol = solution.map((c) => `${c.x * cell + cell / 2},${c.y * cell + cell / 2}`).join(" L ");
     const answerKey =
       group({}, parts.join("")) +
       path(`M ${sol}`, { fill: "none", stroke: "#d33", "stroke-width": params.wall * 0.9, "stroke-linejoin": "round", "stroke-dasharray": "2 1.5" });

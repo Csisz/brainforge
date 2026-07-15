@@ -10,6 +10,118 @@
 import { writeFileSync } from "node:fs";
 import { allGenerators } from "../src/lib/worksheets/registry";
 import { composeWorksheet, defaultRenderOptions } from "../src/lib/worksheets/page";
+import { createRng } from "../src/lib/random";
+import type { GeneratorContext } from "../src/lib/worksheets/types";
+
+/**
+ * Walk a path `d` and yield the points it reaches, honouring relative commands.
+ *
+ * Do not simplify this to "grab every number pair": generators emit relative
+ * commands, and reading `l -11 -4.9` as an absolute point puts the extent
+ * eleven millimetres left of the page. That bug made this check report five
+ * healthy generators as broken.
+ *
+ * Curves contribute their control points too. A Bézier lies inside the convex
+ * hull of its controls, so the result is an over-estimate, never an under-one —
+ * the safe direction for "does the drawing escape its box".
+ */
+function pathPoints(d: string): Array<[number, number]> {
+  const tokens = d.match(/[a-zA-Z]|-?\d*\.?\d+(?:e[-+]?\d+)?/gi) ?? [];
+  const out: Array<[number, number]> = [];
+  let i = 0, cmd = "", cx = 0, cy = 0, sx = 0, sy = 0;
+  const take = (n: number) => tokens.slice(i, (i += n)).map(Number);
+  const at = (x: number, y: number, rel: boolean): [number, number] => [rel ? cx + x : x, rel ? cy + y : y];
+
+  while (i < tokens.length) {
+    if (/[a-zA-Z]/.test(tokens[i]!)) cmd = tokens[i++]!;
+    if (!cmd) break;
+    const rel = cmd === cmd.toLowerCase();
+    switch (cmd.toUpperCase()) {
+      case "M": case "L": case "T": {
+        const [x, y] = take(2);
+        [cx, cy] = at(x!, y!, rel);
+        if (cmd.toUpperCase() === "M") { sx = cx; sy = cy; }
+        out.push([cx, cy]);
+        break;
+      }
+      case "H": { const [x] = take(1); cx = rel ? cx + x! : x!; out.push([cx, cy]); break; }
+      case "V": { const [y] = take(1); cy = rel ? cy + y! : y!; out.push([cx, cy]); break; }
+      case "C": {
+        const a = take(6);
+        out.push(at(a[0]!, a[1]!, rel), at(a[2]!, a[3]!, rel));
+        [cx, cy] = at(a[4]!, a[5]!, rel);
+        out.push([cx, cy]);
+        break;
+      }
+      case "S": case "Q": {
+        const a = take(4);
+        out.push(at(a[0]!, a[1]!, rel));
+        [cx, cy] = at(a[2]!, a[3]!, rel);
+        out.push([cx, cy]);
+        break;
+      }
+      case "A": {
+        const a = take(7); // rx ry rot large-arc sweep x y — only the endpoint is a point
+        [cx, cy] = at(a[5]!, a[6]!, rel);
+        out.push([cx, cy]);
+        break;
+      }
+      case "Z": { cx = sx; cy = sy; break; }
+      default: i++; // unknown command — skip a token and carry on
+    }
+  }
+  return out;
+}
+
+/**
+ * Rough drawn-extent of an SVG body, in the body's own user units.
+ *
+ * A scan, not a full SVG implementation. It reads absolute coordinates and
+ * cannot resolve `transform`, so a body that uses one is skipped rather than
+ * mis-measured (arrow_board draws each arrow around the origin and translates
+ * it into place — scanning those local coordinates would put the extent 11mm
+ * off the page). Resolving transforms means a matrix stack and balanced-tag
+ * parsing, which is past the point of "cheap"; if you need exact numbers,
+ * measure getBBox in a browser instead.
+ *
+ * Checked against headless Chrome's getBBox: agrees within ~1-2% on the 18
+ * generators it can read. Text is measured from its anchor only (no font
+ * metrics), so it under-counts slightly — hence the loose thresholds.
+ */
+function drawnExtent(body: string): { minX: number; minY: number; maxX: number; maxY: number } {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const seeX = (v: number) => { if (Number.isFinite(v)) { minX = Math.min(minX, v); maxX = Math.max(maxX, v); } };
+  const seeY = (v: number) => { if (Number.isFinite(v)) { minY = Math.min(minY, v); maxY = Math.max(maxY, v); } };
+  const num = (s: string | undefined) => (s === undefined ? NaN : Number(s));
+
+  for (const m of body.matchAll(/<rect[^>]*>/g)) {
+    const x = num(/\bx="([-\d.]+)"/.exec(m[0])?.[1]), y = num(/\by="([-\d.]+)"/.exec(m[0])?.[1]);
+    const w = num(/\bwidth="([-\d.]+)"/.exec(m[0])?.[1]), h = num(/\bheight="([-\d.]+)"/.exec(m[0])?.[1]);
+    seeX(x); seeX(x + w); seeY(y); seeY(y + h);
+  }
+  for (const m of body.matchAll(/<circle[^>]*>/g)) {
+    const cx = num(/\bcx="([-\d.]+)"/.exec(m[0])?.[1]), cy = num(/\bcy="([-\d.]+)"/.exec(m[0])?.[1]);
+    const r = num(/\br="([-\d.]+)"/.exec(m[0])?.[1]);
+    seeX(cx - r); seeX(cx + r); seeY(cy - r); seeY(cy + r);
+  }
+  for (const m of body.matchAll(/<line[^>]*>/g)) {
+    seeX(num(/\bx1="([-\d.]+)"/.exec(m[0])?.[1])); seeX(num(/\bx2="([-\d.]+)"/.exec(m[0])?.[1]));
+    seeY(num(/\by1="([-\d.]+)"/.exec(m[0])?.[1])); seeY(num(/\by2="([-\d.]+)"/.exec(m[0])?.[1]));
+  }
+  for (const m of body.matchAll(/<text[^>]*>/g)) {
+    seeX(num(/\bx="([-\d.]+)"/.exec(m[0])?.[1])); seeY(num(/\by="([-\d.]+)"/.exec(m[0])?.[1]));
+  }
+  for (const m of body.matchAll(/\bd="([^"]+)"/g)) {
+    for (const [x, y] of pathPoints(m[1]!)) { seeX(x); seeY(y); }
+  }
+  // polygon/polyline points are always absolute pairs.
+  for (const m of body.matchAll(/\bpoints="([^"]+)"/g)) {
+    for (const p of m[1]!.matchAll(/(-?[\d.]+)[ ,](-?[\d.]+)/g)) {
+      seeX(Number(p[1])); seeY(Number(p[2]));
+    }
+  }
+  return { minX, minY, maxX, maxY };
+}
 
 const OUT = process.argv[2] && !process.argv[2].startsWith("-") ? process.argv[2] : ".";
 const ONLY = process.argv[3]?.split(",").filter(Boolean) ?? [];
@@ -71,6 +183,34 @@ for (const c of cards) {
   if (!/BrainForge Kids/.test(c.full.svg)) p.push("footer missing");
   if (c.full.box) p.push("box leaked into full-page mode");
   ok(c.id.padEnd(20), p.length === 0, p.join("; "));
+}
+
+console.log("\n── content box: generators declare what they draw");
+for (const g of allGenerators().filter((x) => !ONLY.length || ONLY.includes(x.id))) {
+  const rng = createRng(`${g.id}:v${g.version}:catalog-${g.id}`);
+  const gctx = { ...ctx, rng } as unknown as GeneratorContext;
+  const content = g.generate(gctx, g.defaultParams(gctx));
+
+  if (/\btransform="/.test(content.body)) {
+    console.log(`  skip  ${g.id.padEnd(20)} — emits transforms; scan can't resolve them`);
+    continue;
+  }
+
+  const e = drawnExtent(content.body);
+  const fillW = (e.maxX - e.minX) / content.width;
+  const fillH = (e.maxY - e.minY) / content.height;
+  const p: string[] = [];
+  // A box larger than the drawing is a phantom margin: the page composer and
+  // the catalog frame both size from it, so the sheet gets whitespace nobody
+  // authored. Loose bar — this is a smoke test, and text metrics are estimated.
+  if (fillW < 0.75) p.push(`fills only ${(fillW * 100).toFixed(0)}% of declared width`);
+  if (fillH < 0.75) p.push(`fills only ${(fillH * 100).toFixed(0)}% of declared height`);
+  // The other direction: content escaping its own box risks clipping.
+  if (e.minX < -1 || e.minY < -1) p.push(`starts outside the box at (${e.minX.toFixed(1)}, ${e.minY.toFixed(1)})`);
+  if (e.maxX > content.width + 1 || e.maxY > content.height + 1) {
+    p.push(`overflows to (${e.maxX.toFixed(1)}, ${e.maxY.toFixed(1)}) of ${content.width.toFixed(1)}x${content.height.toFixed(1)}`);
+  }
+  ok(g.id.padEnd(20), p.length === 0, p.length ? p.join("; ") : `fill ${(fillW * 100).toFixed(0)}%x${(fillH * 100).toFixed(0)}%`);
 }
 
 console.log("\n── determinism");

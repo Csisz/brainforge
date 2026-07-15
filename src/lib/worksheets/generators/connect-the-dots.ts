@@ -30,20 +30,38 @@ export const connectDotsGenerator: WorksheetGenerator<DotsParams> = {
   },
 
   generate(ctx, params): WorksheetContent {
-    const W = 160, H = 180;
-    const cx = W / 2, cy = H / 2;
-    const baseR = Math.min(W, H) * 0.36;
+    const MAX_W = 160, MAX_H = 180;
+    /** Labels sit outside the ring, so they are part of the content box. */
+    const pad = 5.5 + params.labelSize * 0.8;
 
-    // Radial blob: angles roughly even with jitter, radius wanders smoothly.
-    const pts: Array<[number, number]> = [];
+    // Radial blob about the origin: angles roughly even with jitter, radius
+    // wanders smoothly. Shape only — it is scaled to the sheet below.
+    const baseR = 50;
+    const raw: Array<[number, number]> = [];
     let r = baseR;
     for (let i = 0; i < params.dots; i++) {
       const rng = ctx.rng.fork(`pt-${i}`);
       const a = (i / params.dots) * Math.PI * 2 + rng.next() * ((Math.PI * 2) / params.dots) * 0.45;
-      // Smooth radius walk, clamped so the shape stays plausible and inside.
+      // Smooth radius walk, clamped so the shape stays plausible.
       r = Math.max(baseR * 0.55, Math.min(baseR * 1.15, r + (rng.next() - 0.5) * baseR * 0.45));
-      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+      raw.push([r * Math.cos(a), r * Math.sin(a)]);
     }
+
+    // A wandering radius means the blob's extent is seed-dependent, so a fixed
+    // box would leave a different phantom margin on every sheet. Normalize
+    // instead: scale the blob to fill the area, then declare what we drew.
+    const xs = raw.map((p) => p[0]!), ys = raw.map((p) => p[1]!);
+    const minX = Math.min(...xs), minY = Math.min(...ys);
+    const spanX = Math.max(...xs) - minX || 1;
+    const spanY = Math.max(...ys) - minY || 1;
+    const fit = Math.min((MAX_W - pad * 2) / spanX, (MAX_H - pad * 2) / spanY);
+    const W = spanX * fit + pad * 2;
+    const H = spanY * fit + pad * 2;
+    const cx = W / 2, cy = H / 2;
+    const pts: Array<[number, number]> = raw.map(([x, y]) => [
+      (x - minX) * fit + pad,
+      (y - minY) * fit + pad,
+    ]);
 
     const parts: string[] = [];
     pts.forEach(([x, y], i) => {
