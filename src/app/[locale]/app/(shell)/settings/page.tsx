@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/profile/queries";
 import { getSubscription } from "@/lib/subscriptions/queries";
+import { getChildren } from "@/lib/children/queries";
+import { AdaptiveToggle } from "@/components/settings/adaptive-toggle";
 
 export default async function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -16,7 +18,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const [profile, subscription] = await Promise.all([getProfile(), getSubscription()]);
+  const [profile, subscription, children] = await Promise.all([getProfile(), getSubscription(), getChildren()]);
 
   return (
     <div className="max-w-md space-y-6">
@@ -34,6 +36,28 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
           />
         </CardContent>
       </Card>
+
+      {children.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t("settings.adaptiveTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* One honest sentence: what it does, and what turning it off means. */}
+            <p className="text-sm leading-snug text-ink-soft">{t("settings.adaptiveHint")}</p>
+            <div className="mt-3 divide-y divide-line border-t border-line">
+              {children.map((child) => (
+                <AdaptiveToggle
+                  key={child.id}
+                  childId={child.id}
+                  nickname={child.nickname}
+                  enabled={child.adaptive_enabled !== false}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

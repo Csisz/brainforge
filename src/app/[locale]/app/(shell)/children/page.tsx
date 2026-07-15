@@ -2,6 +2,8 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getChildren } from "@/lib/children/queries";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
+import { getCalibration } from "@/lib/adaptive/queries";
+import { LevelPanel } from "@/components/adaptive/level-dots";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -10,6 +12,15 @@ export default async function ChildrenPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const t = await getTranslations();
   const children = await getChildren();
+
+  const levelsByChild = Object.fromEntries(
+    await Promise.all(
+      children.map(async (child) => [
+        child.id,
+        (await getCalibration(child.id)).map((row) => ({ goal: row.goal, level: row.level })),
+      ]),
+    ),
+  );
 
   return (
     <div className="space-y-6">
@@ -39,6 +50,7 @@ export default async function ChildrenPage({ params }: { params: Promise<{ local
                       ))}
                     </div>
                   )}
+                  <LevelPanel levels={levelsByChild[child.id] ?? []} className="border-t border-line pt-2" />
                 </div>
               </CardContent>
             </Card>

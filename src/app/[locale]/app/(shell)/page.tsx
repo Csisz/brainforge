@@ -4,6 +4,8 @@ import { getSessions } from "@/lib/sessions/queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { lowestCoverageGoals } from "@/lib/children/goal-nudge";
 import { ChildCard } from "@/components/dashboard/child-card";
+import { getCalibration } from "@/lib/adaptive/queries";
+import { adaptiveNote } from "@/lib/adaptive/note";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
 
 export default async function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -15,6 +17,11 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
     getSessions(),
     getAchievementsByChild(),
   ]);
+
+  // What calibration last did per child, for the one calm line on the card.
+  const noteByChild = Object.fromEntries(
+    await Promise.all(children.map(async (c) => [c.id, adaptiveNote(await getCalibration(c.id))])),
+  );
 
   // Tally each child's session goals once, so every card's nudge is derived
   // from real history (or age-typical defaults when there's none).
@@ -35,6 +42,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
             child={child}
             nudgeGoals={lowestCoverageGoals(goalsByChild.get(child.id) ?? [], ageFromBirthMonth(child.birth_month))}
             achievements={achievementsByChild[child.id] ?? []}
+            note={noteByChild[child.id] ?? null}
           />
         ))}
       </div>

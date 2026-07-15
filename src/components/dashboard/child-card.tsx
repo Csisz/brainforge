@@ -10,17 +10,22 @@ import { ageFromBirthMonth } from "@/lib/children/age";
 import type { ChildRow } from "@/lib/children/queries";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
 import type { AchievementKind } from "@/lib/achievements";
+import type { AdaptiveNote } from "@/lib/adaptive/note";
 
 export async function ChildCard({
   child,
   nudgeGoals,
   achievements,
+  note,
 }: {
   child: ChildRow;
   nudgeGoals: DevelopmentGoal[];
   achievements: AchievementKind[];
+  /** What calibration last did, if it is worth saying out loud. */
+  note: AdaptiveNote;
 }) {
   const t = await getTranslations("dashboard");
+  const tAdaptive = await getTranslations("adaptive");
   const Icon = getAvatarIcon(child.avatar);
   const age = ageFromBirthMonth(child.birth_month);
 
@@ -45,6 +50,12 @@ export async function ChildCard({
           <div className="mt-1">
             <AchievementBadges kinds={achievements} />
           </div>
+        )}
+        {note && (
+          // Calm, never a verdict: no arrow, no colour, no number. A step down
+          // reads as "here is what we are working on", because that is what it
+          // is — the level describes the material, not the child.
+          <p className="mt-1 text-xs leading-snug text-ink-soft">{tAdaptive(note)}</p>
         )}
         {nudgeGoals.length > 0 && (
           <div className="mt-1 flex flex-col items-center gap-1.5">
