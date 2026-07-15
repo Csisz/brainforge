@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "verify": "tsx scripts/verify-worksheets.ts",
     "demo:worksheets": "tsx scripts/demo-worksheets.ts",
     "flow:test": "tsx --env-file=.env.local scripts/flow-test.ts"
   },
