@@ -15,8 +15,16 @@ import { esc } from "./svg";
  * Print pipeline decision: the SVG is sized in real millimetres
  * (width="210mm" viewBox="0 0 210 297"), so browser print → PDF is
  * dimensionally exact with @page { size: A4; margin: 0 }. Server-side PDF
- * (resvg + pdf-lib in an Edge Function) is a Sprint-3 TODO for batch export;
- * the SVG contract stays identical.
+ * (resvg + pdf-lib in an Edge Function) is deferred to Sprint 4 for batch
+ * export; the SVG contract stays identical.
+ *
+ * Thumbnail mode ({ thumbnail: true }) composes the *same* content with no
+ * chrome and no paper: the viewBox is the generator's own content box, so the
+ * task fills the frame instead of being a legible-only-at-A4 speck under a
+ * header. It is a second composition of one content contract — the reason
+ * chrome lives here and not in generators. Sizing is relative (100%/100% +
+ * preserveAspectRatio) because the caller owns the frame; the print route's
+ * millimetre contract is untouched.
  */
 
 const PAPERS = {
@@ -25,10 +33,16 @@ const PAPERS = {
 } as const;
 
 const MARGIN = 14; // mm — generous whitespace per PRD §6
+const THUMB_PAD = 4; // mm — keeps strokes off the frame edge in thumbnail mode
 
 export type ComposedPage = {
   svg: string;
   answerKeySvg?: string;
+};
+
+export type ComposeOptions = {
+  /** Chrome-less, paper-less render sized to the content box (catalog cards). */
+  thumbnail?: boolean;
 };
 
 /** Minimal i18n for on-sheet strings; will be replaced by next-intl messages. */
@@ -160,12 +174,27 @@ export function composeWorksheet(
   recipe: WorksheetRecipe,
   ctx: Omit<GeneratorContext, "rng">,
   meta: { childName?: string } = {},
+  opts: ComposeOptions = {},
 ): ComposedPage {
   const generator = getGenerator(recipe.generatorId);
   const rng = createRng(`${recipe.generatorId}:v${recipe.generatorVersion}:${recipe.seed}`);
   const fullCtx: GeneratorContext = { ...ctx, rng };
   const params = recipe.params ?? generator.defaultParams(fullCtx);
   const content = generator.generate(fullCtx, params);
+
+  if (opts.thumbnail) {
+    const vbW = content.width + THUMB_PAD * 2;
+    const vbH = content.height + THUMB_PAD * 2;
+    // No width/height in mm: the frame decides the size, the viewBox the crop.
+    const thumb = (body: string) => `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="${vbW}" height="${vbH}" fill="#fff"/>
+  <g transform="translate(${THUMB_PAD} ${THUMB_PAD})">${body}</g>
+</svg>`;
+    return {
+      svg: thumb(content.body),
+      answerKeySvg: content.answerKey ? thumb(content.answerKey) : undefined,
+    };
+  }
 
   const paper = PAPERS[ctx.render.paper];
   const innerW = paper.w - MARGIN * 2;

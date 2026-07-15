@@ -29,9 +29,12 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
   };
 
   const cards = allGenerators().map((g) => {
+    // Thumbnail mode: the task itself fills the card, not the top of an A4 sheet.
     const { svg } = composeWorksheet(
       { generatorId: g.id, generatorVersion: g.version, params: null, seed: `catalog-${g.id}` },
       ctx,
+      {},
+      { thumbnail: true },
     );
     return { id: g.id, svg, goals: g.goals, ageRange: g.ageRange };
   });
@@ -49,11 +52,13 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
             key={card.id}
             className="flex flex-col overflow-hidden rounded-card border border-line bg-card shadow-soft"
           >
-            {/* Cap the A4-tall preview to the recognizable top of the sheet so cards stay scannable. */}
-            <div className="relative h-56 overflow-hidden border-b border-line bg-white p-2 [&>svg]:h-auto [&>svg]:w-full">
+            {/* Sheet-like frame; the thumbnail letterboxes inside it, never crops. */}
+            <div className="aspect-[3/4] overflow-hidden border-b border-line bg-white p-3">
               {/* Trusted output: composeWorksheet() is our own deterministic renderer. */}
-              <div dangerouslySetInnerHTML={{ __html: card.svg }} />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
+              <div
+                className="h-full w-full [&>svg]:block [&>svg]:h-full [&>svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: card.svg }}
+              />
             </div>
             <div className="flex flex-1 flex-col gap-3 p-4">
               <div>
