@@ -104,19 +104,46 @@ Never hardcode that list: `allGenerators()` is the source, and the worksheet
 catalog (`/app/worksheets`) renders itself from it — a new generator appears
 there with a live preview the moment it registers.
 
-`npm run demo:worksheets` generates sample sheets into `demo-output/` and
-asserts that identical seeds produce identical output. Note the samples are
-rendered with a **fresh seed each run** and carry the render date, so they
-churn on every run — they are a visual smoke test, not golden files.
+## Regression guards
 
-`npm run flow:test` needs the local stack up (`supabase start`) and drives the
-whole product chain headlessly against it: magic-link signup via Mailpit →
+There is no test framework here yet; these two scripts are the safety net, and
+both iterate `allGenerators()` so a new worksheet type is covered the moment it
+registers.
+
+**`npm run verify`** — worksheet composition. The catalog and the print route
+share one composer with two modes, so a change made for a thumbnail can wreck a
+printable page. It asserts both contracts per generator: thumbnail mode returns
+the content viewBox with no chrome and a `box` that matches it; full-page mode
+still emits a 210×297mm sheet with header and footer; both re-render
+byte-identically. It also writes an HTML harness of every thumbnail for
+eyeballing.
+
+**`npm run demo:worksheets`** — golden files. Renders every generator into
+`demo-output/`, which is **tracked on purpose**: seeds and the render date are
+pinned, so output changes only when the engine changes. An unexpected
+`demo-output/` diff is therefore a regression signal — read it, don't re-commit
+it. Regenerate deliberately when a generator legitimately changes, and eyeball
+the diff before committing.
+
+**`npm run flow:test`** — the end-to-end product chain. Needs the local stack up
+(`supabase start`) and drives it headlessly: magic-link signup via Mailpit →
 child → a session containing a `dual_path` worksheet → print render → feedback
 → achievement. It asserts the properties the UI can't show you — that RLS hides
 a child from an unauthenticated client, that `unique(child,generator,seed)`
 rejects a repeat, that a recipe re-renders byte-identically, that `dual_path`
 keeps its non-gray header colors, and that re-awarding achievements is
 idempotent. Each run signs up a fresh throwaway user.
+
+## Known issues (don't debug these twice)
+
+- **`npm run build` warns that `process.version` is unsupported in the Edge
+  Runtime.** It comes from `@supabase/supabase-js` via `src/lib/supabase/
+  middleware.ts`, not from our code, and is harmless — the middleware runs fine.
+  Only a clean build shows it; incremental builds cache it away.
+- **`maze` and some other generators declare a content box larger than they
+  draw into**, so a catalog preview (which is shaped from the declared box) has
+  whitespace around the task. It shows on the printed sheet too. Fixing it means
+  tightening those generators' `content.width/height`.
 
 ## Local auth quickstart
 
