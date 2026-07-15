@@ -12,3 +12,7 @@ tsconfig.tsbuildinfo
 # Scratch renders from the sprint patch drops; demo-output/ is the tracked
 # sample set (`npm run demo:worksheets`).
 demo-samples/
+
+# Stray Claude Code config at the repo root (Claude Code reads .claude/,
+# so this file is inert) — personal machine config, not project code.
+settings.local.json
