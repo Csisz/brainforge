@@ -67,9 +67,9 @@ export function LoginForm() {
           <CardContent>
             <p className="text-sm text-ink-soft">
               {t.rich("checkEmailLocalHint", {
-                url: () => (
+                url: (chunks) => (
                   <a href={MAILPIT_URL} target="_blank" rel="noreferrer" className="font-medium text-crayon underline underline-offset-2">
-                    {MAILPIT_URL}
+                    {chunks}
                   </a>
                 ),
               })}
