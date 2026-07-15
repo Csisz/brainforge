@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "demo:worksheets": "tsx scripts/demo-worksheets.ts"
+    "demo:worksheets": "tsx scripts/demo-worksheets.ts",
+    "flow:test": "tsx --env-file=.env.local scripts/flow-test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

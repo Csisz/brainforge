@@ -8,7 +8,8 @@
     "login": "Bejelentkezés",
     "logout": "Kijelentkezés",
     "signupCta": "Kezdjük el ingyen",
-    "worksheets": "Feladatlapok"
+    "worksheets": "Feladatlapok",
+    "toggleSidebar": "Menü ki-be kapcsolása"
   },
   "common": {
     "appName": "BrainForge Kids",

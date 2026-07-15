@@ -8,7 +8,8 @@
     "login": "Log in",
     "logout": "Log out",
     "signupCta": "Start for free",
-    "worksheets": "Worksheets"
+    "worksheets": "Worksheets",
+    "toggleSidebar": "Toggle menu"
   },
   "common": {
     "appName": "BrainForge Kids",

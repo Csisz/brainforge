@@ -32,8 +32,8 @@ content never mix.
 **4. Print pipeline: real-millimetre SVG.**
 Pages are `width="210mm" viewBox="0 0 210 297"`, so browser print → PDF is
 dimensionally exact with `@page { size: A4; margin: 0 }`. Server-side batch
-PDF (resvg + pdf-lib in a Supabase Edge Function) reuses the identical SVG
-contract (Sprint 3).
+PDF (resvg + pdf-lib in a Supabase Edge Function) will reuse the identical
+SVG contract (deferred to Sprint 4 — not yet built).
 
 **5. Child data is minimized and locked down.**
 Children are stored as nickname + birth month only. Every table has RLS
@@ -46,6 +46,32 @@ material availability, and goal→generator matching. The `SessionSlot`
 contract is stable so the adaptive layer (PRD §7) can replace the difficulty
 heuristic without touching the composer.
 
+**7. The content layer carries the pedagogy, not the components.**
+A parent with no pedagogy background must never meet a bare label. Three
+message sections — `goalDescriptions`, `generatorDescriptions`, `activityHowTo`
+— explain every goal, worksheet type and physical activity, in all locales.
+They are content, not chrome: components look them up by id
+(`generatorDescriptions.${generator.id}`), so registering a generator or
+activity without its copy is a visible gap, never a silent one.
+
+**8. Pictograms are drawn, not photographed.**
+Physical activities (`src/lib/pictograms/`) are IKEA-style stick-figure strips
+emitted as inline SVG on the same mm grid as worksheets — hand-authored fixed
+geometry per activity (not seeded; unlike worksheets there is nothing to
+randomize). `composePictogram(activityKey)` → SVG or `null`, guarded by
+`hasPictogram()`, so coverage is deliberately partial: 5 of 17 activities have
+a strip today and the rest fall back to text with no UI branch. What makes the
+printed daily plan screen-free is the `activityHowTo` text, which every
+activity has; the strips are an accelerant, not the mechanism. No illustration
+assets, no CDN.
+
+**9. Bilateral ("Itt-Ott") worksheets are a family, not a flag.**
+`dual_path` and `dual_find` train two-hand simultaneous work. They are
+ordinary generators — no special-casing in the platform — but their header
+colors are *meaningful* (they tell each hand where to start), so print paths
+must never grayscale them. `lowInk` already handles this by numbering inside
+the dots.
+
 ## Layout
 
 ```
@@ -53,16 +79,44 @@ src/lib/random.ts                     seeded PRNG (sfc32) — sole randomness so
 src/lib/worksheets/types.ts           generator contract + closed domain unions
 src/lib/worksheets/svg.ts             mm-based SVG builder
 src/lib/worksheets/page.ts            A4/Letter page composer + answer keys
-src/lib/worksheets/registry.ts        plugin registry
-src/lib/worksheets/generators/        maze, tracing, pattern_completion (v1)
+src/lib/worksheets/registry.ts        plugin registry — the only list of types
+src/lib/worksheets/generators/        all 19 PRD §4 types (see below)
+src/lib/pictograms/                   stick-figure strips for physical activities
 src/lib/activities/engine.ts          daily session composer
+src/lib/achievements.ts               achievement catalog + pure evaluation
 src/lib/ai/provider.ts                LLM abstraction layer (Anthropic adapter)
 supabase/migrations/0001_init.sql     full schema + RLS + signup trigger
 scripts/demo-worksheets.ts            engine proof + determinism test
+scripts/flow-test.ts                  headless end-to-end acceptance test
 ```
 
+The 19 registered generators, by family:
+
+| Family | Generators |
+|---|---|
+| Motor / pre-writing | `tracing`, `maze`, `mirror_drawing`, `cut_and_paste` |
+| Visual perception | `pattern_completion`, `grid_copy`, `symmetry_grid`, `visual_search`, `hidden_objects` |
+| Attention / memory | `matching`, `memory_cards`, `arrow_board` |
+| Thinking | `logic_grid`, `sequencing`, `color_by_rule`, `counting`, `connect_the_dots` |
+| Bilateral ("Itt-Ott") | `dual_path`, `dual_find` — see decision 9 |
+
+Never hardcode that list: `allGenerators()` is the source, and the worksheet
+catalog (`/app/worksheets`) renders itself from it — a new generator appears
+there with a live preview the moment it registers.
+
 `npm run demo:worksheets` generates sample sheets into `demo-output/` and
-asserts that identical seeds produce identical output.
+asserts that identical seeds produce identical output. Note the samples are
+rendered with a **fresh seed each run** and carry the render date, so they
+churn on every run — they are a visual smoke test, not golden files.
+
+`npm run flow:test` needs the local stack up (`supabase start`) and drives the
+whole product chain headlessly against it: magic-link signup via Mailpit →
+child → a session containing a `dual_path` worksheet → print render → feedback
+→ achievement. It asserts the properties the UI can't show you — that RLS hides
+a child from an unauthenticated client, that `unique(child,generator,seed)`
+rejects a repeat, that a recipe re-renders byte-identically, that `dual_path`
+keeps its non-gray header colors, and that re-awarding achievements is
+idempotent. Each run signs up a fresh throwaway user.
 
 ## Local auth quickstart
 
@@ -80,9 +134,15 @@ asserts that identical seeds produce identical output.
 ## Sprint roadmap
 
 - **Sprint 1 (done):** engine core, 3 generators, session composer, schema, AI layer contract.
-- **Sprint 2:** landing page + auth + onboarding + child profiles; session wizard (goal/theme/duration/materials); worksheet viewer with print CSS; OpenAI/Gemini adapters; design system on the tokens in `globals.css`.
-- **Sprint 3:** remaining PRD §4 generators (symmetry, mirror drawing, hidden objects, memory cards, matching, logic grids, color-by-rule, connect-the-dots, counting, sequencing, cut & paste, visual scanning); Edge-Function batch PDF; activity history + dashboard.
-- **Sprint 4:** feedback capture + adaptive difficulty; achievements; Stripe subscriptions; accessibility modes (dyslexia/ADHD/autism-friendly rendering).
+- **Sprint 2 (done):** landing page + auth + onboarding + child profiles; session wizard (goal/theme/duration/materials); worksheet viewer with print CSS; OpenAI/Gemini adapters; design system on the tokens in `globals.css`.
+- **Sprint 3 (done):** all remaining PRD §4 generators (19 total) plus the
+  bilateral `dual_*` family; the content layer that explains every goal,
+  worksheet and activity to a non-pedagogue parent; worksheet catalog at
+  `/app/worksheets`; activity pictograms + screen-free daily-plan print;
+  feedback capture and achievements.
+- **Sprint 4:** adaptive difficulty (consuming the Sprint-3 feedback rows);
+  Edge-Function batch PDF; Stripe subscriptions; accessibility modes
+  (dyslexia/ADHD/autism-friendly rendering).
 
 ## Deliberately deferred (TODO, per PRD roadmap — not invented features)
 
