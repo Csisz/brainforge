@@ -5,7 +5,7 @@ import { getChild } from "@/lib/children/queries";
 import { getProfile } from "@/lib/profile/queries";
 import { composePictogram, hasPictogram } from "@/lib/pictograms";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
-import type { SessionPlan } from "@/lib/activities/engine";
+import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { PrintButton } from "@/components/print/print-button";
 
 /**
@@ -32,7 +32,7 @@ export default async function SessionPlanPrintPage({
   const [child, profile] = await Promise.all([getChild(session.child_id), getProfile()]);
   if (!child) notFound();
 
-  const plan = session.plan as SessionPlan;
+  const plan = session.plan as StoredSessionPlan;
   const paperSize = profile?.paper_size ?? "a4";
 
   return (

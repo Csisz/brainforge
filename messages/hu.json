@@ -241,7 +241,9 @@
       "3": "Korának megfelelő kihívás.",
       "4": "Kihívást jelent — ha már gyakorlott.",
       "5": "A legnehezebb — magabiztos gyerekeknek."
-    }
+    },
+    "difficultyAuto": "Automatikus (ajánlott)",
+    "difficultyAutoHint": "A nehézséget fejlesztési célonként állítjuk be aszerint, hogyan mentek az eddigi foglalkozások. Kikapcsolva te választasz szintet."
   },
   "print": {
     "printButton": "Nyomtatás",
@@ -265,7 +267,11 @@
     "subscriptionTitle": "Előfizetés",
     "currentPlanLabel": "Jelenlegi csomag",
     "upgradeCta": "Frissítés Premiumra",
-    "upgradeComingSoon": "Hamarosan elérhető."
+    "upgradeComingSoon": "Hamarosan elérhető.",
+    "adaptiveTitle": "Adaptív nehézség",
+    "adaptiveHint": "Bekapcsolva a feladatok nehézsége magától követi a gyereket: ha jól megy, lassan emelkedik, ha nehéz volt, azonnal visszavesz. Kikapcsolva minden foglalkozásnál te állítod be.",
+    "adaptiveOn": "Bekapcsolva",
+    "adaptiveOff": "Kikapcsolva"
   },
   "planTiers": {
     "free": "Ingyenes",
@@ -297,7 +303,12 @@
     "doneBody": "A mai foglalkozást elmentettük.",
     "backToDashboard": "Vissza az áttekintéshez",
     "howToToggle": "Hogyan játsszátok?",
-    "printPlan": "Napi terv nyomtatása"
+    "printPlan": "Napi terv nyomtatása",
+    "easeLabel": "Hogy ment?",
+    "easeEasy": "Könnyen ment",
+    "easeOk": "Ment",
+    "easeHard": "Nehéz volt",
+    "easeHint": "Ebből tudjuk, milyen feladat jöjjön legközelebb."
   },
   "goalDescriptions": {
     "attention": "Mennyi ideig tud egy dologra figyelni, és mennyire tudja kizárni a zavaró ingereket.",
@@ -402,5 +413,12 @@
       "name": "Kétkezes mester",
       "description": "Öt kétkezes feladatlap kész — ügyes mindkét kéz!"
     }
+  },
+  "adaptive": {
+    "stepDown": "Most a magabiztosság építésén dolgozunk",
+    "stepUp": "Szintlépés! Új kihívás jön",
+    "rotate": "Új feladattípusokat hozunk — ezt már kívülről fújja",
+    "levelLabel": "jelenlegi szint",
+    "levelOf": "{level}. szint az 5-ből"
   }
 }

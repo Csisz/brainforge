@@ -3,13 +3,30 @@
 import { createClient } from "@/lib/supabase/server";
 import type { SessionSlot } from "@/lib/activities/engine";
 import { evaluateAchievements } from "@/lib/achievements";
+import { runCalibrationForSession } from "@/lib/adaptive/queries";
+import { getChild } from "@/lib/children/queries";
+import { ageFromBirthMonth } from "@/lib/children/age";
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+/**
+ * How the sheet went, in the parent's words. We never ask a parent to score
+ * their child out of 100 — they pick one of three honest descriptions and we
+ * map it to the success signal the calibration engine needs.
+ */
+export const EASE_SUCCESS: Record<Ease, number> = {
+  easy: 1,
+  ok: 0.65,
+  hard: 0.3,
+};
+export type Ease = "easy" | "ok" | "hard";
 
 export type SlotFeedback = {
   slotIndex: number;
   slotKind: SessionSlot["kind"];
   completed: boolean;
   enjoyment: number | null;
+  /** Worksheet slots only — drives adaptive calibration. */
+  ease?: Ease | null;
 };
 
 export async function submitSessionFeedback(
@@ -30,6 +47,7 @@ export async function submitSessionFeedback(
       slot_kind: e.slotKind,
       completed: e.completed,
       enjoyment: e.enjoyment,
+      success_rate: e.ease ? EASE_SUCCESS[e.ease] : null,
     })),
   );
   if (feedbackError) return { error: feedbackError.message };
@@ -46,6 +64,24 @@ export async function submitSessionFeedback(
   if (session?.child_id) {
     try {
       await awardAchievements(supabase, session.child_id, user.id);
+    } catch {
+      /* ignore — feedback already saved */
+    }
+
+    // Calibration likewise: a child's next session being mis-levelled is a
+    // worse outcome than a lost update, but neither justifies losing feedback
+    // the parent already gave us. Idempotent per session inside.
+    try {
+      const child = await getChild(session.child_id);
+      if (child) {
+        await runCalibrationForSession(
+          supabase,
+          sessionId,
+          session.child_id,
+          user.id,
+          ageFromBirthMonth(child.birth_month),
+        );
+      }
     } catch {
       /* ignore — feedback already saved */
     }

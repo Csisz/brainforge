@@ -7,7 +7,7 @@ import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-cont
 import { getProfile } from "@/lib/profile/queries";
 import { composeWorksheet } from "@/lib/worksheets/page";
 import { composePictogram, hasPictogram } from "@/lib/pictograms";
-import type { SessionPlan } from "@/lib/activities/engine";
+import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
 
 export default async function SessionViewPage({
@@ -24,7 +24,7 @@ export default async function SessionViewPage({
   const child = await getChild(session.child_id);
   if (!child) notFound();
 
-  const plan = session.plan as SessionPlan;
+  const plan = session.plan as StoredSessionPlan;
   const [worksheetRecords, profile] = await Promise.all([getSessionWorksheets(id), getProfile()]);
   const ctx = buildWorksheetRenderContext(child, session, locale, profile?.paper_size ?? "a4");
 

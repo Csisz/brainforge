@@ -20,10 +20,33 @@ export type SessionRequest = {
   theme: ThemeId;
   durationMin: 10 | 20 | 30 | 45;
   materials: MaterialId[];
+  /**
+   * Session-wide fallback. Used for any goal `adaptive` does not cover, and for
+   * every goal when the parent overrode the slider or turned adaptive off.
+   */
   difficulty: Difficulty;
   /** (generatorId, paramsHash) pairs used recently — never repeat (PRD §6). */
   recentWorksheets: Array<{ generatorId: string; seed: string }>;
   locale: string;
+  /**
+   * Adaptive calibration (Sprint 5). Absent ⇒ every worksheet uses
+   * `difficulty`. The server loads it and passes it in; this module stays pure
+   * and knows nothing about the DB or the calibration rules.
+   */
+  adaptive?: AdaptivePlan;
+};
+
+/** What calibration tells the composer, resolved per goal by the server. */
+export type AdaptivePlan = {
+  /** Calibrated level per goal. A goal absent here falls back to `difficulty`. */
+  levelByGoal: Partial<Record<DevelopmentGoal, Difficulty>>;
+  /** rotate_variety: generator ids to avoid for a goal (success without joy). */
+  avoidByGoal?: Partial<Record<DevelopmentGoal, string[]>>;
+  /**
+   * pending_anchor: this goal's next session owes the child a guaranteed win,
+   * so one worksheet must come from the named generator.
+   */
+  anchor?: { goal: DevelopmentGoal; generatorId: string };
 };
 
 export type MaterialId =
@@ -33,14 +56,39 @@ export type MaterialId =
 export type SessionSlot =
   | { kind: "warmup"; activityKey: string; minutes: number }
   | { kind: "movement"; activityKey: string; minutes: number }
-  | { kind: "worksheet"; recipe: WorksheetRecipe; minutes: number }
+  | { kind: "worksheet"; recipe: WorksheetRecipe; minutes: number; goal: DevelopmentGoal; difficulty: Difficulty }
   | { kind: "memory_game"; activityKey: string; minutes: number }
   | { kind: "creative"; activityKey: string; minutes: number }
   | { kind: "reward"; activityKey: string; minutes: number }
   | { kind: "reflection"; activityKey: string; minutes: number };
 
+export type WorksheetSlot = Extract<SessionSlot, { kind: "worksheet" }>;
+
+/**
+ * A slot read back from `sessions.plan`, where `goal`/`difficulty` may be
+ * missing — but ONLY because the row predates Sprint 5. The composer types them
+ * as required, so a freshly composed slot always has them: a worksheet slot
+ * without a goal can mean "legacy row", never "new bug silently skipping
+ * calibration". Read stored plans as this; compose as SessionSlot.
+ */
+export type StoredSessionSlot =
+  | Exclude<SessionSlot, { kind: "worksheet" }>
+  | (Omit<WorksheetSlot, "goal" | "difficulty"> & { goal?: DevelopmentGoal; difficulty?: Difficulty });
+
 export type SessionPlan = {
   slots: SessionSlot[];
+  totalMinutes: number;
+};
+
+/**
+ * A plan read back from `sessions.plan`. Always read stored plans as this, never
+ * as SessionPlan: casting jsonb to SessionPlan tells the compiler every
+ * worksheet slot has a goal, which is untrue for pre-Sprint-5 rows and hides
+ * exactly the case that must stay visible. A freshly composed SessionPlan is
+ * assignable to it.
+ */
+export type StoredSessionPlan = {
+  slots: StoredSessionSlot[];
   totalMinutes: number;
 };
 
@@ -126,15 +174,17 @@ export function composeSession(req: SessionRequest): SessionPlan {
   const template = TEMPLATES[req.durationMin];
   const usedKeys = new Set<string>();
 
+  // The anchor is owed to exactly one worksheet, so it is spent on the first
+  // one composed and not offered to the rest.
+  let anchor = req.adaptive?.anchor;
+
   const slots: SessionSlot[] = template.map((slot) => {
     if (slot.kind === "worksheet") {
-      return { kind: "worksheet", recipe: pickWorksheet(req, rng), minutes: slot.minutes };
+      const sheet = pickWorksheet(req, rng, anchor);
+      anchor = undefined;
+      return { kind: "worksheet", minutes: slot.minutes, ...sheet };
     }
-    const pool = PHYSICAL_POOL[slot.kind].filter(
-      (a) => a.minAge <= req.age && a.materials.every((m) => req.materials.includes(m)) && !usedKeys.has(a.key),
-    );
-    const fallback = PHYSICAL_POOL[slot.kind].filter((a) => a.materials.length === 0 && a.minAge <= req.age);
-    const chosen = rng.pick(pool.length ? pool : fallback);
+    const chosen = rng.pick(physicalCandidates(slot.kind, req, usedKeys));
     usedKeys.add(chosen.key);
     return { kind: slot.kind, activityKey: chosen.key, minutes: slot.minutes } as SessionSlot;
   });
@@ -142,20 +192,77 @@ export function composeSession(req: SessionRequest): SessionPlan {
   return { slots, totalMinutes: template.reduce((s, t) => s + t.minutes, 0) };
 }
 
-function pickWorksheet(req: SessionRequest, rng: ReturnType<typeof createRng>): WorksheetRecipe {
-  const goal = rng.pick(req.goals);
+type PhysicalKind = Exclude<SessionSlot["kind"], "worksheet">;
+
+/**
+ * Candidate activities for a physical slot, best tier first — and NEVER empty.
+ *
+ * Preference order: everything fits → no materials needed → age fits but the
+ * cupboard doesn't → anything of this kind. The last two tiers exist because
+ * the ideal ("never suggest what the family doesn't have") has no answer for
+ * some real requests: every `creative` activity needs materials, so a 45-minute
+ * session with only pencil and paper had no candidate at all, and every
+ * `memory_game` is 3+, so a 2-year-old had none either. Both are reachable from
+ * the wizard's own defaults, and both used to throw "pick() on empty array"
+ * before the parent ever saw a plan. A slightly-off suggestion degrades the
+ * session; an exception loses it.
+ */
+function physicalCandidates(kind: PhysicalKind, req: SessionRequest, usedKeys: Set<string>) {
+  const all = PHYSICAL_POOL[kind];
+  const fits = (a: (typeof all)[number]) => a.materials.every((m) => req.materials.includes(m));
+  const tiers = [
+    all.filter((a) => a.minAge <= req.age && fits(a) && !usedKeys.has(a.key)),
+    all.filter((a) => a.materials.length === 0 && a.minAge <= req.age),
+    all.filter((a) => a.minAge <= req.age),
+    all,
+  ];
+  return tiers.find((t) => t.length > 0) ?? all;
+}
+
+/**
+ * Pick one worksheet, and record WHICH GOAL it was picked for. That attribution
+ * is the whole basis of per-goal calibration: feedback on this slot moves this
+ * goal's level and no other's, so a child who aced the fine-motor sheet is not
+ * stepped down because the memory game went badly.
+ */
+function pickWorksheet(
+  req: SessionRequest,
+  rng: ReturnType<typeof createRng>,
+  anchor: AdaptivePlan["anchor"],
+): Pick<WorksheetSlot, "recipe" | "goal" | "difficulty"> {
+  const goal = anchor?.goal ?? rng.pick(req.goals);
+  const difficulty = req.adaptive?.levelByGoal[goal] ?? req.difficulty;
+
+  const generator = anchor
+    ? // The anchor is a promise of a win after a hard session: take it as given
+      // rather than letting anti-repetition or variety talk us out of it.
+      (findGenerators({ age: req.age }).find((g) => g.id === anchor.generatorId) ?? pickFrom(req, rng, goal))
+    : pickFrom(req, rng, goal);
+
+  return {
+    goal,
+    difficulty,
+    recipe: {
+      generatorId: generator.id,
+      generatorVersion: generator.version,
+      // null ⇒ defaultParams(ctx) at render time, driven by slot.difficulty.
+      params: null,
+      seed: freshSeed(),
+    },
+  };
+}
+
+function pickFrom(req: SessionRequest, rng: ReturnType<typeof createRng>, goal: DevelopmentGoal) {
   const candidates = findGenerators({ goal, age: req.age });
   const pool = candidates.length ? candidates : findGenerators({ age: req.age });
 
-  // Anti-repetition (PRD §6): deprioritize generators used recently.
-  const recentIds = new Set(req.recentWorksheets.map((w) => w.generatorId));
-  const freshPool = pool.filter((g) => !recentIds.has(g.id));
-  const generator = rng.pick(freshPool.length ? freshPool : pool);
-
-  return {
-    generatorId: generator.id,
-    generatorVersion: generator.version,
-    params: null, // null ⇒ defaultParams(ctx) at render time; adaptive layer will override
-    seed: freshSeed(),
-  };
+  // Anti-repetition (PRD §6): deprioritize generators used recently. When
+  // calibration reports boredom, this goal's recent ids are excluded too —
+  // succeeding without enjoying it means the material is stale, not too easy.
+  const avoid = new Set([
+    ...req.recentWorksheets.map((w) => w.generatorId),
+    ...(req.adaptive?.avoidByGoal?.[goal] ?? []),
+  ]);
+  const freshPool = pool.filter((g) => !avoid.has(g.id));
+  return rng.pick(freshPool.length ? freshPool : pool);
 }

@@ -17,6 +17,7 @@ import { startSession } from "@/lib/sessions/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 const DURATIONS: SessionRequest["durationMin"][] = [10, 20, 30, 45];
@@ -61,7 +62,8 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       theme,
       durationMin,
       materials,
-      difficulty,
+      // null ⇒ let calibration pick a level per goal.
+      difficulty: manualDifficulty,
       locale,
     });
     if (result.error || !result.sessionId) {
@@ -229,21 +231,33 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       <Card>
         <CardHeader>
           <CardTitle>
-            {t("difficultyLabel")} — {difficulty}/5
+            {t("difficultyLabel")} — {manualDifficulty === null ? t("difficultyAuto") : `${difficulty}/5`}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <Slider
-            value={[difficulty]}
-            min={1}
-            max={5}
-            step={1}
-            onValueChange={([v]) => setManualDifficulty(v as Difficulty)}
-          />
-          <p className="text-sm font-medium text-ink" aria-live="polite">
-            {t(`difficultyHint.${difficulty}`)}
-          </p>
-          <p className="text-xs text-ink-soft">{t("difficultyManualHint")}</p>
+        <CardContent className="space-y-3">
+          <div className="flex items-start justify-between gap-4">
+            <p className="text-xs text-ink-soft">{t("difficultyAutoHint")}</p>
+            <Switch
+              checked={manualDifficulty === null}
+              onCheckedChange={(on: boolean) => setManualDifficulty(on ? null : defaultDifficulty(age))}
+              aria-label={t("difficultyAuto")}
+            />
+          </div>
+          {manualDifficulty !== null && (
+            <>
+              <Slider
+                value={[difficulty]}
+                min={1}
+                max={5}
+                step={1}
+                onValueChange={([v]) => setManualDifficulty(v as Difficulty)}
+              />
+              <p className="text-sm font-medium text-ink" aria-live="polite">
+                {t(`difficultyHint.${difficulty}`)}
+              </p>
+              <p className="text-xs text-ink-soft">{t("difficultyManualHint")}</p>
+            </>
+          )}
         </CardContent>
       </Card>
 

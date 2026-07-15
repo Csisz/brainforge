@@ -8,6 +8,7 @@ import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-cont
 import { composeWorksheet } from "@/lib/worksheets/page";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
+import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { PrintButton } from "@/components/print/print-button";
 
 export default async function WorksheetPrintPage({
@@ -32,8 +33,18 @@ export default async function WorksheetPrintPage({
   const paperSize = profile?.paper_size ?? "a4";
   // Session worksheets freeze their difficulty/theme; catalog worksheets (no
   // owning session) derive a sensible context from the child at print time.
+  //
+  // Difficulty comes from the SLOT, not the session: calibration is per goal, so
+  // two sheets in one session can legitimately print at different levels. Fall
+  // back to the session's level for pre-Sprint-5 plans, whose slots carry none.
+  const slot = session
+    ? (session.plan as StoredSessionPlan).slots.find(
+        (s) => s.kind === "worksheet" && s.recipe.seed === worksheet.seed,
+      )
+    : undefined;
+  const slotDifficulty = slot?.kind === "worksheet" ? slot.difficulty : undefined;
   const renderSource = session
-    ? { difficulty: session.difficulty, theme: session.theme }
+    ? { difficulty: slotDifficulty ?? session.difficulty, theme: session.theme }
     : {
         difficulty: defaultDifficulty(ageFromBirthMonth(child.birth_month)),
         theme: child.preferred_themes[0] ?? "nature",

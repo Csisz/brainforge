@@ -4,16 +4,18 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { Star, Printer, PartyPopper, ChevronDown } from "lucide-react";
-import type { SessionSlot } from "@/lib/activities/engine";
+import type { StoredSessionSlot } from "@/lib/activities/engine";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
-import { submitSessionFeedback, type SlotFeedback } from "@/lib/feedback/actions";
+import { submitSessionFeedback, type SlotFeedback, type Ease } from "@/lib/feedback/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
 export type WorksheetSlotData = { svg: string; worksheetId: string };
 
-type Entry = { completed: boolean; enjoyment: number };
+type Entry = { completed: boolean; enjoyment: number; ease: Ease | null };
+
+const EASE_OPTIONS: Ease[] = ["easy", "ok", "hard"];
 
 export function SessionView({
   sessionId,
@@ -23,7 +25,7 @@ export function SessionView({
   alreadyCompleted,
 }: {
   sessionId: string;
-  slots: SessionSlot[];
+  slots: StoredSessionSlot[];
   worksheetData: Record<number, WorksheetSlotData>;
   /** Server-rendered inline-SVG pictogram strips keyed by slot index (physical slots only). */
   pictograms: Record<number, string>;
@@ -33,7 +35,7 @@ export function SessionView({
   const router = useRouter();
 
   const [entries, setEntries] = useState<Record<number, Entry>>(() =>
-    Object.fromEntries(slots.map((_, i) => [i, { completed: false, enjoyment: 0 }])),
+    Object.fromEntries(slots.map((_, i) => [i, { completed: false, enjoyment: 0, ease: null }])),
   );
   const [expandedHowTo, setExpandedHowTo] = useState<Record<number, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +50,7 @@ export function SessionView({
     setEntries((prev) => ({ ...prev, [index]: { ...prev[index]!, ...patch } }));
   }
 
-  function slotLabel(slot: SessionSlot): string {
+  function slotLabel(slot: StoredSessionSlot): string {
     if (slot.kind === "worksheet") return t(`generators.${slot.recipe.generatorId}`);
     return t(slot.activityKey);
   }
@@ -67,6 +69,7 @@ export function SessionView({
       slotKind: slot.kind,
       completed: entries[i]!.completed,
       enjoyment: entries[i]!.enjoyment || null,
+      ease: entries[i]!.ease,
     }));
     const result = await submitSessionFeedback(sessionId, payload);
     if (result.error) {
@@ -194,6 +197,37 @@ export function SessionView({
                       </button>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Worksheet slots only: how it went is what calibrates the next
+                  session's level for this slot's goal. Three honest phrasings —
+                  we never ask a parent to score their child. */}
+              {!alreadyCompleted && slot.kind === "worksheet" && (
+                <div className="mt-3 border-t border-line pt-3">
+                  <p className="text-sm text-ink">{t("sessionView.easeLabel")}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {EASE_OPTIONS.map((option) => {
+                      const selected = entries[i]!.ease === option;
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() => setEntry(i, { ease: option })}
+                          className={cn(
+                            "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                            selected
+                              ? "border-crayon bg-crayon-soft text-crayon-text"
+                              : "border-line bg-card text-ink-soft hover:bg-mist",
+                          )}
+                        >
+                          {t(`sessionView.ease${option[0]!.toUpperCase()}${option.slice(1)}`)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-1.5 text-xs text-ink-soft">{t("sessionView.easeHint")}</p>
                 </div>
               )}
             </li>

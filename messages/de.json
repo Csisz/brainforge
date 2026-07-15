@@ -241,7 +241,9 @@
       "3": "Eine altersgerechte Herausforderung.",
       "4": "Herausfordernd — für ein bereites Kind.",
       "5": "Am schwersten — für sichere Kinder."
-    }
+    },
+    "difficultyAuto": "Automatisch (empfohlen)",
+    "difficultyAutoHint": "Wir stellen das Niveau pro Förderziel danach ein, wie die bisherigen Einheiten liefen. Ausgeschaltet wählst du das Niveau selbst."
   },
   "print": {
     "printButton": "Drucken",
@@ -265,7 +267,11 @@
     "subscriptionTitle": "Abonnement",
     "currentPlanLabel": "Aktueller Plan",
     "upgradeCta": "Auf Premium upgraden",
-    "upgradeComingSoon": "Demnächst verfügbar."
+    "upgradeComingSoon": "Demnächst verfügbar.",
+    "adaptiveTitle": "Adaptive Schwierigkeit",
+    "adaptiveHint": "Eingeschaltet folgt das Niveau deinem Kind von selbst: Es steigt langsam, solange es gut läuft, und geht nach einer schweren Einheit sofort zurück. Ausgeschaltet stellst du es für jede Einheit selbst ein.",
+    "adaptiveOn": "Ein",
+    "adaptiveOff": "Aus"
   },
   "planTiers": {
     "free": "Kostenlos",
@@ -297,7 +303,12 @@
     "doneBody": "Die heutige Einheit wurde gespeichert.",
     "backToDashboard": "Zurück zur Übersicht",
     "howToToggle": "Wie spielt ihr?",
-    "printPlan": "Tagesplan drucken"
+    "printPlan": "Tagesplan drucken",
+    "easeLabel": "Wie lief es?",
+    "easeEasy": "Ging ganz leicht",
+    "easeOk": "Ging gut",
+    "easeHard": "War schwer",
+    "easeHint": "So wissen wir, was beim nächsten Mal kommen soll."
   },
   "goalDescriptions": {
     "attention": "Wie lange das Kind bei einer Sache bleibt und Ablenkungen ausblenden kann.",
@@ -402,5 +413,12 @@
       "name": "Beidhändiger Meister",
       "description": "Fünf beidhändige Arbeitsblätter geschafft — beide Hände sind spitze!"
     }
+  },
+  "adaptive": {
+    "stepDown": "Gerade bauen wir Selbstvertrauen auf",
+    "stepUp": "Neues Level! Eine neue Herausforderung wartet",
+    "rotate": "Es kommen neue Aufgabenarten — diese sitzt schon",
+    "levelLabel": "aktuelles Niveau",
+    "levelOf": "Niveau {level} von 5"
   }
 }

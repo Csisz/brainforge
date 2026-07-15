@@ -1,15 +1,15 @@
 import { getTranslations } from "next-intl/server";
-import type { SessionPlan, SessionSlot } from "@/lib/activities/engine";
+import type { StoredSessionPlan, StoredSessionSlot } from "@/lib/activities/engine";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import { cn } from "@/lib/utils";
 
-async function slotLabel(slot: SessionSlot, t: Awaited<ReturnType<typeof getTranslations>>): Promise<string> {
+async function slotLabel(slot: StoredSessionSlot, t: Awaited<ReturnType<typeof getTranslations>>): Promise<string> {
   if (slot.kind === "worksheet") return t(`generators.${slot.recipe.generatorId}`);
   return t(slot.activityKey);
 }
 
 /** Vertical timeline of session slots — shared by the landing sample plan (M2) and the real session view (M5). */
-export async function SessionTimeline({ plan, className }: { plan: SessionPlan; className?: string }) {
+export async function SessionTimeline({ plan, className }: { plan: StoredSessionPlan; className?: string }) {
   const t = await getTranslations();
 
   return (
