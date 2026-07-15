@@ -179,7 +179,7 @@ function t(table: Record<string, Record<string, string>>, key: string, locale: s
 export function composeWorksheet(
   recipe: WorksheetRecipe,
   ctx: Omit<GeneratorContext, "rng">,
-  meta: { childName?: string } = {},
+  meta: { childName?: string; date?: Date } = {},
   opts: ComposeOptions = {},
 ): ComposedPage {
   const generator = getGenerator(recipe.generatorId);
@@ -213,7 +213,7 @@ export function composeWorksheet(
   const page = (body: string, watermark?: string) => `<svg xmlns="http://www.w3.org/2000/svg" width="${paper.w}mm" height="${paper.h}mm" viewBox="0 0 ${paper.w} ${paper.h}" font-family="system-ui, -apple-system, sans-serif">
   <rect width="${paper.w}" height="${paper.h}" fill="#fff"/>
   <text x="${MARGIN}" y="${MARGIN + 6}" font-size="6.5" font-weight="600" fill="#111">${esc(t(TITLES, recipe.generatorId, ctx.render.locale))}</text>
-  <text x="${paper.w - MARGIN}" y="${MARGIN + 6}" font-size="3.6" fill="#888" text-anchor="end">${esc(meta.childName ?? "")}${meta.childName ? "  ·  " : ""}${esc(dateLabel(ctx.render.locale))}</text>
+  <text x="${paper.w - MARGIN}" y="${MARGIN + 6}" font-size="3.6" fill="#888" text-anchor="end">${esc(meta.childName ?? "")}${meta.childName ? "  ·  " : ""}${esc(dateLabel(ctx.render.locale, meta.date))}</text>
   <text x="${MARGIN}" y="${MARGIN + 14}" font-size="4.2" fill="#444">${esc(t(INSTRUCTIONS, content.instructionKey, ctx.render.locale))}</text>
   <line x1="${MARGIN}" y1="${MARGIN + 18}" x2="${paper.w - MARGIN}" y2="${MARGIN + 18}" stroke="#e5e5e5" stroke-width="0.3"/>
   ${watermark ?? ""}
@@ -234,11 +234,16 @@ export function composeWorksheet(
   };
 }
 
-function dateLabel(locale: string): string {
+/**
+ * Printed date. Defaults to today; `meta.date` pins it so a caller that needs
+ * a reproducible sheet (the demo golden files) is not at the mercy of the
+ * calendar — the only non-deterministic input in an otherwise seeded pipeline.
+ */
+function dateLabel(locale: string, date = new Date()): string {
   try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date());
+    return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(date);
   } catch {
-    return new Date().toISOString().slice(0, 10);
+    return date.toISOString().slice(0, 10);
   }
 }
 
