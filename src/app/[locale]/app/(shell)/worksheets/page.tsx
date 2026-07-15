@@ -12,6 +12,15 @@ const PREVIEW_AGE: Age = 5;
 const PREVIEW_DIFFICULTY: Difficulty = 3;
 const PREVIEW_THEME: ThemeId = "nature";
 
+// Each preview takes its sheet's own shape — generators author anything from
+// tall portrait to wide landscape, and a fixed frame would letterbox the
+// extremes into a void. Clamped so a future outlier can't produce a card that
+// is a sliver or a tower; card *width* stays uniform, only height varies.
+const ASPECT_MIN = 3 / 4; // 0.75 — tallest allowed (portrait sheet)
+const ASPECT_MAX = 16 / 10; // 1.6 — widest allowed
+const frameAspect = (box: { width: number; height: number }) =>
+  Math.min(ASPECT_MAX, Math.max(ASPECT_MIN, box.width / box.height));
+
 export default async function WorksheetsCatalogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -30,13 +39,13 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
 
   const cards = allGenerators().map((g) => {
     // Thumbnail mode: the task itself fills the card, not the top of an A4 sheet.
-    const { svg } = composeWorksheet(
+    const { svg, box } = composeWorksheet(
       { generatorId: g.id, generatorVersion: g.version, params: null, seed: `catalog-${g.id}` },
       ctx,
       {},
       { thumbnail: true },
     );
-    return { id: g.id, svg, goals: g.goals, ageRange: g.ageRange };
+    return { id: g.id, svg, goals: g.goals, ageRange: g.ageRange, aspect: frameAspect(box!) };
   });
 
   return (
@@ -52,8 +61,11 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
             key={card.id}
             className="flex flex-col overflow-hidden rounded-card border border-line bg-card shadow-soft"
           >
-            {/* Sheet-like frame; the thumbnail letterboxes inside it, never crops. */}
-            <div className="aspect-[3/4] overflow-hidden border-b border-line bg-white p-3">
+            {/* Sheet-like frame shaped to this sheet — no crop, no letterbox void. */}
+            <div
+              style={{ aspectRatio: String(card.aspect) }}
+              className="overflow-hidden border-b border-line bg-white p-3"
+            >
               {/* Trusted output: composeWorksheet() is our own deterministic renderer. */}
               <div
                 className="h-full w-full [&>svg]:block [&>svg]:h-full [&>svg]:w-full"

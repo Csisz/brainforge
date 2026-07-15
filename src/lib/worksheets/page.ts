@@ -38,6 +38,12 @@ const THUMB_PAD = 4; // mm — keeps strokes off the frame edge in thumbnail mod
 export type ComposedPage = {
   svg: string;
   answerKeySvg?: string;
+  /**
+   * Thumbnail mode only: the SVG's viewBox size in mm (content box + padding).
+   * The caller sizes its frame from this so the sheet fills it instead of
+   * letterboxing into a fixed ratio.
+   */
+  box?: { width: number; height: number };
 };
 
 export type ComposeOptions = {
@@ -193,6 +199,7 @@ export function composeWorksheet(
     return {
       svg: thumb(content.body),
       answerKeySvg: content.answerKey ? thumb(content.answerKey) : undefined,
+      box: { width: vbW, height: vbH },
     };
   }
 
