@@ -271,7 +271,8 @@
     "adaptiveTitle": "Adaptív nehézség",
     "adaptiveHint": "Bekapcsolva a feladatok nehézsége magától követi a gyereket: ha jól megy, lassan emelkedik, ha nehéz volt, azonnal visszavesz. Kikapcsolva minden foglalkozásnál te állítod be.",
     "adaptiveOn": "Bekapcsolva",
-    "adaptiveOff": "Kikapcsolva"
+    "adaptiveOff": "Kikapcsolva",
+    "usageLabel": "Felhasználás"
   },
   "planTiers": {
     "free": "Ingyenes",
@@ -420,5 +421,15 @@
     "rotate": "Új feladattípusokat hozunk — ezt már kívülről fújja",
     "levelLabel": "jelenlegi szint",
     "levelOf": "{level}. szint az 5-ből"
+  },
+  "plan": {
+    "unlimited": "Korlátlan",
+    "usageUsed": "{used} / {limit} feladatlap ezen a héten"
+  },
+  "upgrade": {
+    "title": "Elfogyott a heti ingyenes kereted",
+    "body": "Az ingyenes csomagban hetente 3 feladatlapot készíthetsz. A foglalkozás többi része megvan — csak a feladatlap vár.",
+    "unlockAt": "A következő ingyenes feladatlap {date}-kor nyílik meg.",
+    "cta": "Nézd meg a Premium csomagot"
   }
 }

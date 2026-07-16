@@ -271,7 +271,8 @@
     "adaptiveTitle": "Adaptive Schwierigkeit",
     "adaptiveHint": "Eingeschaltet folgt das Niveau deinem Kind von selbst: Es steigt langsam, solange es gut läuft, und geht nach einer schweren Einheit sofort zurück. Ausgeschaltet stellst du es für jede Einheit selbst ein.",
     "adaptiveOn": "Ein",
-    "adaptiveOff": "Aus"
+    "adaptiveOff": "Aus",
+    "usageLabel": "Nutzung"
   },
   "planTiers": {
     "free": "Kostenlos",
@@ -420,5 +421,15 @@
     "rotate": "Es kommen neue Aufgabenarten — diese sitzt schon",
     "levelLabel": "aktuelles Niveau",
     "levelOf": "Niveau {level} von 5"
+  },
+  "plan": {
+    "unlimited": "Unbegrenzt",
+    "usageUsed": "{used} / {limit} Arbeitsblätter diese Woche"
+  },
+  "upgrade": {
+    "title": "Deine kostenlosen Arbeitsblätter dieser Woche sind aufgebraucht",
+    "body": "Der kostenlose Plan enthält 3 Arbeitsblätter pro Woche. Der Rest der Einheit ist fertig — nur das Arbeitsblatt wartet.",
+    "unlockAt": "Dein nächstes kostenloses Arbeitsblatt gibt es am {date}.",
+    "cta": "Premium-Plan ansehen"
   }
 }

@@ -6,6 +6,7 @@ import { getRecentWorksheets } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
+import { getGenerationAllowance } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
@@ -68,6 +69,13 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
       (s) => s.kind === "worksheet" && s.recipe.generatorId === adaptive.anchor!.generatorId,
     );
 
+  // Plan gating (server-side, authoritative). A free account over its weekly
+  // limit still gets the full plan — physical activities and all — but the
+  // worksheet is held back: the session is marked gated and no worksheet row is
+  // created, so it neither prints nor counts against the next window.
+  const allowance = await getGenerationAllowance(user.id);
+  const gated = !allowance.allowed;
+
   const { data: session, error: sessionError } = await supabase
     .from("sessions")
     .insert({
@@ -81,6 +89,7 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
       seed: freshSeed(),
       plan,
       status: "active",
+      worksheets_gated: gated,
     })
     .select("id")
     .single();
@@ -98,18 +107,21 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
     if (worksheetGoals.has(goal)) await clearRotate(input.childId, goal);
   }
 
-  const worksheetRows = plan.slots
-    .filter((slot) => slot.kind === "worksheet")
-    .map((slot) => ({
-      session_id: session.id,
-      child_id: input.childId,
-      owner_id: user.id,
-      generator_id: slot.recipe.generatorId,
-      generator_version: slot.recipe.generatorVersion,
-      params: slot.recipe.params,
-      seed: slot.recipe.seed,
-      goal: slot.goal,
-    }));
+  // Gated sessions create no worksheet rows — the upgrade card renders instead.
+  const worksheetRows = gated
+    ? []
+    : plan.slots
+        .filter((slot) => slot.kind === "worksheet")
+        .map((slot) => ({
+          session_id: session.id,
+          child_id: input.childId,
+          owner_id: user.id,
+          generator_id: slot.recipe.generatorId,
+          generator_version: slot.recipe.generatorVersion,
+          params: slot.recipe.params,
+          seed: slot.recipe.seed,
+          goal: slot.goal,
+        }));
 
   if (worksheetRows.length > 0) {
     const { error: worksheetsError } = await supabase.from("worksheets").insert(worksheetRows);

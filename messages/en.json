@@ -271,7 +271,8 @@
     "adaptiveTitle": "Adaptive difficulty",
     "adaptiveHint": "When on, the level follows your child by itself: it rises slowly while things go well, and eases off straight away after a hard session. When off, you set the level for every session.",
     "adaptiveOn": "On",
-    "adaptiveOff": "Off"
+    "adaptiveOff": "Off",
+    "usageLabel": "Usage"
   },
   "planTiers": {
     "free": "Free",
@@ -420,5 +421,15 @@
     "rotate": "Bringing new kinds of tasks — this one's mastered",
     "levelLabel": "current level",
     "levelOf": "level {level} of 5"
+  },
+  "plan": {
+    "unlimited": "Unlimited",
+    "usageUsed": "{used} / {limit} worksheets this week"
+  },
+  "upgrade": {
+    "title": "You've used this week's free worksheets",
+    "body": "The free plan includes 3 worksheets a week. The rest of the session is ready — only the worksheet is waiting.",
+    "unlockAt": "Your next free worksheet unlocks {date}.",
+    "cta": "See the Premium plan"
   }
 }

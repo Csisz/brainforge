@@ -23,6 +23,7 @@ export function SessionView({
   worksheetData,
   pictograms,
   alreadyCompleted,
+  upgradeCard,
 }: {
   sessionId: string;
   slots: StoredSessionSlot[];
@@ -30,6 +31,8 @@ export function SessionView({
   /** Server-rendered inline-SVG pictogram strips keyed by slot index (physical slots only). */
   pictograms: Record<number, string>;
   alreadyCompleted: boolean;
+  /** Server-rendered upgrade card, shown for the worksheet slot when gated. */
+  upgradeCard?: React.ReactNode;
 }) {
   const t = useTranslations();
   const router = useRouter();
@@ -169,6 +172,11 @@ export function SessionView({
                 </div>
               )}
 
+              {/* Gated worksheet slot: no sheet was generated, show the upgrade card. */}
+              {slot.kind === "worksheet" && !worksheet && upgradeCard && (
+                <div className="mt-3">{upgradeCard}</div>
+              )}
+
               {!alreadyCompleted && (
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
                   <label className="flex items-center gap-2 text-sm text-ink">
@@ -200,10 +208,11 @@ export function SessionView({
                 </div>
               )}
 
-              {/* Worksheet slots only: how it went is what calibrates the next
-                  session's level for this slot's goal. Three honest phrasings —
-                  we never ask a parent to score their child. */}
-              {!alreadyCompleted && slot.kind === "worksheet" && (
+              {/* Worksheet slots only, and only when a sheet actually exists (a
+                  gated slot has nothing to rate): how it went calibrates the next
+                  session's level for this goal. We never ask a parent to score
+                  their child. */}
+              {!alreadyCompleted && slot.kind === "worksheet" && worksheet && (
                 <div className="mt-3 border-t border-line pt-3">
                   <p className="text-sm text-ink">{t("sessionView.easeLabel")}</p>
                   <div className="mt-2 flex flex-wrap gap-2">

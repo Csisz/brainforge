@@ -15,6 +15,7 @@ import { evaluateAchievements, ACHIEVEMENT_KINDS } from "../src/lib/achievements
 import { runCalibrationForSession, bestGeneratorForGoal, recentGeneratorsForGoal } from "../src/lib/adaptive/queries";
 import { coldStartLevel } from "../src/lib/adaptive/engine";
 import { EASE_SUCCESS } from "../src/lib/feedback/actions";
+import { getGenerationAllowance } from "../src/lib/entitlements/queries";
 import { freshSeed } from "../src/lib/random";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -425,6 +426,21 @@ async function main() {
   const rotatedGen = rotatedSheet?.kind === "worksheet" ? rotatedSheet.recipe.generatorId : "";
   ok("the next session's worksheet avoids the recently-seen generators", !avoided.includes(rotatedGen), `picked ${rotatedGen}, avoided ${avoided.join(",")}`);
   ok("...and the rotation flag is cleared after the session is composed", (await levelNow(BORE))?.rotate_pending === false);
+
+  // 8 ── PLAN GATING (Sprint 6 M1) -----------------------------------------
+  // By now this free account has generated well over the weekly limit.
+  step("8. plan gating");
+  const blocked = await getGenerationAllowance(user.id, new Date(), supabase);
+  ok("a free account over its weekly limit is blocked", blocked.allowed === false, `used ${blocked.used}, tier ${blocked.tier}`);
+  ok("...with a real unlock time in the future", Boolean(blocked.unlockAt) && blocked.unlockAt!.getTime() > Date.now());
+
+  // The gate reads subscriptions, never a client claim: upgrading lifts it.
+  await supabase.from("subscriptions").update({ tier: "premium" }).eq("owner_id", user.id);
+  const premium = await getGenerationAllowance(user.id, new Date(), supabase);
+  ok("upgrading to premium unlocks generation", premium.allowed && premium.unlimited, `tier ${premium.tier}`);
+  await supabase.from("subscriptions").update({ tier: "free" }).eq("owner_id", user.id);
+  const backToFree = await getGenerationAllowance(user.id, new Date(), supabase);
+  ok("downgrading re-applies the gate", backToFree.allowed === false, `tier ${backToFree.tier}`);
 
   console.log(`\n${failures ? `${failures} CHECK(S) FAILED` : "ALL CHECKS PASSED"}`);
   process.exit(failures ? 1 : 0);

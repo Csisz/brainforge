@@ -7,8 +7,11 @@ import { buildWorksheetRenderContext } from "@/lib/worksheet-records/render-cont
 import { getProfile } from "@/lib/profile/queries";
 import { composeWorksheet } from "@/lib/worksheets/page";
 import { composePictogram, hasPictogram } from "@/lib/pictograms";
+import { getGenerationAllowance } from "@/lib/entitlements/queries";
+import { createClient } from "@/lib/supabase/server";
 import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
+import { UpgradeCard } from "@/components/plan/upgrade-card";
 
 export default async function SessionViewPage({
   params,
@@ -48,6 +51,18 @@ export default async function SessionViewPage({
     }
   });
 
+  // When the worksheet was gated, show the upgrade card with the real unlock
+  // time. Rendered here (server) so SessionView stays a thin client component.
+  let upgradeCard = null;
+  if (session.worksheets_gated) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const allowance = user ? await getGenerationAllowance(user.id) : null;
+    upgradeCard = <UpgradeCard unlockAt={allowance?.unlockAt ?? null} />;
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -60,6 +75,7 @@ export default async function SessionViewPage({
         worksheetData={worksheetData}
         pictograms={pictograms}
         alreadyCompleted={session.status === "completed"}
+        upgradeCard={upgradeCard}
       />
     </div>
   );

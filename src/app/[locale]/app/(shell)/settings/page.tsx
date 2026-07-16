@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/profile/queries";
 import { getSubscription } from "@/lib/subscriptions/queries";
 import { getChildren } from "@/lib/children/queries";
+import { getGenerationAllowance } from "@/lib/entitlements/queries";
 import { AdaptiveToggle } from "@/components/settings/adaptive-toggle";
 
 export default async function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -19,6 +20,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
     data: { user },
   } = await supabase.auth.getUser();
   const [profile, subscription, children] = await Promise.all([getProfile(), getSubscription(), getChildren()]);
+  const allowance = user ? await getGenerationAllowance(user.id) : null;
 
   return (
     <div className="max-w-md space-y-6">
@@ -77,6 +79,16 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
             {t("settings.currentPlanLabel")}:{" "}
             <span className="font-semibold text-ink">{t(`planTiers.${subscription?.tier ?? "free"}`)}</span>
           </p>
+          {allowance && (
+            <p className="text-sm text-ink-soft">
+              {t("settings.usageLabel")}:{" "}
+              <span className="font-semibold text-ink">
+                {allowance.unlimited
+                  ? t("plan.unlimited")
+                  : t("plan.usageUsed", { used: allowance.used, limit: allowance.limit })}
+              </span>
+            </p>
+          )}
           <Button variant="outline" disabled title={t("settings.upgradeComingSoon")}>
             {t("settings.upgradeCta")}
           </Button>
