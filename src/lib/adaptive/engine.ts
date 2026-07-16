@@ -45,6 +45,12 @@ export type Calibration = {
   level: Difficulty;
   lastStepUpAt: Date | null;
   pendingAnchor: boolean;
+  /**
+   * Boredom owes this goal a change of material at the next session. Sticky
+   * like `pendingAnchor`: set when the engine sees boredom, carried across
+   * unrelated sessions, and cleared only when a composed session consumes it.
+   */
+  rotatePending: boolean;
 };
 
 /**
@@ -76,10 +82,11 @@ export type CalibrationDecision = {
   /** What happened, for microcopy — never rendered as a number to a parent. */
   change: CalibrationChange;
   /**
-   * Success without enjoyment: keep the level, change the material. The session
-   * composer excludes this goal's recently-used generators when set.
+   * Success without enjoyment: keep the level, change the material. Sticky until
+   * a composed session consumes it (the composer then excludes this goal's
+   * recently-used generators). Carried forward across unrelated sessions.
    */
-  rotateVariety: boolean;
+  rotatePending: boolean;
 };
 
 const clamp = (n: number): Difficulty => Math.min(5, Math.max(1, Math.round(n))) as Difficulty;
@@ -135,13 +142,16 @@ export function calibrate(input: CalibrationInput): CalibrationDecision {
     level: coldStartLevel(input.age),
     lastStepUpAt: null,
     pendingAnchor: false,
+    rotatePending: false,
   };
   const base: CalibrationDecision = {
     level: current.level,
     lastStepUpAt: current.lastStepUpAt,
     pendingAnchor: current.pendingAnchor,
     change: "none",
-    rotateVariety: false,
+    // Carried forward like pendingAnchor: only a fresh boredom sets it, only a
+    // composed session clears it. A hold or a step-up leaves it as it was.
+    rotatePending: current.rotatePending,
   };
 
   const latest = input.recent[0];
@@ -176,7 +186,7 @@ export function calibrate(input: CalibrationInput): CalibrationDecision {
   }
 
   // 3. BOREDOM — never a level change; change the material instead.
-  if (bored(latest)) return { ...base, rotateVariety: true };
+  if (bored(latest)) return { ...base, rotatePending: true };
 
   // 4. Otherwise hold. Steady is a valid answer.
   return base;

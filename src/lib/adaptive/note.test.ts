@@ -11,6 +11,7 @@ const row = (o: Partial<CalibrationRow> = {}): CalibrationRow => ({
   level: 3,
   last_step_up_at: null,
   pending_anchor: false,
+  rotate_pending: false,
   ...o,
 });
 

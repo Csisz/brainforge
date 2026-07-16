@@ -9,9 +9,10 @@
 import { createClient } from "@supabase/supabase-js";
 import { writeFileSync } from "node:fs";
 import { composeSession, type SessionSlot } from "../src/lib/activities/engine";
+import type { DevelopmentGoal } from "../src/lib/worksheets/types";
 import { composeWorksheet, defaultRenderOptions } from "../src/lib/worksheets/page";
 import { evaluateAchievements, ACHIEVEMENT_KINDS } from "../src/lib/achievements";
-import { runCalibrationForSession, bestGeneratorForGoal } from "../src/lib/adaptive/queries";
+import { runCalibrationForSession, bestGeneratorForGoal, recentGeneratorsForGoal } from "../src/lib/adaptive/queries";
 import { coldStartLevel } from "../src/lib/adaptive/engine";
 import { EASE_SUCCESS } from "../src/lib/feedback/actions";
 import { freshSeed } from "../src/lib/random";
@@ -247,7 +248,7 @@ async function main() {
   async function playSession(
     ease: "easy" | "hard",
     enjoyment: number,
-    goal: "fine_motor" | "math_thinking" = GOAL,
+    goal: DevelopmentGoal = GOAL,
     at = new Date(),
   ) {
     const adaptive = await currentPlan(goal);
@@ -273,6 +274,28 @@ async function main() {
       .select("id")
       .single();
 
+    // Worksheet rows carry the goal, so recentGeneratorsForGoal can find them —
+    // and so this mirrors what startSession actually persists.
+    const sheets = plan.slots.filter((slot) => slot.kind === "worksheet");
+    if (sheets.length) {
+      await supabase.from("worksheets").insert(
+        sheets.map((slot) => ({
+          session_id: s!.id, child_id: child!.id, owner_id: user.id,
+          generator_id: slot.recipe.generatorId, generator_version: slot.recipe.generatorVersion,
+          params: slot.recipe.params, seed: slot.recipe.seed, goal: slot.goal,
+        })),
+      );
+    }
+
+    // Consume the pending flags at compose time, exactly as startSession does —
+    // BEFORE this session's own feedback could set them again.
+    await supabase.from("calibration").update({ pending_anchor: false })
+      .eq("child_id", child!.id).eq("goal", goal).eq("pending_anchor", true);
+    if (goal in adaptive.avoidByGoal) {
+      await supabase.from("calibration").update({ rotate_pending: false })
+        .eq("child_id", child!.id).eq("goal", goal);
+    }
+
     const rows = plan.slots.map((slot, i) => ({
       session_id: s!.id, owner_id: user.id, slot_index: i, slot_kind: slot.kind,
       completed: true, enjoyment,
@@ -280,26 +303,28 @@ async function main() {
     }));
     await supabase.from("feedback").insert(rows);
     await runCalibrationForSession(supabase, s!.id, child!.id, user.id, 6, at);
-    return { sessionId: s!.id, plan };
+    return { sessionId: s!.id, plan, avoid: adaptive.avoidByGoal[goal] ?? [] };
   }
 
-  const currentPlan = async (goal: "fine_motor" | "math_thinking" = GOAL) => {
+  const currentPlan = async (goal: DevelopmentGoal = GOAL) => {
     const { data } = await supabase
       .from("calibration")
-      .select("goal, level, last_step_up_at, pending_anchor")
+      .select("goal, level, last_step_up_at, pending_anchor, rotate_pending")
       .eq("child_id", child!.id);
     const row = (data ?? []).find((r) => r.goal === goal);
     const anchorGen = row?.pending_anchor ? await bestGeneratorForGoal(supabase, child!.id, goal) : null;
+    const avoidByGoal: Partial<Record<DevelopmentGoal, string[]>> = {};
+    if (row?.rotate_pending) avoidByGoal[goal] = await recentGeneratorsForGoal(supabase, child!.id, goal);
     return {
       levelByGoal: { [goal]: row?.level ?? coldStartLevel(6) },
-      avoidByGoal: {},
+      avoidByGoal,
       anchor: anchorGen ? { goal, generatorId: anchorGen } : undefined,
     };
   };
-  const levelNow = async (goal: "fine_motor" | "math_thinking" = GOAL) => {
+  const levelNow = async (goal: DevelopmentGoal = GOAL) => {
     const { data } = await supabase
       .from("calibration")
-      .select("level, pending_anchor, last_step_up_at")
+      .select("level, pending_anchor, last_step_up_at, rotate_pending")
       .eq("child_id", child!.id)
       .eq("goal", goal)
       .maybeSingle();
@@ -374,6 +399,32 @@ async function main() {
   const afterRelapse = await levelNow(RISE);
   ok("a hard session retreats at once, whatever the streak", afterRelapse?.level === 3, `level ${afterRelapse?.level}`);
   ok("...and owes the next session a win", afterRelapse?.pending_anchor === true);
+
+  // --- Boredom: aced but not enjoyed → rotate the material, not the level ---
+  // On a goal with 10 generators, so avoiding 3 still leaves a real choice.
+  const BORE = "visual_perception" as const;
+
+  // Build some history so there are recent generators to steer away from.
+  await playSession("easy", 5, BORE);
+  await playSession("easy", 5, BORE);
+  await playSession("easy", 5, BORE);
+  const levelBeforeBored = (await levelNow(BORE))?.level;
+
+  // High success (easy → 1.0), low enjoyment (1) — the boredom signal.
+  await playSession("easy", 1, BORE);
+  const afterBored = await levelNow(BORE);
+  ok("boredom leaves the level unchanged", afterBored?.level === levelBeforeBored, `level ${afterBored?.level} (was ${levelBeforeBored})`);
+  ok("...and marks a rotation pending", afterBored?.rotate_pending === true);
+
+  const avoided = await recentGeneratorsForGoal(supabase, child.id, BORE);
+  ok("the recent generators to avoid are identified", avoided.length >= 3, avoided.join(", "));
+
+  // The next session composes against the avoid list, then clears the flag.
+  const rotated = await playSession("easy", 5, BORE);
+  const rotatedSheet = rotated.plan.slots.find((s) => s.kind === "worksheet");
+  const rotatedGen = rotatedSheet?.kind === "worksheet" ? rotatedSheet.recipe.generatorId : "";
+  ok("the next session's worksheet avoids the recently-seen generators", !avoided.includes(rotatedGen), `picked ${rotatedGen}, avoided ${avoided.join(",")}`);
+  ok("...and the rotation flag is cleared after the session is composed", (await levelNow(BORE))?.rotate_pending === false);
 
   console.log(`\n${failures ? `${failures} CHECK(S) FAILED` : "ALL CHECKS PASSED"}`);
   process.exit(failures ? 1 : 0);

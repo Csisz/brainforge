@@ -17,19 +17,23 @@ export type CalibrationRow = {
   level: Difficulty;
   last_step_up_at: string | null;
   pending_anchor: boolean;
+  rotate_pending: boolean;
 };
+
+const CALIBRATION_COLUMNS = "goal, level, last_step_up_at, pending_anchor, rotate_pending";
 
 const toCalibration = (r: CalibrationRow): Calibration => ({
   level: r.level,
   lastStepUpAt: r.last_step_up_at ? new Date(r.last_step_up_at) : null,
   pendingAnchor: r.pending_anchor,
+  rotatePending: r.rotate_pending,
 });
 
 export async function getCalibration(childId: string): Promise<CalibrationRow[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("calibration")
-    .select("goal, level, last_step_up_at, pending_anchor")
+    .select(CALIBRATION_COLUMNS)
     .eq("child_id", childId);
   return (data ?? []) as CalibrationRow[];
 }
@@ -59,10 +63,16 @@ export async function resolveAdaptivePlan(
     // A goal with no row has never been calibrated: start it one below the age
     // default rather than at the session level, so a first sheet is winnable.
     levelByGoal[goal] = row ? row.level : coldStartLevel(age);
+
+    // rotate_pending: the last session for this goal was aced but not enjoyed.
+    // Steer away from the generators the child has seen most recently. The key
+    // is present (marking the goal as owing a rotation) even when the list is
+    // empty, so the caller knows to clear the flag afterwards.
+    if (row?.rotate_pending) {
+      avoidByGoal[goal] = await recentGeneratorsForGoal(supabase, childId, goal);
+    }
   }
 
-  // rotate_variety is decided at feedback time and recorded by the composer's
-  // caller; here it is expressed as the goal's 3 most recent generator ids.
   const anchorGoal = goals.find((g) => byGoal.get(g)?.pending_anchor);
   const anchor = anchorGoal
     ? await bestGeneratorForGoal(supabase, childId, anchorGoal).then((generatorId) =>
@@ -133,30 +143,32 @@ async function goalOutcomesByGenerator(
   return out;
 }
 
-/** The goal's 3 most recent generator ids — what rotate_variety steps away from. */
+/**
+ * The goal's most recent distinct generator ids — what a rotation steps away
+ * from. A plain indexed query on worksheets.goal (0004), not a plan walk: the
+ * goal is stamped on the worksheet row at creation, so recency is just an
+ * ordered scan of that child's sheets for the goal.
+ */
 export async function recentGeneratorsForGoal(
   supabase: SupabaseClient,
   childId: string,
   goal: DevelopmentGoal,
   limit = 3,
 ): Promise<string[]> {
-  const { data: sessions } = await supabase
-    .from("sessions")
-    .select("plan, created_at")
+  const { data } = await supabase
+    .from("worksheets")
+    .select("generator_id, created_at")
     .eq("child_id", childId)
+    .eq("goal", goal)
     .order("created_at", { ascending: false })
-    .limit(20);
+    .limit(30);
 
   const ids: string[] = [];
-  for (const s of sessions ?? []) {
-    for (const slot of ((s.plan as StoredSessionPlan)?.slots ?? [])) {
-      if (slot.kind === "worksheet" && slot.goal === goal && !ids.includes(slot.recipe.generatorId)) {
-        ids.push(slot.recipe.generatorId);
-      }
-    }
+  for (const w of data ?? []) {
+    if (!ids.includes(w.generator_id)) ids.push(w.generator_id);
     if (ids.length >= limit) break;
   }
-  return ids.slice(0, limit);
+  return ids;
 }
 
 /**
@@ -235,7 +247,7 @@ export async function runCalibrationForSession(
 
   const { data: rows } = await supabase
     .from("calibration")
-    .select("goal, level, last_step_up_at, pending_anchor")
+    .select(CALIBRATION_COLUMNS)
     .eq("child_id", childId);
   const byGoal = new Map((rows ?? []).map((r) => [r.goal as DevelopmentGoal, r as CalibrationRow]));
 
@@ -258,6 +270,7 @@ export async function runCalibrationForSession(
         level: decision.level,
         last_step_up_at: decision.lastStepUpAt?.toISOString() ?? null,
         pending_anchor: decision.pendingAnchor,
+        rotate_pending: decision.rotatePending,
         updated_at: now.toISOString(),
       },
       { onConflict: "child_id,goal" },
@@ -309,6 +322,16 @@ export async function clearAnchor(childId: string, goal: DevelopmentGoal): Promi
   await supabase
     .from("calibration")
     .update({ pending_anchor: false, updated_at: new Date().toISOString() })
+    .eq("child_id", childId)
+    .eq("goal", goal);
+}
+
+/** Clear the rotation once a session has been composed against the avoid list. */
+export async function clearRotate(childId: string, goal: DevelopmentGoal): Promise<void> {
+  const supabase = await createClient();
+  await supabase
+    .from("calibration")
+    .update({ rotate_pending: false, updated_at: new Date().toISOString() })
     .eq("child_id", childId)
     .eq("goal", goal);
 }

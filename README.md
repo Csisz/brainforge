@@ -103,7 +103,7 @@ src/lib/adaptive/engine.ts            calibration rules (pure, unit-tested)
 src/lib/adaptive/queries.ts           the DB half: load rows, write decisions
 src/lib/achievements.ts               achievement catalog + pure evaluation
 src/lib/ai/provider.ts                LLM abstraction layer (Anthropic adapter)
-supabase/migrations/                  schema + RLS (0003 adds calibration)
+supabase/migrations/                  schema + RLS (0003–0004 add the adaptive layer)
 scripts/demo-worksheets.ts            engine proof + golden files
 scripts/verify-worksheets.ts          worksheet composition regression guard
 scripts/flow-test.ts                  headless end-to-end acceptance test

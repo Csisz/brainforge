@@ -5,7 +5,7 @@ import { getChild } from "@/lib/children/queries";
 import { getRecentWorksheets } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
-import { resolveAdaptivePlan, clearAnchor } from "@/lib/adaptive/queries";
+import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
@@ -90,6 +90,14 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
   // Clear the anchor only after the session it was owed to exists.
   if (anchorUsed && adaptive?.anchor) await clearAnchor(input.childId, adaptive.anchor.goal);
 
+  // A rotation is consumed once a session composed against its avoid list
+  // exists. Clear it for every rotate-pending goal (the avoidByGoal keys) that
+  // this plan actually produced a worksheet for — same lifecycle as the anchor.
+  const worksheetGoals = new Set(plan.slots.filter((s) => s.kind === "worksheet").map((s) => s.goal));
+  for (const goal of Object.keys(adaptive?.avoidByGoal ?? {}) as DevelopmentGoal[]) {
+    if (worksheetGoals.has(goal)) await clearRotate(input.childId, goal);
+  }
+
   const worksheetRows = plan.slots
     .filter((slot) => slot.kind === "worksheet")
     .map((slot) => ({
@@ -100,6 +108,7 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
       generator_version: slot.recipe.generatorVersion,
       params: slot.recipe.params,
       seed: slot.recipe.seed,
+      goal: slot.goal,
     }));
 
   if (worksheetRows.length > 0) {

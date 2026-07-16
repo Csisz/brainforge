@@ -23,6 +23,7 @@ const cal = (c: Partial<Calibration> = {}): Calibration => ({
   level: 3,
   lastStepUpAt: null,
   pendingAnchor: false,
+  rotatePending: false,
   ...c,
 });
 const run = (current: Calibration | null, recent: GoalOutcome[], age: Age = 6) =>
@@ -171,13 +172,13 @@ describe("boredom — nailed it, no fun", () => {
     const d = run(cal({ level: 3 }), [outcome({ successRate: 0.95, enjoyment: 1 })]);
     assert.equal(d.level, 3, "bored is not the same as ready");
     assert.equal(d.change, "none");
-    assert.equal(d.rotateVariety, true);
+    assert.equal(d.rotatePending, true);
   });
 
   test("enjoyment 2 is bored; 3 is neither bored nor thriving", () => {
-    assert.equal(run(cal(), [outcome({ successRate: 0.9, enjoyment: 2 })]).rotateVariety, true);
+    assert.equal(run(cal(), [outcome({ successRate: 0.9, enjoyment: 2 })]).rotatePending, true);
     const middling = run(cal(), [outcome({ successRate: 0.9, enjoyment: 3 })]);
-    assert.equal(middling.rotateVariety, false);
+    assert.equal(middling.rotatePending, false);
     assert.equal(middling.change, "none");
   });
 
@@ -186,14 +187,52 @@ describe("boredom — nailed it, no fun", () => {
     const d = run(cal({ level: 2 }), [b, b]);
     assert.equal(d.level, 2);
     assert.equal(d.change, "none");
-    assert.equal(d.rotateVariety, true);
+    assert.equal(d.rotatePending, true);
   });
 
   test("a step up wins over boredom when the streak qualifies", () => {
-    // Newest thrived (enjoyment 5) so it is not bored; the flag stays off.
+    // Newest thrived (enjoyment 5) so it is not bored; nothing new to rotate.
     const d = run(cal({ level: 2 }), [thriving, thriving]);
     assert.equal(d.change, "step_up");
-    assert.equal(d.rotateVariety, false);
+    assert.equal(d.rotatePending, false);
+  });
+});
+
+describe("the rotate-pending flag lifecycle (sticky like the anchor)", () => {
+  test("boredom sets it", () => {
+    assert.equal(run(cal(), [outcome({ successRate: 0.9, enjoyment: 1 })]).rotatePending, true);
+  });
+
+  test("it survives an unrelated hold until something consumes it", () => {
+    // Already pending, latest session is middling (not bored, not thriving).
+    const d = run(cal({ rotatePending: true }), [outcome({ successRate: 0.6, enjoyment: 3 })]);
+    assert.equal(d.rotatePending, true);
+    assert.equal(d.change, "none");
+  });
+
+  test("it is carried through a step up — a rise does not cancel an owed rotation", () => {
+    const d = run(cal({ level: 2, rotatePending: true }), [thriving, thriving]);
+    assert.equal(d.change, "step_up");
+    assert.equal(d.rotatePending, true);
+  });
+
+  test("it is carried through a step down too", () => {
+    const d = run(cal({ level: 3, rotatePending: true }), [struggling]);
+    assert.equal(d.change, "step_down");
+    assert.equal(d.rotatePending, true);
+    assert.equal(d.pendingAnchor, true, "both flags can be owed at once");
+  });
+
+  test("the engine never clears it — only a composed session does (see clearRotate)", () => {
+    // No branch returns rotatePending:false when it was true coming in.
+    for (const recent of [[thriving, thriving], [struggling], [outcome({ successRate: 0.6, enjoyment: 3 })], []]) {
+      assert.equal(run(cal({ rotatePending: true }), recent).rotatePending, true);
+    }
+  });
+
+  test("a fresh child with nothing bored owes no rotation", () => {
+    assert.equal(run(null, [thriving], 6).rotatePending, false);
+    assert.equal(run(cal({ rotatePending: false }), [thriving]).rotatePending, false);
   });
 });
 
