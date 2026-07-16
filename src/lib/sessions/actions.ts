@@ -6,7 +6,7 @@ import { getRecentWorksheets } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
-import { getGenerationAllowance } from "@/lib/entitlements/queries";
+import { getGenerationAllowance, isRateLimited } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
@@ -36,6 +36,9 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
 
   const child = await getChild(input.childId);
   if (!child) return { error: "child_not_found" };
+
+  // Abuse rate limit (all tiers) — reject before doing any work.
+  if (await isRateLimited(user.id)) return { error: "rate_limited" };
 
   const age = ageFromBirthMonth(child.birth_month);
   const recentWorksheets = await getRecentWorksheets(input.childId);

@@ -252,7 +252,8 @@
       "5": "A legnehezebb — magabiztos gyerekeknek."
     },
     "difficultyAuto": "Automatikus (ajánlott)",
-    "difficultyAutoHint": "A nehézséget fejlesztési célonként állítjuk be aszerint, hogyan mentek az eddigi foglalkozások. Kikapcsolva te választasz szintet."
+    "difficultyAutoHint": "A nehézséget fejlesztési célonként állítjuk be aszerint, hogyan mentek az eddigi foglalkozások. Kikapcsolva te választasz szintet.",
+    "rateLimited": "Egy kis türelmet — túl gyorsan indítasz új foglalkozásokat. Próbáld újra egy perc múlva."
   },
   "print": {
     "printButton": "Nyomtatás",

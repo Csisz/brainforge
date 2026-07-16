@@ -252,7 +252,8 @@
       "5": "The hardest — for confident kids."
     },
     "difficultyAuto": "Automatic (recommended)",
-    "difficultyAutoHint": "We set the level per development goal based on how past sessions went. Turn it off to choose the level yourself."
+    "difficultyAutoHint": "We set the level per development goal based on how past sessions went. Turn it off to choose the level yourself.",
+    "rateLimited": "Just a moment — you're starting sessions very fast. Try again in a minute."
   },
   "print": {
     "printButton": "Print",

@@ -252,7 +252,8 @@
       "5": "Am schwersten — für sichere Kinder."
     },
     "difficultyAuto": "Automatisch (empfohlen)",
-    "difficultyAutoHint": "Wir stellen das Niveau pro Förderziel danach ein, wie die bisherigen Einheiten liefen. Ausgeschaltet wählst du das Niveau selbst."
+    "difficultyAutoHint": "Wir stellen das Niveau pro Förderziel danach ein, wie die bisherigen Einheiten liefen. Ausgeschaltet wählst du das Niveau selbst.",
+    "rateLimited": "Einen Moment — du startest sehr schnell neue Einheiten. Versuche es in einer Minute erneut."
   },
   "print": {
     "printButton": "Drucken",

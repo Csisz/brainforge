@@ -13,6 +13,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 type Status = "idle" | "sending" | "sent" | "error";
 
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "1";
+// Build-time flag: Next inlines NODE_ENV, so the Mailpit hint (and its localhost
+// URL) is dead-code-eliminated from production client bundles — no localhost
+// string leaks to prod.
+const IS_DEV = process.env.NODE_ENV !== "production";
 const MAILPIT_URL = "http://localhost:54324";
 
 /** True when running against a local dev origin — used only for dev hints. */
@@ -63,7 +67,7 @@ export function LoginForm() {
           <CardTitle>{t("checkEmailTitle")}</CardTitle>
           <CardDescription>{t("checkEmailBody", { email })}</CardDescription>
         </CardHeader>
-        {isLocalhost() && (
+        {IS_DEV && isLocalhost() && (
           <CardContent>
             <p className="text-sm text-ink-soft">
               {t.rich("checkEmailLocalHint", {

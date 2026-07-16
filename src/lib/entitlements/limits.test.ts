@@ -7,6 +7,9 @@ import {
   isUnlimited,
   childLimit,
   canAddChild,
+  withinRateLimit,
+  RATE_LIMIT_MAX,
+  RATE_LIMIT_WINDOW_SEC,
   PLAN_LIMITS,
   type PlanTier,
 } from "./limits";
@@ -121,6 +124,30 @@ describe("custom limits (used by tests and any future tier tuning)", () => {
     const a = evaluateAllowance({ tier: "free", generatedAt: [], now: NOW });
     assert.equal(a.limit, PLAN_LIMITS.free.weeklyWorksheets);
     assert.equal(a.limit, FREE_WEEKLY_LIMIT);
+  });
+});
+
+describe("abuse rate limit (all tiers, sliding seconds window)", () => {
+  const secsAgo = (s: number) => new Date(NOW.getTime() - s * 1000);
+
+  test("under the burst cap is allowed", () => {
+    const ts = Array.from({ length: RATE_LIMIT_MAX - 1 }, (_, i) => secsAgo(i));
+    assert.equal(withinRateLimit(ts, NOW), true);
+  });
+
+  test("at the burst cap is blocked", () => {
+    const ts = Array.from({ length: RATE_LIMIT_MAX }, (_, i) => secsAgo(i));
+    assert.equal(withinRateLimit(ts, NOW), false);
+  });
+
+  test("generations outside the seconds window don't count", () => {
+    const ts = Array.from({ length: RATE_LIMIT_MAX + 5 }, () => secsAgo(RATE_LIMIT_WINDOW_SEC + 5));
+    assert.equal(withinRateLimit(ts, NOW), true);
+  });
+
+  test("the window boundary is exclusive", () => {
+    const ts = Array.from({ length: RATE_LIMIT_MAX }, () => secsAgo(RATE_LIMIT_WINDOW_SEC));
+    assert.equal(withinRateLimit(ts, NOW), true, "exactly windowSec old has aged out");
   });
 });
 

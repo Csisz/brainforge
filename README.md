@@ -229,6 +229,66 @@ Resend; leave it empty and `sendEmail` silently returns false. It is decorative
 by design — nothing in the product depends on an email arriving, and a provider
 failure never surfaces to the user. Weekly summaries are out of scope.
 
+## Production deployment
+
+Deployment is config-only — no code changes. App on Vercel, database/auth on
+Supabase Cloud.
+
+**1. Supabase Cloud.** Create a project. Push the schema: `supabase link
+--project-ref <ref>` then `supabase db push` (applies `supabase/migrations/`).
+In the dashboard: Auth → URL Configuration → set Site URL to your domain and add
+`https://<domain>/api/auth/callback` to redirect URLs; Auth → Emails → SMTP →
+enter the Resend SMTP values (see the `[auth.email.smtp]` block in
+`supabase/config.toml`).
+
+**2. Vercel.** Import the repo. Set the environment variables below (Production
+scope). Deploy — the build validates env at boot and fails fast with a readable
+message if anything required is missing.
+
+**3. Stripe.** Create the €9 Premium and €14 Family recurring products; copy
+their price ids into env. Add a webhook endpoint pointing at
+`https://<domain>/api/stripe/webhook` for `checkout.session.completed`,
+`customer.subscription.updated`, `customer.subscription.deleted`; copy its
+signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+**Environment variables**
+
+| Variable | Scope | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | required | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | required | anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | required | server only — webhook + account deletion |
+| `NEXT_PUBLIC_APP_URL` | required | `https://<domain>` |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | billing | all-or-nothing group |
+| `STRIPE_PRICE_PREMIUM` / `STRIPE_PRICE_FAMILY` | billing | recurring price ids |
+| `RESEND_API_KEY` / `EMAIL_FROM` | email | app-sent mail; empty ⇒ skipped |
+| `ANTHROPIC_API_KEY` etc. | optional | decorative AI text |
+
+**First-deploy smoke test**
+
+1. Sign up with a real email → magic link arrives via Resend (not Mailpit).
+2. Add a child → welcome email arrives; dashboard loads.
+3. Run a session → worksheet prints; feedback saves.
+4. Hit the free limit (4th sheet in a week) → upgrade card with a real unlock time.
+5. Upgrade via Stripe test card `4242…` → webhook flips the tier → generation unlocks.
+6. Open the customer portal → cancel → tier returns to free.
+7. `/privacy`, `/terms`, `/imprint` render; footer links work in all three locales.
+8. Delete the account in Settings → sign-in no longer works; data is gone.
+
+**Rate limiting.** Worksheet generation is rate-limited per account (a sliding
+seconds window in Postgres, reusing the worksheets count — see
+`isRateLimited`), applied to every tier as anti-hammering on top of the free
+plan gate. Auth-adjacent routes (magic-link requests, token refresh) rely on
+Supabase's built-in rate limits; tune them under Auth → Rate Limits in the
+dashboard (locally, the `email_sent` limit is raised in `config.toml`).
+
+**Note on the localhost grep.** A production client bundle still contains two
+localhost strings: `NEXT_PUBLIC_SUPABASE_URL` (env-injected — it becomes your
+cloud URL when built with production env) and a `localhost:9999` default baked
+into `@supabase/auth-js` (a library fallback, overridden at runtime). Neither is
+a hardcoded reference from our code; the one dev-only hardcoded URL (the Mailpit
+hint) is compiled out of production builds.
+
 ## Sprint roadmap
 
 - **Sprint 1 (done):** engine core, 3 generators, session composer, schema, AI layer contract.
@@ -240,8 +300,12 @@ failure never surfaces to the user. Weekly summaries are out of scope.
   feedback capture and achievements.
 - **Sprint 5 (done):** adaptive difficulty — per (child, goal) calibration,
   success-first rules, parent-facing framing that never reads as regression.
-- **Next:** Edge-Function batch PDF; Stripe subscriptions; accessibility modes
-  (dyslexia/ADHD/autism-friendly rendering).
+- **Sprint 6 (done):** monetization + production readiness — free-tier plan
+  gating, Stripe billing (checkout/portal/webhook), per-tier child caps,
+  transactional email, legal/trust pages + account deletion, env validation,
+  rate limiting, and a deploy runbook. Deployment is config-only.
+- **Next:** Edge-Function batch PDF; accessibility modes (dyslexia/ADHD/autism-
+  friendly rendering).
 
 ## Deliberately deferred (TODO, per PRD roadmap — not invented features)
 

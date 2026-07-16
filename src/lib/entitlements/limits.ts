@@ -38,6 +38,26 @@ export function isUnlimited(tier: PlanTier): boolean {
   return PLAN_LIMITS[tier].weeklyWorksheets === null;
 }
 
+/**
+ * Abuse rate limit — orthogonal to the plan gate and applied to EVERY tier
+ * (an unlimited plan still can't hammer the generator). A human composing
+ * sessions cannot approach this; a script can. Sliding window, in seconds.
+ */
+export const RATE_LIMIT_MAX = 10;
+export const RATE_LIMIT_WINDOW_SEC = 60;
+
+/** True if another generation is allowed under the sliding rate window. */
+export function withinRateLimit(
+  generatedAt: Date[],
+  now: Date,
+  max = RATE_LIMIT_MAX,
+  windowSec = RATE_LIMIT_WINDOW_SEC,
+): boolean {
+  const start = now.getTime() - windowSec * 1000;
+  const recent = generatedAt.filter((d) => d.getTime() > start).length;
+  return recent < max;
+}
+
 /** Children this tier may have. */
 export function childLimit(tier: PlanTier): number {
   return PLAN_LIMITS[tier].children;

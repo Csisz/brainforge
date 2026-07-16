@@ -45,6 +45,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   function toggleGoal(goal: DevelopmentGoal) {
     setGoals((prev) => (prev.includes(goal) ? prev.filter((g) => g !== goal) : [...prev, goal]));
@@ -56,6 +57,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
   async function handleSubmit() {
     setSubmitting(true);
     setError(false);
+    setRateLimited(false);
     const result = await startSession({
       childId: child.id,
       goals: goals.length ? goals : ["attention"],
@@ -66,6 +68,11 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       difficulty: manualDifficulty,
       locale,
     });
+    if (result.error === "rate_limited") {
+      setRateLimited(true);
+      setSubmitting(false);
+      return;
+    }
     if (result.error || !result.sessionId) {
       setError(true);
       setSubmitting(false);
@@ -261,6 +268,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
         </CardContent>
       </Card>
 
+      {rateLimited && <p className="text-sm text-ink-soft">{t("rateLimited")}</p>}
       {error && <p className="text-sm text-destructive">{t("errorGeneric")}</p>}
 
       <Button size="lg" className="w-full" onClick={handleSubmit} disabled={submitting}>
