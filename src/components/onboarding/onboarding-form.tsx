@@ -9,6 +9,8 @@ import { THEME_IDS } from "@/lib/worksheets/theme-list";
 import { AVATARS, type AvatarId } from "@/lib/children/avatar-list";
 import { Sparkles } from "lucide-react";
 import { createChild } from "@/lib/children/actions";
+import { isValidBirthMonth } from "@/lib/children/age";
+import { BirthMonthPicker } from "@/components/children/birth-month-picker";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +35,7 @@ export function OnboardingForm() {
   const [motorSupport, setMotorSupport] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [birthError, setBirthError] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
 
   function toggleTheme(theme: ThemeId) {
@@ -41,6 +44,12 @@ export function OnboardingForm() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    // The two selects can't express "future month" or an >10y-old the way the
+    // native input's `max` did, so gate it here before saving.
+    if (!isValidBirthMonth(birthMonth)) {
+      setBirthError(true);
+      return;
+    }
     setSubmitting(true);
     setError(false);
     const result = await createChild({
@@ -110,14 +119,16 @@ export function OnboardingForm() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="birthMonth">{t("birthMonthLabel")}</Label>
-              <Input
-                id="birthMonth"
-                type="month"
-                required
-                max={new Date().toISOString().slice(0, 7)}
+              <BirthMonthPicker
                 value={birthMonth}
-                onChange={(e) => setBirthMonth(e.target.value)}
+                onChange={(v) => {
+                  setBirthMonth(v);
+                  setBirthError(false);
+                }}
+                yearTriggerId="birthMonth"
+                invalid={birthError}
               />
+              {birthError && <p className="text-sm text-destructive">{t("birthDateError")}</p>}
             </div>
           </div>
 
