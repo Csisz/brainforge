@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { AppSidebar } from "@/components/shell/app-sidebar";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getChildren } from "@/lib/children/queries";
 
@@ -26,6 +27,7 @@ export default async function AppShellLayout({
   if (kids.length === 0) redirect(`/${locale}/onboarding`);
 
   const t = await getTranslations("nav");
+  const tf = await getTranslations("footer");
 
   return (
     <SidebarProvider>
@@ -37,6 +39,13 @@ export default async function AppShellLayout({
           <Separator orientation="vertical" className="h-4" />
         </header>
         <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <footer className="border-t border-line px-4 py-4">
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            <Link href="/privacy" className="text-ink-soft hover:text-ink">{tf("privacy")}</Link>
+            <Link href="/terms" className="text-ink-soft hover:text-ink">{tf("terms")}</Link>
+            <Link href="/imprint" className="text-ink-soft hover:text-ink">{tf("imprint")}</Link>
+          </nav>
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -10,6 +10,7 @@ import { getGenerationAllowance } from "@/lib/entitlements/queries";
 import { stripeConfigured } from "@/lib/stripe/config";
 import { AdaptiveToggle } from "@/components/settings/adaptive-toggle";
 import { BillingActions } from "@/components/settings/billing-actions";
+import { DeleteAccount } from "@/components/settings/delete-account";
 
 export default async function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -93,6 +94,17 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
           <BillingActions tier={subscription?.tier ?? "free"} configured={stripeConfigured()} />
         </CardContent>
       </Card>
+
+      {user?.email && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t("deleteAccount.title")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DeleteAccount email={user.email} />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

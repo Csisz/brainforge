@@ -20,7 +20,10 @@
   },
   "footer": {
     "tagline": "Druckbare Förder-Arbeitsblätter, jeden Tag.",
-    "rights": "Alle Rechte vorbehalten."
+    "rights": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen",
+    "imprint": "Impressum"
   },
   "worksheet": {
     "seedLabel": "seed"
@@ -453,5 +456,19 @@
       "subject": "Willkommen bei BrainForge Kids! 🎉",
       "body": "Hallo! Das Profil von {childName} ist fertig. Ab jetzt könnt ihr jeden Tag ein neues, personalisiertes Arbeitsblatt und eine bildschirmfreie Einheit zusammen gestalten. Viel Spaß!\n\n— Das BrainForge Kids Team"
     }
+  },
+  "legal": {
+    "updated": "Aktualisiert:",
+    "draftNotice": "Dies ist ein Entwurf nach bestem Wissen, noch vor der rechtlichen Prüfung. Es ist kein endgültiger Rechtstext."
+  },
+  "deleteAccount": {
+    "title": "Konto löschen",
+    "description": "Das Löschen deines Kontos entfernt sofort und dauerhaft dein Konto, jedes Kinderprofil und alle zugehörigen Daten. Dies kann nicht rückgängig gemacht werden.",
+    "open": "Konto löschen…",
+    "confirmLabel": "Gib zur Bestätigung deine E-Mail ein: {email}",
+    "confirm": "Endgültig löschen",
+    "deleting": "Wird gelöscht…",
+    "cancel": "Abbrechen",
+    "error": "Löschen fehlgeschlagen. Prüfe die eingegebene E-Mail und versuche es erneut."
   }
 }

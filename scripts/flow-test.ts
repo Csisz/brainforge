@@ -501,6 +501,33 @@ async function main() {
   const afterCancel = await readSub();
   ok("subscription.deleted drops the account back to free", afterCancel?.tier === "free" && afterCancel?.status === "canceled", `tier ${afterCancel?.tier}, status ${afterCancel?.status}`);
 
+  // 10 ── ACCOUNT DELETION (Sprint 6 M4) — GDPR erasure, cascade ------------
+  // Exactly what deleteAccount() does: admin.deleteUser(user.id) → cascade.
+  step("10. account deletion");
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
+    ok("SUPABASE_SERVICE_ROLE_KEY available for the deletion check", false, "set it in .env.local");
+  } else {
+    const admin = createClient(SUPABASE_URL, serviceKey, { auth: { persistSession: false } });
+    const childrenBefore = (await admin.from("children").select("id").eq("owner_id", user.id)).data ?? [];
+    ok("the account has data to erase before deletion", childrenBefore.length > 0, `${childrenBefore.length} children`);
+
+    const { error: delErr } = await admin.auth.admin.deleteUser(user.id);
+    ok("the auth user is hard-deleted", !delErr, delErr?.message);
+
+    // The cascade must have removed everything owned by the account.
+    const remaining = await Promise.all(
+      ["children", "sessions", "worksheets", "feedback", "calibration", "subscriptions"].map(async (table) => {
+        const { count } = await admin.from(table).select("*", { count: "exact", head: true }).eq("owner_id", user.id);
+        return [table, count ?? 0] as const;
+      }),
+    );
+    const leftover = remaining.filter(([, n]) => n > 0);
+    ok("deletion cascades through every owned table", leftover.length === 0, leftover.map(([t, n]) => `${t}:${n}`).join(", ") || "all clear");
+    const { data: goneProfile } = await admin.from("profiles").select("id").eq("id", user.id).maybeSingle();
+    ok("the profile row is gone too", !goneProfile);
+  }
+
   console.log(`\n${failures ? `${failures} CHECK(S) FAILED` : "ALL CHECKS PASSED"}`);
   process.exit(failures ? 1 : 0);
 }

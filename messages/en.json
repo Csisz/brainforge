@@ -20,7 +20,10 @@
   },
   "footer": {
     "tagline": "Printable developmental worksheets, every day.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "imprint": "Imprint"
   },
   "worksheet": {
     "seedLabel": "seed"
@@ -453,5 +456,19 @@
       "subject": "Welcome to BrainForge Kids! 🎉",
       "body": "Hi! {childName}'s profile is ready. From now on you can make a fresh, personalized worksheet and a screen-free session together every day. Have fun!\n\n— The BrainForge Kids team"
     }
+  },
+  "legal": {
+    "updated": "Updated:",
+    "draftNotice": "This is a good-faith draft, pending legal review. It is not final legal text."
+  },
+  "deleteAccount": {
+    "title": "Delete account",
+    "description": "Deleting your account permanently and immediately removes your account, every child profile, and all associated data. This cannot be undone.",
+    "open": "Delete account…",
+    "confirmLabel": "Type your email to confirm: {email}",
+    "confirm": "Permanently delete",
+    "deleting": "Deleting…",
+    "cancel": "Cancel",
+    "error": "Couldn't delete. Check the email you typed and try again."
   }
 }

@@ -40,11 +40,18 @@ export default async function PublicLayout({
             <p className="font-display text-sm font-bold text-ink">{t("common.appName")}</p>
             <p className="mt-1 text-sm text-ink-soft">{t("footer.tagline")}</p>
           </div>
-          <div className="flex items-center gap-4">
-            <LocaleSwitcher />
-            <p className="text-xs text-ink-soft">
-              © {new Date().getFullYear()} {t("common.appName")} · {t("footer.rights")}
-            </p>
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+              <Link href="/privacy" className="text-ink-soft hover:text-ink">{t("footer.privacy")}</Link>
+              <Link href="/terms" className="text-ink-soft hover:text-ink">{t("footer.terms")}</Link>
+              <Link href="/imprint" className="text-ink-soft hover:text-ink">{t("footer.imprint")}</Link>
+            </nav>
+            <div className="flex items-center gap-4">
+              <LocaleSwitcher />
+              <p className="text-xs text-ink-soft">
+                © {new Date().getFullYear()} {t("common.appName")} · {t("footer.rights")}
+              </p>
+            </div>
           </div>
         </div>
       </footer>

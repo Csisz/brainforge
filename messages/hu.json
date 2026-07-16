@@ -20,7 +20,10 @@
   },
   "footer": {
     "tagline": "Nyomtatható fejlesztő feladatlapok minden napra.",
-    "rights": "Minden jog fenntartva."
+    "rights": "Minden jog fenntartva.",
+    "privacy": "Adatvédelem",
+    "terms": "Feltételek",
+    "imprint": "Impresszum"
   },
   "worksheet": {
     "seedLabel": "seed"
@@ -453,5 +456,19 @@
       "subject": "Üdv a BrainForge Kids-ben! 🎉",
       "body": "Szia! {childName} profilja elkészült. Mostantól minden nap új, személyre szabott feladatlapot és képernyőmentes foglalkozást készíthettek együtt. Jó játékot!\n\n— A BrainForge Kids csapata"
     }
+  },
+  "legal": {
+    "updated": "Frissítve:",
+    "draftNotice": "Ez egy jóhiszemű vázlat, amelyet még jogi felülvizsgálat előtt áll. Nem minősül végleges jogi szövegnek."
+  },
+  "deleteAccount": {
+    "title": "Fiók törlése",
+    "description": "A fiók törlése véglegesen és azonnal eltávolítja a fiókodat, minden gyerekprofilt és az összes kapcsolódó adatot. Ez nem vonható vissza.",
+    "open": "Fiók törlése…",
+    "confirmLabel": "A megerősítéshez írd be az e-mail-címedet: {email}",
+    "confirm": "Végleges törlés",
+    "deleting": "Törlés…",
+    "cancel": "Mégse",
+    "error": "Nem sikerült törölni. Ellenőrizd a beírt e-mail-címet, és próbáld újra."
   }
 }
