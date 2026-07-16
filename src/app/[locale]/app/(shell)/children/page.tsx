@@ -1,9 +1,12 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { Plus } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { getChildren } from "@/lib/children/queries";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { getCalibration } from "@/lib/adaptive/queries";
 import { LevelPanel } from "@/components/adaptive/level-dots";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -24,7 +27,15 @@ export default async function ChildrenPage({ params }: { params: Promise<{ local
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-extrabold text-ink">{t("nav.children")}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-extrabold text-ink">{t("nav.children")}</h1>
+        <Button asChild size="sm" className="gap-1.5">
+          <Link href="/onboarding">
+            <Plus className="size-4" aria-hidden="true" />
+            {t("children.addChild")}
+          </Link>
+        </Button>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {children.map((child) => {
           const Icon = getAvatarIcon(child.avatar);

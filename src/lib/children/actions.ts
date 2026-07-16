@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { canAddChild, type PlanTier } from "@/lib/entitlements/limits";
 import type { ThemeId } from "@/lib/worksheets/types";
 
 export type CreateChildInput = {
@@ -11,12 +12,23 @@ export type CreateChildInput = {
   accessibility: { lowInk: boolean; highContrast: boolean; motorSupport: boolean };
 };
 
+/** `error: "child_limit_reached"` is a signal, not a message — the UI shows a
+ * warm upgrade prompt for it, never a raw error. */
 export async function createChild(input: CreateChildInput): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: "not_authenticated" };
+
+  // Child cap is per tier (PLAN_LIMITS). Enforced here, server-side — never a
+  // client claim. Existing children are never touched; we only decline to add.
+  const [{ data: sub }, { count }] = await Promise.all([
+    supabase.from("subscriptions").select("tier").eq("owner_id", user.id).maybeSingle(),
+    supabase.from("children").select("id", { count: "exact", head: true }).eq("owner_id", user.id),
+  ]);
+  const tier = (sub?.tier ?? "free") as PlanTier;
+  if (!canAddChild(tier, count ?? 0)) return { error: "child_limit_reached" };
 
   const { error } = await supabase.from("children").insert({
     owner_id: user.id,

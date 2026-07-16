@@ -2,13 +2,14 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { LocaleSwitcher } from "@/components/shell/locale-switcher";
 import { ProfileForm } from "@/components/settings/profile-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/profile/queries";
 import { getSubscription } from "@/lib/subscriptions/queries";
 import { getChildren } from "@/lib/children/queries";
 import { getGenerationAllowance } from "@/lib/entitlements/queries";
+import { stripeConfigured } from "@/lib/stripe/config";
 import { AdaptiveToggle } from "@/components/settings/adaptive-toggle";
+import { BillingActions } from "@/components/settings/billing-actions";
 
 export default async function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -89,9 +90,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
               </span>
             </p>
           )}
-          <Button variant="outline" disabled title={t("settings.upgradeComingSoon")}>
-            {t("settings.upgradeCta")}
-          </Button>
+          <BillingActions tier={subscription?.tier ?? "free"} configured={stripeConfigured()} />
         </CardContent>
       </Card>
     </div>

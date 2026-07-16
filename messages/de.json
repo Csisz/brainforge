@@ -167,7 +167,13 @@
     },
     "submit": "Kind hinzufügen",
     "submitting": "Speichern…",
-    "errorGeneric": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
+    "errorGeneric": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "childLimit": {
+      "title": "Für ein weiteres Kind bitte upgraden",
+      "body": "Free und Premium gelten für ein Kind. Family umfasst bis zu 4 Kinder in einem Abo — und dein aktuelles Kind behält alles.",
+      "cta": "Family-Plan ansehen",
+      "back": "Zurück"
+    }
   },
   "themes": {
     "dinosaurs": "Dinosaurier",
@@ -431,5 +437,15 @@
     "body": "Der kostenlose Plan enthält 3 Arbeitsblätter pro Woche. Der Rest der Einheit ist fertig — nur das Arbeitsblatt wartet.",
     "unlockAt": "Dein nächstes kostenloses Arbeitsblatt gibt es am {date}.",
     "cta": "Premium-Plan ansehen"
+  },
+  "children": {
+    "addChild": "Kind hinzufügen"
+  },
+  "billing": {
+    "unavailable": "Die Zahlung ist in dieser Umgebung noch nicht eingerichtet.",
+    "manage": "Abo verwalten",
+    "upgradePremium": "Premium – 9 €/Mon.",
+    "upgradeFamily": "Family – 14 €/Mon.",
+    "error": "Zahlung konnte nicht geöffnet werden. Bitte versuche es erneut."
   }
 }

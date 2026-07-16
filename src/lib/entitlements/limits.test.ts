@@ -1,6 +1,15 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
-import { evaluateAllowance, FREE_WEEKLY_LIMIT, WINDOW_DAYS, isUnlimited, type PlanTier } from "./limits";
+import {
+  evaluateAllowance,
+  FREE_WEEKLY_LIMIT,
+  WINDOW_DAYS,
+  isUnlimited,
+  childLimit,
+  canAddChild,
+  PLAN_LIMITS,
+  type PlanTier,
+} from "./limits";
 
 const NOW = new Date("2026-07-16T12:00:00Z");
 const DAY = 86_400_000;
@@ -106,5 +115,35 @@ describe("custom limits (used by tests and any future tier tuning)", () => {
     const a = evaluateAllowance({ tier: "free", generatedAt: [hoursAgo(1)], now: NOW, limit: 1, windowDays: 1 });
     assert.equal(a.allowed, false);
     assert.equal(a.limit, 1);
+  });
+
+  test("free's weekly limit comes from PLAN_LIMITS, not a literal", () => {
+    const a = evaluateAllowance({ tier: "free", generatedAt: [], now: NOW });
+    assert.equal(a.limit, PLAN_LIMITS.free.weeklyWorksheets);
+    assert.equal(a.limit, FREE_WEEKLY_LIMIT);
+  });
+});
+
+describe("child caps (one source, PLAN_LIMITS)", () => {
+  test("the caps are the agreed ladder", () => {
+    assert.equal(childLimit("free"), 1);
+    assert.equal(childLimit("premium"), 1);
+    assert.equal(childLimit("family"), 4);
+    assert.equal(childLimit("school"), 50);
+    assert.equal(childLimit("therapist"), 50);
+  });
+
+  test("canAddChild blocks exactly at the cap", () => {
+    assert.equal(canAddChild("free", 0), true);
+    assert.equal(canAddChild("free", 1), false);
+    assert.equal(canAddChild("family", 3), true);
+    assert.equal(canAddChild("family", 4), false);
+  });
+
+  test("every tier has both limits defined — no gaps", () => {
+    for (const t of ["free", "premium", "family", "school", "therapist"] as PlanTier[]) {
+      assert.ok(PLAN_LIMITS[t].children >= 1, `${t} children`);
+      assert.equal(isUnlimited(t), PLAN_LIMITS[t].weeklyWorksheets === null);
+    }
   });
 });

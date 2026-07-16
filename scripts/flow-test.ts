@@ -7,6 +7,7 @@
  * Run: npx tsx scripts/flow-test.ts
  */
 import { createClient } from "@supabase/supabase-js";
+import Stripe from "stripe";
 import { writeFileSync } from "node:fs";
 import { composeSession, type SessionSlot } from "../src/lib/activities/engine";
 import type { DevelopmentGoal } from "../src/lib/worksheets/types";
@@ -16,6 +17,7 @@ import { runCalibrationForSession, bestGeneratorForGoal, recentGeneratorsForGoal
 import { coldStartLevel } from "../src/lib/adaptive/engine";
 import { EASE_SUCCESS } from "../src/lib/feedback/actions";
 import { getGenerationAllowance } from "../src/lib/entitlements/queries";
+import { applyStripeEvent } from "../src/lib/stripe/webhook";
 import { freshSeed } from "../src/lib/random";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -441,6 +443,63 @@ async function main() {
   await supabase.from("subscriptions").update({ tier: "free" }).eq("owner_id", user.id);
   const backToFree = await getGenerationAllowance(user.id, new Date(), supabase);
   ok("downgrading re-applies the gate", backToFree.allowed === false, `tier ${backToFree.tier}`);
+
+  // 9 ── STRIPE WEBHOOK (Sprint 6 M2) — mocked, signed with the test secret ---
+  step("9. stripe webhook");
+  const stripe = new Stripe("sk_test_flowtest_dummy", { apiVersion: "2026-06-24.dahlia" });
+  const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? "whsec_flowtest";
+
+  /** Sign a payload the way Stripe does, then verify it — exactly the route's path. */
+  const signedEvent = (payload: object) => {
+    const body = JSON.stringify(payload);
+    const header = stripe.webhooks.generateTestHeaderString({ payload: body, secret: WEBHOOK_SECRET });
+    return stripe.webhooks.constructEvent(body, header, WEBHOOK_SECRET);
+  };
+
+  // A tampered signature must be rejected before anything is read.
+  let rejected = false;
+  try {
+    stripe.webhooks.constructEvent(JSON.stringify({ id: "evt" }), "t=1,v1=deadbeef", WEBHOOK_SECRET);
+  } catch {
+    rejected = true;
+  }
+  ok("a bad signature is rejected", rejected);
+
+  const checkout = signedEvent({
+    id: "evt_flow_checkout",
+    type: "checkout.session.completed",
+    data: {
+      object: {
+        id: "cs_flow",
+        object: "checkout.session",
+        client_reference_id: user.id,
+        customer: "cus_flowtest",
+        metadata: { owner_id: user.id, tier: "premium" },
+      },
+    },
+  });
+  ok("a valid signature verifies to an event", checkout.type === "checkout.session.completed");
+
+  const applied = await applyStripeEvent(supabase, checkout);
+  const readSub = async () =>
+    (await supabase.from("subscriptions").select("tier, status, provider_customer_id").eq("owner_id", user.id).single()).data;
+  const afterCheckout = await readSub();
+  ok("checkout.session.completed activates the tier from the session", applied.handled && afterCheckout?.tier === "premium", `tier ${afterCheckout?.tier}`);
+  ok("...and links the Stripe customer", afterCheckout?.provider_customer_id === "cus_flowtest");
+
+  // Idempotency: replaying the same event lands on the same state, not a dupe.
+  await applyStripeEvent(supabase, checkout);
+  const afterReplay = await readSub();
+  ok("replaying the same event is idempotent", afterReplay?.tier === "premium" && afterReplay?.status === afterCheckout?.status);
+
+  const canceled = signedEvent({
+    id: "evt_flow_cancel",
+    type: "customer.subscription.deleted",
+    data: { object: { id: "sub_flow", object: "subscription", customer: "cus_flowtest", status: "canceled", items: { data: [] } } },
+  });
+  await applyStripeEvent(supabase, canceled);
+  const afterCancel = await readSub();
+  ok("subscription.deleted drops the account back to free", afterCancel?.tier === "free" && afterCancel?.status === "canceled", `tier ${afterCancel?.tier}, status ${afterCancel?.status}`);
 
   console.log(`\n${failures ? `${failures} CHECK(S) FAILED` : "ALL CHECKS PASSED"}`);
   process.exit(failures ? 1 : 0);

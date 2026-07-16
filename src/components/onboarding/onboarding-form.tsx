@@ -7,7 +7,9 @@ import { Check } from "lucide-react";
 import type { ThemeId } from "@/lib/worksheets/types";
 import { THEME_IDS } from "@/lib/worksheets/theme-list";
 import { AVATARS, type AvatarId } from "@/lib/children/avatar-list";
+import { Sparkles } from "lucide-react";
 import { createChild } from "@/lib/children/actions";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +33,7 @@ export function OnboardingForm() {
   const [motorSupport, setMotorSupport] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
 
   function toggleTheme(theme: ThemeId) {
     setThemes((prev) => (prev.includes(theme) ? prev.filter((t) => t !== theme) : [...prev, theme]));
@@ -47,6 +50,11 @@ export function OnboardingForm() {
       preferredThemes: themes,
       accessibility: { lowInk, highContrast, motorSupport },
     });
+    if (result.error === "child_limit_reached") {
+      setLimitReached(true);
+      setSubmitting(false);
+      return;
+    }
     if (result.error) {
       setError(true);
       setSubmitting(false);
@@ -54,6 +62,30 @@ export function OnboardingForm() {
     }
     router.push("/app");
     router.refresh();
+  }
+
+  // Warm, never punitive: the child was not added, but nothing is broken — the
+  // existing child is untouched, and this simply names what the family plan adds.
+  if (limitReached) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
+          <span className="flex size-11 items-center justify-center rounded-full bg-crayon-soft text-crayon-text">
+            <Sparkles className="size-5" aria-hidden="true" />
+          </span>
+          <CardTitle>{t("childLimit.title")}</CardTitle>
+          <p className="max-w-sm text-sm text-ink-soft">{t("childLimit.body")}</p>
+          <div className="mt-2 flex gap-2">
+            <Button asChild>
+              <Link href="/app/settings">{t("childLimit.cta")}</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/app">{t("childLimit.back")}</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (

@@ -11,15 +11,41 @@
 
 export type PlanTier = "free" | "premium" | "family" | "school" | "therapist";
 
+/**
+ * THE ONE PLACE plan limits live. Every gate — child creation, worksheet
+ * generation, usage display — reads from here, so a pricing experiment is a
+ * one-line change and there are no scattered literals to miss.
+ *
+ * `weeklyWorksheets: null` means unlimited. `children` is the hard cap enforced
+ * at child creation.
+ */
+export const PLAN_LIMITS: Record<PlanTier, { children: number; weeklyWorksheets: number | null }> = {
+  free: { children: 1, weeklyWorksheets: 3 },
+  premium: { children: 1, weeklyWorksheets: null },
+  family: { children: 4, weeklyWorksheets: null },
+  school: { children: 50, weeklyWorksheets: null },
+  therapist: { children: 50, weeklyWorksheets: null },
+};
+
 /** Worksheets a free account may generate per window. */
-export const FREE_WEEKLY_LIMIT = 3;
+export const FREE_WEEKLY_LIMIT = PLAN_LIMITS.free.weeklyWorksheets!;
 /** Length of the rolling window, in days. */
 export const WINDOW_DAYS = 7;
 const DAY_MS = 86_400_000;
 
-/** Every tier except free is unlimited. */
+/** Whether a tier's worksheet generation is unlimited. */
 export function isUnlimited(tier: PlanTier): boolean {
-  return tier !== "free";
+  return PLAN_LIMITS[tier].weeklyWorksheets === null;
+}
+
+/** Children this tier may have. */
+export function childLimit(tier: PlanTier): number {
+  return PLAN_LIMITS[tier].children;
+}
+
+/** Whether an account on `tier` with `currentCount` children may add one more. */
+export function canAddChild(tier: PlanTier, currentCount: number): boolean {
+  return currentCount < childLimit(tier);
 }
 
 export type Allowance = {
@@ -53,7 +79,7 @@ export function evaluateAllowance(input: {
   limit?: number;
   windowDays?: number;
 }): Allowance {
-  const limit = input.limit ?? FREE_WEEKLY_LIMIT;
+  const limit = input.limit ?? PLAN_LIMITS[input.tier].weeklyWorksheets ?? FREE_WEEKLY_LIMIT;
   const windowMs = (input.windowDays ?? WINDOW_DAYS) * DAY_MS;
   const windowStart = input.now.getTime() - windowMs;
 

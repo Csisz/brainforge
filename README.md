@@ -189,6 +189,27 @@ idempotent. Each run signs up a fresh throwaway user.
 5. If magic links stop arriving, check the auth rate limits in
    `supabase/config.toml` (`email_sent`, raised to 100/h for local dev).
 
+## Billing (Stripe) — local dev
+
+Billing is hidden until the Stripe keys are set (`stripeConfigured()`), so the
+app runs fine without them. To exercise checkout + webhooks locally:
+
+1. Set in `.env.local`: `STRIPE_SECRET_KEY` (test mode), `STRIPE_PRICE_PREMIUM`
+   and `STRIPE_PRICE_FAMILY` (test price ids for the €9 and €14 monthly
+   products you create in the Stripe dashboard).
+2. Forward webhooks to the local route and copy the printed signing secret into
+   `STRIPE_WEBHOOK_SECRET`:
+   ```
+   stripe listen --forward-to localhost:3000/api/stripe/webhook
+   ```
+3. `npm run dev`, open Settings, click a plan. Use Stripe's test card
+   `4242 4242 4242 4242`. The webhook flips `subscriptions.tier`; the plan gate
+   reads that table, so generation unlocks immediately.
+
+The webhook verifies every request against `STRIPE_WEBHOOK_SECRET` and updates
+the subscription idempotently, so Stripe's retries are safe. `npm run flow:test`
+covers this path with a mocked, signed event — no Stripe account needed.
+
 ## Sprint roadmap
 
 - **Sprint 1 (done):** engine core, 3 generators, session composer, schema, AI layer contract.

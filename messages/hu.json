@@ -167,7 +167,13 @@
     },
     "submit": "Gyermek hozzáadása",
     "submitting": "Mentés…",
-    "errorGeneric": "Nem sikerült menteni. Próbáld újra."
+    "errorGeneric": "Nem sikerült menteni. Próbáld újra.",
+    "childLimit": {
+      "title": "Új gyerek hozzáadásához válts csomagot",
+      "body": "Az ingyenes és Premium csomag egy gyerekre szól. A Family csomaggal akár 4 gyereket vehetsz fel, egyetlen előfizetéssel — a mostani gyereked mindene megmarad.",
+      "cta": "Nézd meg a Family csomagot",
+      "back": "Vissza"
+    }
   },
   "themes": {
     "dinosaurs": "Dinoszauruszok",
@@ -431,5 +437,15 @@
     "body": "Az ingyenes csomagban hetente 3 feladatlapot készíthetsz. A foglalkozás többi része megvan — csak a feladatlap vár.",
     "unlockAt": "A következő ingyenes feladatlap {date}-kor nyílik meg.",
     "cta": "Nézd meg a Premium csomagot"
+  },
+  "children": {
+    "addChild": "Új gyerek"
+  },
+  "billing": {
+    "unavailable": "A fizetés még nincs beállítva ezen a környezeten.",
+    "manage": "Előfizetés kezelése",
+    "upgradePremium": "Premium – 9 €/hó",
+    "upgradeFamily": "Family – 14 €/hó",
+    "error": "Nem sikerült megnyitni a fizetést. Próbáld újra."
   }
 }

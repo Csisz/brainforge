@@ -167,7 +167,13 @@
     },
     "submit": "Add child",
     "submitting": "Saving…",
-    "errorGeneric": "Couldn't save. Please try again."
+    "errorGeneric": "Couldn't save. Please try again.",
+    "childLimit": {
+      "title": "Upgrade to add another child",
+      "body": "The Free and Premium plans cover one child. Family covers up to 4 children on a single subscription — and your current child keeps everything.",
+      "cta": "See the Family plan",
+      "back": "Back"
+    }
   },
   "themes": {
     "dinosaurs": "Dinosaurs",
@@ -431,5 +437,15 @@
     "body": "The free plan includes 3 worksheets a week. The rest of the session is ready — only the worksheet is waiting.",
     "unlockAt": "Your next free worksheet unlocks {date}.",
     "cta": "See the Premium plan"
+  },
+  "children": {
+    "addChild": "Add child"
+  },
+  "billing": {
+    "unavailable": "Billing isn't configured in this environment yet.",
+    "manage": "Manage subscription",
+    "upgradePremium": "Premium – €9/mo",
+    "upgradeFamily": "Family – €14/mo",
+    "error": "Couldn't open billing. Please try again."
   }
 }
