@@ -210,6 +210,25 @@ The webhook verifies every request against `STRIPE_WEBHOOK_SECRET` and updates
 the subscription idempotently, so Stripe's retries are safe. `npm run flow:test`
 covers this path with a mocked, signed event — no Stripe account needed.
 
+## Email
+
+Two independent paths, both optional in dev:
+
+**Auth emails (magic links)** are sent by Supabase, not the app. Locally they go
+to Mailpit (http://localhost:54324). In production, point Supabase at Resend SMTP
+— this is dashboard configuration, not code: in the Supabase project, *Auth →
+Emails → SMTP Settings*, set host `smtp.resend.com`, port `465`, user `resend`,
+password = your Resend API key, sender = your verified domain address. (The same
+values are in the commented `[auth.email.smtp]` block in `supabase/config.toml`
+for local override.)
+
+**App-sent transactional email** (currently just the welcome note after a
+parent's first child) goes through `src/lib/email/` — an abstraction that mirrors
+the AI layer: set `RESEND_API_KEY` (and optionally `EMAIL_FROM`) and it sends via
+Resend; leave it empty and `sendEmail` silently returns false. It is decorative
+by design — nothing in the product depends on an email arriving, and a provider
+failure never surfaces to the user. Weekly summaries are out of scope.
+
 ## Sprint roadmap
 
 - **Sprint 1 (done):** engine core, 3 generators, session composer, schema, AI layer contract.

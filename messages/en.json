@@ -447,5 +447,11 @@
     "upgradePremium": "Premium – €9/mo",
     "upgradeFamily": "Family – €14/mo",
     "error": "Couldn't open billing. Please try again."
+  },
+  "email": {
+    "welcome": {
+      "subject": "Welcome to BrainForge Kids! 🎉",
+      "body": "Hi! {childName}'s profile is ready. From now on you can make a fresh, personalized worksheet and a screen-free session together every day. Have fun!\n\n— The BrainForge Kids team"
+    }
   }
 }

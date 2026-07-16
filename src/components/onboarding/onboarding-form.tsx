@@ -49,6 +49,7 @@ export function OnboardingForm() {
       avatar,
       preferredThemes: themes,
       accessibility: { lowInk, highContrast, motorSupport },
+      locale,
     });
     if (result.error === "child_limit_reached") {
       setLimitReached(true);

@@ -447,5 +447,11 @@
     "upgradePremium": "Premium – 9 €/hó",
     "upgradeFamily": "Family – 14 €/hó",
     "error": "Nem sikerült megnyitni a fizetést. Próbáld újra."
+  },
+  "email": {
+    "welcome": {
+      "subject": "Üdv a BrainForge Kids-ben! 🎉",
+      "body": "Szia! {childName} profilja elkészült. Mostantól minden nap új, személyre szabott feladatlapot és képernyőmentes foglalkozást készíthettek együtt. Jó játékot!\n\n— A BrainForge Kids csapata"
+    }
   }
 }

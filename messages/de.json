@@ -447,5 +447,11 @@
     "upgradePremium": "Premium – 9 €/Mon.",
     "upgradeFamily": "Family – 14 €/Mon.",
     "error": "Zahlung konnte nicht geöffnet werden. Bitte versuche es erneut."
+  },
+  "email": {
+    "welcome": {
+      "subject": "Willkommen bei BrainForge Kids! 🎉",
+      "body": "Hallo! Das Profil von {childName} ist fertig. Ab jetzt könnt ihr jeden Tag ein neues, personalisiertes Arbeitsblatt und eine bildschirmfreie Einheit zusammen gestalten. Viel Spaß!\n\n— Das BrainForge Kids Team"
+    }
   }
 }

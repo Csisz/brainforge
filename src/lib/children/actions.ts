@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { canAddChild, type PlanTier } from "@/lib/entitlements/limits";
+import { sendWelcomeEmail } from "@/lib/email/welcome";
 import type { ThemeId } from "@/lib/worksheets/types";
 
 export type CreateChildInput = {
@@ -10,6 +11,8 @@ export type CreateChildInput = {
   avatar: string;
   preferredThemes: ThemeId[];
   accessibility: { lowInk: boolean; highContrast: boolean; motorSupport: boolean };
+  /** For localizing the welcome email sent after the first child. */
+  locale: string;
 };
 
 /** `error: "child_limit_reached"` is a signal, not a message — the UI shows a
@@ -38,8 +41,16 @@ export async function createChild(input: CreateChildInput): Promise<{ error?: st
     preferred_themes: input.preferredThemes,
     accessibility: input.accessibility,
   });
+  if (error) return { error: error.message };
 
-  return error ? { error: error.message } : {};
+  // First child ⇒ welcome note. Decorative and best-effort: sendWelcomeEmail
+  // never throws and its result is ignored, so a missing/failing email provider
+  // never affects onboarding.
+  if ((count ?? 0) === 0 && user.email) {
+    void sendWelcomeEmail(user.email, input.locale, input.nickname);
+  }
+
+  return {};
 }
 
 /**
