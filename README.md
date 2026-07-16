@@ -1,7 +1,8 @@
-# BrainForge Kids AI
+# Kalmo Kids
 
-AI-native SaaS that procedurally generates personalized developmental
-activities and printable worksheets for children aged 2–10.
+AI-native SaaS that procedurally generates personalized, printable worksheets
+and screen-free activity sessions for children aged 2–10 — designed around
+calm and focus, not screens.
 Source of truth: `BrainForge_Kids_AI_PRD_v1.docx`.
 
 ## Architecture decisions (v1)
@@ -237,7 +238,7 @@ Supabase Cloud.
 **1. Supabase Cloud.** Create a project. Push the schema: `supabase link
 --project-ref <ref>` then `supabase db push` (applies `supabase/migrations/`).
 In the dashboard: Auth → URL Configuration → set Site URL to your domain and add
-`https://<domain>/api/auth/callback` to redirect URLs; Auth → Emails → SMTP →
+`https://kalmokids.com/api/auth/callback` to redirect URLs; Auth → Emails → SMTP →
 enter the Resend SMTP values (see the `[auth.email.smtp]` block in
 `supabase/config.toml`).
 
@@ -247,7 +248,7 @@ message if anything required is missing.
 
 **3. Stripe.** Create the €9 Premium and €14 Family recurring products; copy
 their price ids into env. Add a webhook endpoint pointing at
-`https://<domain>/api/stripe/webhook` for `checkout.session.completed`,
+`https://kalmokids.com/api/stripe/webhook` for `checkout.session.completed`,
 `customer.subscription.updated`, `customer.subscription.deleted`; copy its
 signing secret into `STRIPE_WEBHOOK_SECRET`.
 
@@ -258,7 +259,7 @@ signing secret into `STRIPE_WEBHOOK_SECRET`.
 | `NEXT_PUBLIC_SUPABASE_URL` | required | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | required | anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | required | server only — webhook + account deletion |
-| `NEXT_PUBLIC_APP_URL` | required | `https://<domain>` |
+| `NEXT_PUBLIC_APP_URL` | required | `https://kalmokids.com` |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | billing | all-or-nothing group |
 | `STRIPE_PRICE_PREMIUM` / `STRIPE_PRICE_FAMILY` | billing | recurring price ids |
 | `RESEND_API_KEY` / `EMAIL_FROM` | email | app-sent mail; empty ⇒ skipped |

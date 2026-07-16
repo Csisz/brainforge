@@ -3,7 +3,7 @@
  *
  * WHY THIS EXISTS
  * ---------------
- * Every worksheet in BrainForge is identified by (generatorId, params, seed).
+ * Every worksheet in Kalmo Kids is identified by (generatorId, params, seed).
  * We never store rendered SVGs — we store the recipe and re-render on demand.
  * That only works if generation is fully deterministic: same seed, same
  * output, forever. Math.random() is therefore banned inside generators;

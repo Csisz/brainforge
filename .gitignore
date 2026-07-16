@@ -13,6 +13,12 @@ tsconfig.tsbuildinfo
 # sample set (`npm run demo:worksheets`).
 demo-samples/
 
+# Local scratch outputs written to the repo root by the regression guards
+# (`npm run verify` writes the thumbnail harness; `npm run flow:test` writes a
+# sample dual_path render). Not repo content.
+catalog-harness.html
+flow-dual_path.svg
+
 # Stray Claude Code config at the repo root (Claude Code reads .claude/,
 # so this file is inert) — personal machine config, not project code.
 settings.local.json

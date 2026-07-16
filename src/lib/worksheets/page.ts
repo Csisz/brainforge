@@ -218,7 +218,7 @@ export function composeWorksheet(
   <line x1="${MARGIN}" y1="${MARGIN + 18}" x2="${paper.w - MARGIN}" y2="${MARGIN + 18}" stroke="#e5e5e5" stroke-width="0.3"/>
   ${watermark ?? ""}
   <g transform="translate(${cx.toFixed(2)} ${contentTop.toFixed(2)}) scale(${scale.toFixed(4)})">${body}</g>
-  <text x="${paper.w / 2}" y="${paper.h - 6}" font-size="3" fill="#bbb" text-anchor="middle">BrainForge Kids · ${esc(recipe.seed.slice(0, 8))}</text>
+  <text x="${paper.w / 2}" y="${paper.h - 6}" font-size="3" fill="#bbb" text-anchor="middle">Kalmo Kids · ${esc(recipe.seed.slice(0, 8))}</text>
 </svg>`;
 
   return {

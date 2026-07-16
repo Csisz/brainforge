@@ -12,7 +12,8 @@
     "toggleSidebar": "Menü umschalten"
   },
   "common": {
-    "appName": "BrainForge Kids",
+    "appName": "Kalmo Kids",
+    "tagline": "Ruhiges Kind, klarer Fokus.",
     "loading": "Wird geladen…",
     "comingSoon": "Demnächst.",
     "language": "Sprache",
@@ -30,7 +31,7 @@
   },
   "hero": {
     "headline": "Jeden Tag ein neues Arbeitsblatt. Nie dasselbe zweimal.",
-    "subline": "BrainForge erstellt druckbare, personalisierte Förder-Arbeitsblätter für jedes Kind — endlose Vielfalt, in Sekunden.",
+    "subline": "Kalmo Kids erstellt druckbare, personalisierte Arbeitsblätter und bildschirmfreie Einheiten rund um Ruhe und Fokus — für jedes Kind ein neues, in Sekunden.",
     "regenerate": "Neues Blatt erzeugen"
   },
   "howItWorks": {
@@ -454,8 +455,8 @@
   },
   "email": {
     "welcome": {
-      "subject": "Willkommen bei BrainForge Kids! 🎉",
-      "body": "Hallo! Das Profil von {childName} ist fertig. Ab jetzt könnt ihr jeden Tag ein neues, personalisiertes Arbeitsblatt und eine bildschirmfreie Einheit zusammen gestalten. Viel Spaß!\n\n— Das BrainForge Kids Team"
+      "subject": "Willkommen bei Kalmo Kids! 🎉",
+      "body": "Hallo! Das Profil von {childName} ist fertig. Ab jetzt könnt ihr jeden Tag ein neues, personalisiertes Arbeitsblatt und eine bildschirmfreie Einheit zusammen gestalten. Viel Spaß!\n\n— Das Kalmo Kids Team"
     }
   },
   "legal": {

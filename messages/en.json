@@ -12,7 +12,8 @@
     "toggleSidebar": "Toggle menu"
   },
   "common": {
-    "appName": "BrainForge Kids",
+    "appName": "Kalmo Kids",
+    "tagline": "A calm child, clear focus.",
     "loading": "Loading…",
     "comingSoon": "Coming soon.",
     "language": "Language",
@@ -30,7 +31,7 @@
   },
   "hero": {
     "headline": "A new worksheet every day. Never the same one twice.",
-    "subline": "BrainForge generates printable, personalized developmental worksheets for every child — endless variety, in seconds.",
+    "subline": "Kalmo Kids makes printable, personalized worksheets and screen-free sessions built around calm and focus — a fresh one for every child, in seconds.",
     "regenerate": "Generate a new one"
   },
   "howItWorks": {
@@ -454,8 +455,8 @@
   },
   "email": {
     "welcome": {
-      "subject": "Welcome to BrainForge Kids! 🎉",
-      "body": "Hi! {childName}'s profile is ready. From now on you can make a fresh, personalized worksheet and a screen-free session together every day. Have fun!\n\n— The BrainForge Kids team"
+      "subject": "Welcome to Kalmo Kids! 🎉",
+      "body": "Hi! {childName}'s profile is ready. From now on you can make a fresh, personalized worksheet and a screen-free session together every day. Have fun!\n\n— The Kalmo Kids team"
     }
   },
   "legal": {

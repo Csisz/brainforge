@@ -1,4 +1,4 @@
--- BrainForge Kids AI — initial schema (PRD §11)
+-- Kalmo Kids — initial schema (PRD §11)
 -- Design notes:
 --  * Worksheets store RECIPES (generator + version + params + seed), never SVG.
 --  * All child data is behind RLS keyed to the owning account. Children are

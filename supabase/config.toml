@@ -156,8 +156,8 @@ site_url = "http://localhost:3000"
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 # PRODUCTION: in Supabase Cloud (Auth → URL Configuration), set Site URL to your
-# real domain (e.g. https://app.brainforge.kids) and add its callback here:
-#   https://app.brainforge.kids/api/auth/callback
+# real domain (e.g. https://kalmokids.com) and add its callback here:
+#   https://kalmokids.com/api/auth/callback
 # The localhost entries below are for local dev only and are ignored in the cloud.
 additional_redirect_urls = [
   "http://localhost:3000/api/auth/callback",
@@ -247,7 +247,7 @@ otp_expiry = 3600
 # user = "resend"
 # pass = "env(RESEND_API_KEY)"
 # admin_email = "noreply@your-verified-domain.com"
-# sender_name = "BrainForge Kids"
+# sender_name = "Kalmo Kids"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

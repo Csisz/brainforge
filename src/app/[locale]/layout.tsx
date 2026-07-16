@@ -30,10 +30,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "common" });
-  const tFooter = await getTranslations({ locale, namespace: "footer" });
   return {
     title: t("appName"),
-    description: tFooter("tagline"),
+    description: t("tagline"),
   };
 }
 

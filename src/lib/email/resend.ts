@@ -7,7 +7,7 @@ import type { EmailMessage, EmailProvider } from "./provider";
  */
 export function resendProvider(): EmailProvider {
   const apiKey = process.env.RESEND_API_KEY!;
-  const from = process.env.EMAIL_FROM ?? "BrainForge Kids <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM ?? "Kalmo Kids <onboarding@resend.dev>";
 
   return {
     id: "resend",

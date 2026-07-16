@@ -12,7 +12,8 @@
     "toggleSidebar": "Menü ki-be kapcsolása"
   },
   "common": {
-    "appName": "BrainForge Kids",
+    "appName": "Kalmo Kids",
+    "tagline": "Nyugodt gyerek, tiszta figyelem.",
     "loading": "Betöltés…",
     "comingSoon": "Hamarosan.",
     "language": "Nyelv",
@@ -30,7 +31,7 @@
   },
   "hero": {
     "headline": "Minden nap új feladatlap. Sosem ugyanaz.",
-    "subline": "A BrainForge minden gyerek fejlődéséhez személyre szabott, nyomtatható feladatlapokat generál — végtelen mennyiségben, másodpercek alatt.",
+    "subline": "A Kalmo Kids személyre szabott, nyomtatható feladatlapokat és képernyőmentes foglalkozásokat készít a nyugalom és a figyelem jegyében — minden gyereknek újat, másodpercek alatt.",
     "regenerate": "Új feladatlap"
   },
   "howItWorks": {
@@ -454,8 +455,8 @@
   },
   "email": {
     "welcome": {
-      "subject": "Üdv a BrainForge Kids-ben! 🎉",
-      "body": "Szia! {childName} profilja elkészült. Mostantól minden nap új, személyre szabott feladatlapot és képernyőmentes foglalkozást készíthettek együtt. Jó játékot!\n\n— A BrainForge Kids csapata"
+      "subject": "Üdv a Kalmo Kids-ben! 🎉",
+      "body": "Szia! {childName} profilja elkészült. Mostantól minden nap új, személyre szabott feladatlapot és képernyőmentes foglalkozást készíthettek együtt. Jó játékot!\n\n— A Kalmo Kids csapata"
     }
   },
   "legal": {

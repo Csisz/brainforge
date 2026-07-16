@@ -1,4 +1,10 @@
-# BrainForge Kids AI — project rules
+# Kalmo Kids — project rules
+> Product name is **Kalmo Kids** (user-facing brand, domain kalmokids.com).
+> Internal names are intentionally NOT rebranded and are not brand surface:
+> the repo/directory, npm package aside, the Supabase `project_id`, DB tables,
+> and code identifiers may remain "brainforge". Historical SPRINT*.md build
+> briefs are left as-is.
+
 - Source of truth: README.md architecture decisions. Never store rendered
   SVG; worksheets are recipes (generatorId, version, params, seed).
 - Math.random() is banned in src/lib/worksheets and src/lib/activities;

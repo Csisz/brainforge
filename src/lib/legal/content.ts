@@ -177,7 +177,7 @@ export const LEGAL: Record<LegalKind, Record<AppLocale, LegalDoc>> = {
         {
           heading: "The service",
           body: [
-            "BrainForge Kids generates printable developmental worksheets and screen-free activity plans for children. It is an educational tool for play and practice. It is not medical, psychological, or therapeutic advice, and it is not a substitute for professional assessment.",
+            "Kalmo Kids generates printable developmental worksheets and screen-free activity plans for children. It is an educational tool for play and practice. It is not medical, psychological, or therapeutic advice, and it is not a substitute for professional assessment.",
           ],
         },
         {
@@ -226,7 +226,7 @@ export const LEGAL: Record<LegalKind, Record<AppLocale, LegalDoc>> = {
         {
           heading: "A szolgáltatás",
           body: [
-            "A BrainForge Kids nyomtatható fejlesztő feladatlapokat és képernyőmentes foglalkozásterveket készít gyerekeknek. Ez játékos, gyakorláshoz készült oktatási eszköz. Nem orvosi, pszichológiai vagy terápiás tanács, és nem helyettesíti a szakértői vizsgálatot.",
+            "A Kalmo Kids nyomtatható fejlesztő feladatlapokat és képernyőmentes foglalkozásterveket készít gyerekeknek. Ez játékos, gyakorláshoz készült oktatási eszköz. Nem orvosi, pszichológiai vagy terápiás tanács, és nem helyettesíti a szakértői vizsgálatot.",
           ],
         },
         {
@@ -275,7 +275,7 @@ export const LEGAL: Record<LegalKind, Record<AppLocale, LegalDoc>> = {
         {
           heading: "Der Dienst",
           body: [
-            "BrainForge Kids erstellt druckbare Förder-Arbeitsblätter und bildschirmfreie Aktivitätspläne für Kinder. Es ist ein pädagogisches Werkzeug zum Spielen und Üben. Es ist keine medizinische, psychologische oder therapeutische Beratung und ersetzt keine fachliche Beurteilung.",
+            "Kalmo Kids erstellt druckbare Förder-Arbeitsblätter und bildschirmfreie Aktivitätspläne für Kinder. Es ist ein pädagogisches Werkzeug zum Spielen und Üben. Es ist keine medizinische, psychologische oder therapeutische Beratung und ersetzt keine fachliche Beurteilung.",
           ],
         },
         {

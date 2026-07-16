@@ -157,7 +157,7 @@ for (const c of cards) {
   const vb = c.thumb.svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
   if (!vb) p.push("no viewBox");
   if (/210mm|297mm/.test(c.thumb.svg)) p.push("carries paper size");
-  if (/BrainForge Kids/.test(c.thumb.svg)) p.push("has footer chrome");
+  if (/Kalmo Kids/.test(c.thumb.svg)) p.push("has footer chrome");
   if (!/width="100%" height="100%"/.test(c.thumb.svg)) p.push("not relatively sized");
   if (!/preserveAspectRatio="xMidYMid meet"/.test(c.thumb.svg)) p.push("no preserveAspectRatio");
 
@@ -180,7 +180,7 @@ for (const c of cards) {
   const p: string[] = [];
   if (!/width="210mm" height="297mm"/.test(c.full.svg)) p.push("not A4-sized");
   if (!/viewBox="0 0 210 297"/.test(c.full.svg)) p.push("wrong viewBox");
-  if (!/BrainForge Kids/.test(c.full.svg)) p.push("footer missing");
+  if (!/Kalmo Kids/.test(c.full.svg)) p.push("footer missing");
   if (c.full.box) p.push("box leaked into full-page mode");
   ok(c.id.padEnd(20), p.length === 0, p.join("; "));
 }
