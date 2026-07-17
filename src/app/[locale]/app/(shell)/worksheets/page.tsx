@@ -79,23 +79,27 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
                 <p className="mt-1 text-sm leading-snug text-ink-soft">{t(`generatorDescriptions.${card.id}`)}</p>
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-ink-soft">{tc("trainsLabel")}</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {card.goals.map((goal) => (
-                    <Badge key={goal} variant="outline" className="border-line text-ink-soft">
-                      {t(`goals.${goal}`)}
-                    </Badge>
-                  ))}
+              {/* Collection sheets (reward_chart) train nothing — the description
+                  carries their meaning, so the taxonomy/outcome row is skipped. */}
+              {card.goals.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs font-medium text-ink-soft">{tc("trainsLabel")}</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {card.goals.map((goal) => (
+                      <Badge key={goal} variant="outline" className="border-line text-ink-soft">
+                        {t(`goals.${goal}`)}
+                      </Badge>
+                    ))}
+                  </div>
+                  <GoalOutcomes
+                    label={tc("helpsWith")}
+                    outcomes={[
+                      ...new Set(card.goals.flatMap((goal) => t.raw(`goalOutcomes.${goal}`) as string[])),
+                    ].slice(0, 4)}
+                    className="mt-0.5"
+                  />
                 </div>
-                <GoalOutcomes
-                  label={tc("helpsWith")}
-                  outcomes={[
-                    ...new Set(card.goals.flatMap((goal) => t.raw(`goalOutcomes.${goal}`) as string[])),
-                  ].slice(0, 4)}
-                  className="mt-0.5"
-                />
-              </div>
+              )}
 
               <p className="text-xs text-ink-soft">
                 {tc("ageRange", { from: card.ageRange[0], to: card.ageRange[1] })}

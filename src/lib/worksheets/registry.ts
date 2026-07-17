@@ -18,6 +18,7 @@ import { colorByRuleGenerator } from "./generators/color-by-rule";
 import { sequencingGenerator } from "./generators/sequencing";
 import { cutAndPasteGenerator } from "./generators/cut-and-paste";
 import { hiddenObjectsGenerator } from "./generators/hidden-objects";
+import { rewardChartGenerator } from "./generators/reward-chart";
 
 /**
  * GENERATOR REGISTRY
@@ -49,6 +50,7 @@ const generators: ReadonlyArray<WorksheetGenerator<any>> = [
   sequencingGenerator,
   cutAndPasteGenerator,
   hiddenObjectsGenerator,
+  rewardChartGenerator,
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +63,10 @@ export function getGenerator(id: string): WorksheetGenerator<any> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findGenerators(opts: { goal?: DevelopmentGoal; age?: Age }): ReadonlyArray<WorksheetGenerator<any>> {
   return generators.filter((g) => {
+    // catalogOnly types (reward collection sheets) are never composed into a
+    // session — they are the composer's only exclusion, keyed off the contract
+    // rather than an id list here.
+    if (g.catalogOnly) return false;
     if (opts.goal && !g.goals.includes(opts.goal)) return false;
     if (opts.age !== undefined && (opts.age < g.ageRange[0] || opts.age > g.ageRange[1])) return false;
     return true;

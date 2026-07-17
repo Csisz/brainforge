@@ -74,7 +74,8 @@
     "color_by_rule": "Malen nach Zahlen",
     "sequencing": "In die richtige Reihenfolge",
     "cut_and_paste": "Ausschneiden & Kleben",
-    "hidden_objects": "Versteckte Formen"
+    "hidden_objects": "Versteckte Formen",
+    "reward_chart": "Sammelblatt"
   },
   "pitch": {
     "eyebrow": "Bildschirmfrei",
@@ -213,6 +214,12 @@
     "ageSuffix": "{age} Jahre alt",
     "streakDays": "{count}-Tage-Serie",
     "nudgeLabel": "Als Nächstes probieren"
+  },
+  "collectionSheet": {
+    "cta": "Sammelblatt drucken",
+    "preparing": "Wird vorbereitet…",
+    "error": "Konnte nicht vorbereitet werden. Bitte erneut versuchen.",
+    "offer": "Sammelt die Erfolge der Woche — druckt ein frisches Blatt zum Ausmalen."
   },
   "goals": {
     "attention": "Aufmerksamkeit",
@@ -375,7 +382,8 @@
     "color_by_rule": "Ein Buntglas-Muster, in dem jedes Feld nummeriert ist. Das Kind malt nach der Legende — Aufmerksamkeit, Regelbefolgung und ruhiges Ausmalen.",
     "sequencing": "Bildgeschichten in falscher Reihenfolge — eine wachsende Blume, ein sich füllendes Glas. Das Kind nummeriert die Schritte und übt Ursache-Wirkung und Reihenfolge.",
     "cut_and_paste": "Ein Muster mit Lücken und Ausschneideteilen unten. Das Kind schneidet und klebt jedes Teil an seinen Platz — Musterlogik und Scherenübung.",
-    "hidden_objects": "Ein Gewirr überlappender Umrisse verbirgt Zielformen. Das Kind findet, umkreist und zählt jede — konzentrierte Aufmerksamkeit und Figur-Grund-Wahrnehmung."
+    "hidden_objects": "Ein Gewirr überlappender Umrisse verbirgt Zielformen. Das Kind findet, umkreist und zählt jede — konzentrierte Aufmerksamkeit und Figur-Grund-Wahrnehmung.",
+    "reward_chart": "Keine Aufgabe, sondern ein Andenken. Eine Seite voller Formen, die dein Kind ausmalt oder beklebt — eine für jede erledigte Einheit oder jeden Tag. Eine ganze Woche Mühe, sichtbar gemacht."
   },
   "activityHowTo": {
     "warmup": {

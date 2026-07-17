@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoalBadges } from "@/components/dashboard/goal-badges";
+import { PrintCollectionSheet } from "@/components/dashboard/print-collection-sheet";
 import { AchievementBadges } from "@/components/achievements/achievement-badges";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
@@ -46,6 +47,7 @@ export async function ChildCard({
         <Button asChild className="mt-2 w-full">
           <Link href={{ pathname: "/app/new-session", query: { child: child.id } }}>{t("todaySessionCta")}</Link>
         </Button>
+        <PrintCollectionSheet childId={child.id} />
         {achievements.length > 0 && (
           <div className="mt-1">
             <AchievementBadges kinds={achievements} />

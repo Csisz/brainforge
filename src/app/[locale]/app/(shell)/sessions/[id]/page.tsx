@@ -71,6 +71,7 @@ export default async function SessionViewPage({
       </div>
       <SessionView
         sessionId={session.id}
+        childId={child.id}
         slots={plan.slots}
         worksheetData={worksheetData}
         pictograms={pictograms}

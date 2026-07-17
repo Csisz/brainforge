@@ -95,6 +95,14 @@ export type WorksheetGenerator<P = unknown> = {
   version: number;
   /** Goals this worksheet type trains — used by the activity engine. */
   goals: DevelopmentGoal[];
+  /**
+   * Present in the catalog + print pipeline but never picked for a session.
+   * Reward collection sheets (Sprint 7 M4) live outside the goal-based engine:
+   * they are keepsakes a child fills in over days, not a trained task, so
+   * `findGenerators` (the composer's only door) skips them. `allGenerators`
+   * (catalog, verify, goldens) still includes them.
+   */
+  catalogOnly?: boolean;
   /** Inclusive supported age range. */
   ageRange: [Age, Age];
   /** Derive sensible params from context (age/difficulty aware). */

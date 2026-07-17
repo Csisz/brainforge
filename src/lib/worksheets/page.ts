@@ -148,6 +148,11 @@ const INSTRUCTIONS: Record<string, Record<string, string>> = {
     hu: "Tedd ki a falra! Mondd ki hangosan és gyorsan a nyilak irányát!",
     de: "Aufhängen! Sage die Richtung jedes Pfeils laut und schnell.",
   },
+  "worksheet.reward_chart.instruction": {
+    en: "Color in or add a sticker to one shape for every finished task or day.",
+    hu: "Színezz ki vagy ragassz egy matricát egy formára minden elvégzett feladat vagy nap után!",
+    de: "Male eine Form aus oder klebe einen Sticker auf — für jede erledigte Aufgabe oder jeden Tag.",
+  },
 };
 
 const TITLES: Record<string, Record<string, string>> = {
@@ -170,6 +175,7 @@ const TITLES: Record<string, Record<string, string>> = {
   sequencing: { en: "Put in Order", hu: "Sorba rendezés", de: "In die richtige Reihenfolge" },
   cut_and_paste: { en: "Cut & Paste", hu: "Vágd és ragaszd", de: "Ausschneiden & Kleben" },
   hidden_objects: { en: "Hidden Shapes", hu: "Rejtett formák", de: "Versteckte Formen" },
+  reward_chart: { en: "Collection Sheet", hu: "Gyűjtőlap", de: "Sammelblatt" },
 };
 
 function t(table: Record<string, Record<string, string>>, key: string, locale: string): string {

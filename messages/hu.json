@@ -74,7 +74,8 @@
     "color_by_rule": "Színezz szám szerint",
     "sequencing": "Sorba rendezés",
     "cut_and_paste": "Vágd és ragaszd",
-    "hidden_objects": "Rejtett formák"
+    "hidden_objects": "Rejtett formák",
+    "reward_chart": "Gyűjtőlap"
   },
   "pitch": {
     "eyebrow": "Képernyőmentes",
@@ -213,6 +214,12 @@
     "ageSuffix": "{age} éves",
     "streakDays": "{count} napos sorozat",
     "nudgeLabel": "Próbáljátok legközelebb"
+  },
+  "collectionSheet": {
+    "cta": "Gyűjtőlap nyomtatása",
+    "preparing": "Előkészítés…",
+    "error": "Nem sikerült. Próbáld újra.",
+    "offer": "Gyűjtsétek a heti sikereket — nyomtass egy friss lapot kiszínezni!"
   },
   "goals": {
     "attention": "Figyelem",
@@ -375,7 +382,8 @@
     "color_by_rule": "Ólomüveg-minta, ahol minden mező meg van számozva. A gyerek a jelmagyarázat szerint színez — figyelem, szabálykövetés és egyenletes színezés.",
     "sequencing": "Összekevert képsorok — növő virág, telő pohár. A gyerek megszámozza a lépéseket, ezzel az ok-okozatot és a sorrendiséget gyakorolja.",
     "cut_and_paste": "Hiányos minta, alul kivágható darabokkal. A gyerek kivágja és a helyére ragasztja őket — mintafelismerés és ollóhasználat egyben.",
-    "hidden_objects": "Egymásra csúszó körvonalak rejtik a keresett formákat. A gyerek megkeresi, bekarikázza és megszámolja őket — összpontosított figyelem és alak-háttér elkülönítés."
+    "hidden_objects": "Egymásra csúszó körvonalak rejtik a keresett formákat. A gyerek megkeresi, bekarikázza és megszámolja őket — összpontosított figyelem és alak-háttér elkülönítés.",
+    "reward_chart": "Nem feladat, hanem gyűjtemény. Egy lapnyi forma, amit a gyerek kiszínez vagy matricáz — egyet minden elvégzett foglalkozás vagy nap után. Egy egész hét kitartása, láthatóvá téve."
   },
   "activityHowTo": {
     "warmup": {

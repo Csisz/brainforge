@@ -37,6 +37,7 @@ const cases = [
   { gen: "sequencing", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Zoé" },
   { gen: "cut_and_paste", age: 5 as const, difficulty: 3 as const, locale: "hu", name: "Lili" },
   { gen: "hidden_objects", age: 7 as const, difficulty: 4 as const, locale: "hu", name: "Bence" },
+  { gen: "reward_chart", age: 6 as const, difficulty: 3 as const, locale: "hu", name: "Zita" },
 ];
 
 for (const c of cases) {

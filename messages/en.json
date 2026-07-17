@@ -74,7 +74,8 @@
     "color_by_rule": "Color by Number",
     "sequencing": "Put in Order",
     "cut_and_paste": "Cut & Paste",
-    "hidden_objects": "Hidden Shapes"
+    "hidden_objects": "Hidden Shapes",
+    "reward_chart": "Collection Sheet"
   },
   "pitch": {
     "eyebrow": "Screen-free",
@@ -213,6 +214,12 @@
     "ageSuffix": "{age} years old",
     "streakDays": "{count}-day streak",
     "nudgeLabel": "Try these next"
+  },
+  "collectionSheet": {
+    "cta": "Print collection sheet",
+    "preparing": "Preparing…",
+    "error": "Couldn't prepare it. Please try again.",
+    "offer": "Collect the week's wins — print a fresh sheet to color in."
   },
   "goals": {
     "attention": "Attention",
@@ -375,7 +382,8 @@
     "color_by_rule": "A stained-glass panel where each area is numbered. The child colours by the legend — attention, one-to-one rule following and steady colouring.",
     "sequencing": "Picture stories shown out of order — a flower growing, a glass filling. The child numbers each step, training cause-and-effect and ordering.",
     "cut_and_paste": "A pattern with gaps and cut-out pieces at the bottom. The child cuts and pastes each piece into place — pattern logic plus scissor skills.",
-    "hidden_objects": "A tangle of overlapping outlines hides target shapes. The child finds, circles and counts each one — focused attention and figure-ground scanning."
+    "hidden_objects": "A tangle of overlapping outlines hides target shapes. The child finds, circles and counts each one — focused attention and figure-ground scanning.",
+    "reward_chart": "Not a task — a keepsake. A page of shapes your child colors or stickers, one for every finished session or day. A whole week of effort, made visible and worth finishing."
   },
   "activityHowTo": {
     "warmup": {

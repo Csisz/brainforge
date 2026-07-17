@@ -8,6 +8,7 @@ import type { StoredSessionSlot } from "@/lib/activities/engine";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import { submitSessionFeedback, type SlotFeedback, type Ease } from "@/lib/feedback/actions";
 import { HowToPlay } from "@/components/session/how-to-play";
+import { PrintCollectionSheet } from "@/components/dashboard/print-collection-sheet";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ const EASE_OPTIONS: Ease[] = ["easy", "ok", "hard"];
 
 export function SessionView({
   sessionId,
+  childId,
   slots,
   worksheetData,
   pictograms,
@@ -27,6 +29,7 @@ export function SessionView({
   upgradeCard,
 }: {
   sessionId: string;
+  childId: string;
   slots: StoredSessionSlot[];
   worksheetData: Record<number, WorksheetSlotData>;
   /** Server-rendered inline-SVG pictogram strips keyed by slot index (physical slots only). */
@@ -93,6 +96,11 @@ export function SessionView({
         <Button asChild className="mt-2">
           <Link href="/app">{t("sessionView.backToDashboard")}</Link>
         </Button>
+        {/* A finished session is exactly the moment to mark a win on the wall. */}
+        <div className="mt-4 w-full max-w-xs border-t border-line pt-4">
+          <p className="mb-2 text-xs leading-snug text-ink-soft">{t("collectionSheet.offer")}</p>
+          <PrintCollectionSheet childId={childId} />
+        </div>
       </div>
     );
   }
