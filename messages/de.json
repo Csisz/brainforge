@@ -155,6 +155,9 @@
   "onboarding": {
     "title": "Lern dein Kind kennen lassen",
     "subtitle": "Danach richten wir die täglichen Arbeitsblätter aus.",
+    "editTitle": "Kind bearbeiten",
+    "editSubtitle": "Aktualisiere das Profil deines Kindes — die täglichen Arbeitsblätter richten sich danach.",
+    "saveChild": "Änderungen speichern",
     "nicknameLabel": "Spitzname",
     "nicknamePlaceholder": "z. B. Mia",
     "birthMonthLabel": "Geburtsmonat",
@@ -448,7 +451,18 @@
     "cta": "Premium-Plan ansehen"
   },
   "children": {
-    "addChild": "Kind hinzufügen"
+    "addChild": "Kind hinzufügen",
+    "editAction": "Kind bearbeiten"
+  },
+  "deleteChild": {
+    "title": "Kind löschen",
+    "description": "Das Löschen dieses Kindes entfernt dauerhaft sein Profil und alle Einheiten, Arbeitsblätter und Fortschritte. Das kann nicht rückgängig gemacht werden.",
+    "open": "Kind löschen…",
+    "confirmLabel": "Zur Bestätigung {nickname} eingeben",
+    "confirm": "Endgültig löschen",
+    "deleting": "Wird gelöscht…",
+    "cancel": "Abbrechen",
+    "error": "Löschen fehlgeschlagen. Prüfe den eingegebenen Namen und versuche es erneut."
   },
   "billing": {
     "unavailable": "Die Zahlung ist in dieser Umgebung noch nicht eingerichtet.",

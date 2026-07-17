@@ -155,6 +155,9 @@
   "onboarding": {
     "title": "Let's meet your child",
     "subtitle": "This is what we'll base the daily worksheets on.",
+    "editTitle": "Edit child",
+    "editSubtitle": "Update your child's profile — the daily worksheets follow these.",
+    "saveChild": "Save changes",
     "nicknameLabel": "Nickname",
     "nicknamePlaceholder": "e.g. Mia",
     "birthMonthLabel": "Birth month",
@@ -448,7 +451,18 @@
     "cta": "See the Premium plan"
   },
   "children": {
-    "addChild": "Add child"
+    "addChild": "Add child",
+    "editAction": "Edit child"
+  },
+  "deleteChild": {
+    "title": "Delete child",
+    "description": "Deleting this child permanently removes their profile and every session, worksheet, and piece of progress. This cannot be undone.",
+    "open": "Delete child…",
+    "confirmLabel": "Type {nickname} to confirm",
+    "confirm": "Permanently delete",
+    "deleting": "Deleting…",
+    "cancel": "Cancel",
+    "error": "Couldn't delete. Check the name you typed and try again."
   },
   "billing": {
     "unavailable": "Billing isn't configured in this environment yet.",

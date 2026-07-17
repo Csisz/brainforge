@@ -1,5 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { Plus } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getChildren } from "@/lib/children/queries";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
@@ -40,11 +40,21 @@ export default async function ChildrenPage({ params }: { params: Promise<{ local
         {children.map((child) => {
           const Icon = getAvatarIcon(child.avatar);
           return (
-            <Card key={child.id}>
-              <CardContent className="flex items-start gap-3 py-5">
+            <Card key={child.id} className="relative">
+              <CardContent className="flex items-start gap-3 py-5 pr-12">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-crayon-soft text-crayon-text">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon-sm"
+                  className="absolute top-3 right-3 text-ink-soft"
+                >
+                  <Link href={`/app/children/${child.id}/edit`} aria-label={t("children.editAction")}>
+                    <Pencil aria-hidden="true" />
+                  </Link>
+                </Button>
                 <div className="min-w-0 flex-1 space-y-2">
                   <div>
                     <p className="font-display font-bold text-ink">{child.nickname}</p>

@@ -3,12 +3,11 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import type { ThemeId } from "@/lib/worksheets/types";
 import { THEME_IDS } from "@/lib/worksheets/theme-list";
 import { AVATARS, type AvatarId } from "@/lib/children/avatar-list";
-import { Sparkles } from "lucide-react";
-import { createChild } from "@/lib/children/actions";
+import { createChild, updateChild } from "@/lib/children/actions";
 import { isValidBirthMonth } from "@/lib/children/age";
 import { BirthMonthPicker } from "@/components/children/birth-month-picker";
 import { Link } from "@/i18n/navigation";
@@ -19,47 +18,72 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export function OnboardingForm() {
+export type ChildFormValues = {
+  nickname: string;
+  birthMonth: string; // "YYYY-MM"
+  avatar: AvatarId;
+  themes: ThemeId[];
+  accessibility: { lowInk: boolean; highContrast: boolean; motorSupport: boolean };
+};
+
+/**
+ * The child profile form, shared by onboarding (create) and the child-edit page
+ * (edit, prefilled). One set of fields — nickname, birth month, avatar, themes,
+ * accessibility — behind one "YYYY-MM" birth value, so both flows stay in sync.
+ */
+export function ChildForm({
+  mode,
+  childId,
+  initial,
+}: {
+  mode: "create" | "edit";
+  childId?: string;
+  initial?: ChildFormValues;
+}) {
   const t = useTranslations("onboarding");
   const tThemes = useTranslations("themes");
   const tAvatars = useTranslations("avatars");
   const locale = useLocale();
   const router = useRouter();
 
-  const [nickname, setNickname] = useState("");
-  const [birthMonth, setBirthMonth] = useState("");
-  const [avatar, setAvatar] = useState<AvatarId>("cat");
-  const [themes, setThemes] = useState<ThemeId[]>([]);
-  const [lowInk, setLowInk] = useState(false);
-  const [highContrast, setHighContrast] = useState(false);
-  const [motorSupport, setMotorSupport] = useState(false);
+  const [nickname, setNickname] = useState(initial?.nickname ?? "");
+  const [birthMonth, setBirthMonth] = useState(initial?.birthMonth ?? "");
+  const [avatar, setAvatar] = useState<AvatarId>(initial?.avatar ?? "cat");
+  const [themes, setThemes] = useState<ThemeId[]>(initial?.themes ?? []);
+  const [lowInk, setLowInk] = useState(initial?.accessibility.lowInk ?? false);
+  const [highContrast, setHighContrast] = useState(initial?.accessibility.highContrast ?? false);
+  const [motorSupport, setMotorSupport] = useState(initial?.accessibility.motorSupport ?? false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [birthError, setBirthError] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
 
   function toggleTheme(theme: ThemeId) {
-    setThemes((prev) => (prev.includes(theme) ? prev.filter((t) => t !== theme) : [...prev, theme]));
+    setThemes((prev) => (prev.includes(theme) ? prev.filter((x) => x !== theme) : [...prev, theme]));
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // The two selects can't express "future month" or an >10y-old the way the
-    // native input's `max` did, so gate it here before saving.
+    // Two selects can express a future month or an >10y-old that the native
+    // input's `max` used to guard, so gate it here before saving.
     if (!isValidBirthMonth(birthMonth)) {
       setBirthError(true);
       return;
     }
     setSubmitting(true);
     setError(false);
-    const result = await createChild({
+    const payload = {
       nickname,
       birthMonth,
       avatar,
       preferredThemes: themes,
       accessibility: { lowInk, highContrast, motorSupport },
-      locale,
-    });
+    };
+    const result =
+      mode === "edit" && childId
+        ? await updateChild(childId, payload)
+        : await createChild({ ...payload, locale });
+
     if (result.error === "child_limit_reached") {
       setLimitReached(true);
       setSubmitting(false);
@@ -70,7 +94,7 @@ export function OnboardingForm() {
       setSubmitting(false);
       return;
     }
-    router.push("/app");
+    router.push(mode === "edit" ? "/app/children" : "/app");
     router.refresh();
   }
 
@@ -101,8 +125,8 @@ export function OnboardingForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("subtitle")}</CardDescription>
+        <CardTitle>{mode === "edit" ? t("editTitle") : t("title")}</CardTitle>
+        <CardDescription>{mode === "edit" ? t("editSubtitle") : t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -206,7 +230,7 @@ export function OnboardingForm() {
           {error && <p className="text-sm text-destructive">{t("errorGeneric")}</p>}
 
           <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? t("submitting") : t("submit")}
+            {submitting ? t("submitting") : mode === "edit" ? t("saveChild") : t("submit")}
           </Button>
         </form>
       </CardContent>

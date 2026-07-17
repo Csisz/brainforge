@@ -155,6 +155,9 @@
   "onboarding": {
     "title": "Ismerkedjünk meg gyermekeddel",
     "subtitle": "Ez alapján állítjuk össze a napi feladatlapokat.",
+    "editTitle": "Gyermek szerkesztése",
+    "editSubtitle": "Frissítsd a gyermek profilját — a napi feladatlapok ezt követik.",
+    "saveChild": "Módosítások mentése",
     "nicknameLabel": "Becenév",
     "nicknamePlaceholder": "pl. Zsófi",
     "birthMonthLabel": "Születési hónap",
@@ -448,7 +451,18 @@
     "cta": "Nézd meg a Premium csomagot"
   },
   "children": {
-    "addChild": "Új gyerek"
+    "addChild": "Új gyerek",
+    "editAction": "Gyermek szerkesztése"
+  },
+  "deleteChild": {
+    "title": "Gyermek törlése",
+    "description": "A gyermek törlése véglegesen eltávolítja a profilját és minden foglalkozását, feladatlapját és eredményét. Ez nem vonható vissza.",
+    "open": "Gyermek törlése…",
+    "confirmLabel": "Írd be a megerősítéshez: {nickname}",
+    "confirm": "Végleges törlés",
+    "deleting": "Törlés…",
+    "cancel": "Mégse",
+    "error": "Nem sikerült törölni. Ellenőrizd a beírt nevet, és próbáld újra."
   },
   "billing": {
     "unavailable": "A fizetés még nincs beállítva ezen a környezeten.",

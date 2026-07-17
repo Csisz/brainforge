@@ -1,6 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { OnboardingForm } from "@/components/onboarding/onboarding-form";
+import { ChildForm } from "@/components/children/child-form";
 
 export default async function OnboardingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -13,7 +13,7 @@ export default async function OnboardingPage({ params }: { params: Promise<{ loc
         {t("appName")}
       </Link>
       <div className="w-full max-w-xl">
-        <OnboardingForm />
+        <ChildForm mode="create" />
       </div>
     </div>
   );

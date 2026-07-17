@@ -53,6 +53,55 @@ export async function createChild(input: CreateChildInput): Promise<{ error?: st
   return {};
 }
 
+export type UpdateChildInput = {
+  nickname: string;
+  birthMonth: string; // "YYYY-MM" from the birth-month dropdowns
+  avatar: string;
+  preferredThemes: ThemeId[];
+  accessibility: { lowInk: boolean; highContrast: boolean; motorSupport: boolean };
+};
+
+/**
+ * Edit an existing child (Sprint 7 M1). RLS scopes the update to the owner, so a
+ * child id from another account simply matches no row. adaptive_enabled is left
+ * alone here — it has its own toggle.
+ */
+export async function updateChild(childId: string, input: UpdateChildInput): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "not_authenticated" };
+
+  const { error } = await supabase
+    .from("children")
+    .update({
+      nickname: input.nickname,
+      birth_month: `${input.birthMonth}-01`,
+      avatar: input.avatar,
+      preferred_themes: input.preferredThemes,
+      accessibility: input.accessibility,
+    })
+    .eq("id", childId);
+  return error ? { error: error.message } : {};
+}
+
+/**
+ * Delete a child (Sprint 7 M1). RLS scopes it to the owner; the foreign keys
+ * cascade, so sessions, worksheets, feedback, achievements and calibration for
+ * this child go with it. The UI gates this behind a typed nickname confirmation.
+ */
+export async function deleteChild(childId: string): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "not_authenticated" };
+
+  const { error } = await supabase.from("children").delete().eq("id", childId);
+  return error ? { error: error.message } : {};
+}
+
 /**
  * Per-child adaptive difficulty opt-out (Sprint 5 M4). RLS scopes the update to
  * the owner, so a child id from another account simply matches no row.
