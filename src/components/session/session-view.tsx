@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { Star, Printer, PartyPopper } from "lucide-react";
-import type { StoredSessionSlot } from "@/lib/activities/engine";
+import { activityMaterials, type StoredSessionSlot, type MaterialId } from "@/lib/activities/engine";
+import { MATERIALS } from "@/lib/activities/material-list";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
+import type { ThemeId } from "@/lib/worksheets/types";
 import { submitSessionFeedback, type SlotFeedback, type Ease } from "@/lib/feedback/actions";
 import { HowToPlay } from "@/components/session/how-to-play";
 import { PrintCollectionSheet } from "@/components/dashboard/print-collection-sheet";
@@ -22,6 +24,7 @@ const EASE_OPTIONS: Ease[] = ["easy", "ok", "hard"];
 export function SessionView({
   sessionId,
   childId,
+  theme,
   slots,
   worksheetData,
   pictograms,
@@ -30,6 +33,7 @@ export function SessionView({
 }: {
   sessionId: string;
   childId: string;
+  theme: ThemeId;
   slots: StoredSessionSlot[];
   worksheetData: Record<number, WorksheetSlotData>;
   /** Server-rendered inline-SVG pictogram strips keyed by slot index (physical slots only). */
@@ -62,9 +66,11 @@ export function SessionView({
   }
 
   function activityHowTo(activityKey: string): string | undefined {
-    // "activity.warmup.simon_says" → "activityHowTo.warmup.simon_says"
+    // "activity.warmup.simon_says" → "activityHowTo.warmup.simon_says". The theme
+    // name is passed for the one activity that interpolates it (creative.draw_theme,
+    // Sprint 7 M5d); the others simply ignore it.
     const key = activityKey.replace(/^activity\./, "activityHowTo.");
-    return t.has(key) ? t(key) : undefined;
+    return t.has(key) ? t(key, { theme: t(`themes.${theme}`) }) : undefined;
   }
 
   async function handleFinish() {
@@ -121,6 +127,7 @@ export function SessionView({
           const worksheet = slot.kind === "worksheet" ? worksheetData[i] : undefined;
           const generatorId = slot.kind === "worksheet" ? slot.recipe.generatorId : undefined;
           const howTo = slot.kind === "worksheet" ? undefined : activityHowTo(slot.activityKey);
+          const slotMaterials = slot.kind === "worksheet" ? [] : activityMaterials(slot.activityKey);
           return (
             <li key={i} className="rounded-card border border-line bg-card p-4 shadow-soft">
               <div className="flex items-center gap-3">
@@ -144,6 +151,24 @@ export function SessionView({
                 <p className="mt-2 text-xs leading-snug text-ink-soft">
                   {t(`generatorDescriptions.${generatorId}`)}
                 </p>
+              )}
+
+              {slotMaterials.length > 0 && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <span className="text-xs text-ink-soft">{t("sessionView.needsMaterials")}</span>
+                  {slotMaterials.map((id: MaterialId) => {
+                    const Icon = MATERIALS.find((m) => m.id === id)?.icon;
+                    return (
+                      <span
+                        key={id}
+                        className="inline-flex items-center gap-1 rounded-full bg-mist px-2 py-0.5 text-xs text-ink-soft"
+                      >
+                        {Icon && <Icon className="size-3.5" aria-hidden="true" />}
+                        {t(`materials.${id}`)}
+                      </span>
+                    );
+                  })}
+                </div>
               )}
 
               {howTo && <HowToPlay text={howTo} label={t("sessionView.howToToggle")} />}

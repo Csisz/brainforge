@@ -330,6 +330,7 @@
     "doneBody": "Today's session has been saved.",
     "backToDashboard": "Back to overview",
     "howToToggle": "How to play?",
+    "needsMaterials": "You'll need:",
     "printPlan": "Print daily plan",
     "easeLabel": "How did it go?",
     "easeEasy": "Breezed it",
@@ -404,7 +405,7 @@
     },
     "creative": {
       "build_story": "Build a scene together from blocks (castle, farm, space station) while your child narrates what happens there. You only ask: \"Who lives here? What happened yesterday?\"",
-      "draw_theme": "Give a topic from today's theme and let them draw freely. No corrections — at the end, ask them to tell you about the drawing.",
+      "draw_theme": "Let them draw freely on today’s theme ({theme}). No corrections — at the end, ask them to tell you about the drawing.",
       "cut_collage": "Your child cuts shapes from old magazines or colored paper and glues them into a picture. The cutting itself is fine-motor work — theme it to today's session."
     },
     "reward": {

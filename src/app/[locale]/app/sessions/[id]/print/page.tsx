@@ -66,7 +66,7 @@ export default async function SessionPlanPrintPage({
             const description = isWorksheet
               ? t(`generatorDescriptions.${slot.recipe.generatorId}`)
               : t.has(howToKey)
-                ? t(howToKey)
+                ? t(howToKey, { theme: t(`themes.${session.theme}`) })
                 : undefined;
             const picto = !isWorksheet && hasPictogram(slot.activityKey)
               ? composePictogram(slot.activityKey)

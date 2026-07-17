@@ -1,5 +1,6 @@
-import type { WorksheetGenerator, WorksheetContent } from "../types";
+import type { WorksheetGenerator, WorksheetContent, ThemeId } from "../types";
 import { circle, group, path, rect } from "../svg";
+import { themeSearchGlyphs } from "../theme-glyphs";
 
 /**
  * MATCHING PAIRS — draw a line from each shape to its filled silhouette.
@@ -50,9 +51,30 @@ function crescentD(cx: number, cy: number, r: number): string {
   return `M ${cx + r * 0.4} ${cy - r * 0.9} A ${r} ${r} 0 1 0 ${cx + r * 0.4} ${cy + r * 0.9} A ${r * 0.72} ${r * 0.72} 0 1 1 ${cx + r * 0.4} ${cy - r * 0.9} Z`;
 }
 
+/** Themed glyphs as matchable shapes: a solid all-black silhouette on the right
+ * (fill AND stroke black, so line-detail glyphs like the sun still read solid),
+ * line art on the left. Prepended to the geometric shapes, never replacing them,
+ * so neutral themes keep the full variety a 6-pair sheet needs. */
+function themedShapes(theme: ThemeId): Shape[] {
+  const glyphs = themeSearchGlyphs(theme);
+  if (!glyphs) return [];
+  return glyphs.map(
+    (g): Shape =>
+      (x, y, r, f) =>
+        g(
+          x,
+          y,
+          r,
+          f
+            ? { fill: "#111", stroke: "#111", "stroke-width": 1.0, "stroke-linejoin": "round" }
+            : { fill: "none", stroke: "#111", "stroke-width": 1.0, "stroke-linejoin": "round" },
+        ),
+  );
+}
+
 export const matchingGenerator: WorksheetGenerator<MatchingParams> = {
   id: "matching",
-  version: 1,
+  version: 2, // v2: themed matchable shapes for nature/space/ocean (Sprint 7 M5b)
   goals: ["visual_perception", "attention", "problem_solving"],
   ageRange: [3, 8],
 
@@ -66,7 +88,11 @@ export const matchingGenerator: WorksheetGenerator<MatchingParams> = {
   generate(ctx, params): WorksheetContent {
     const W = 160, H = 185;
     const leftX = 26, rightX = W - 26;
-    const shapes = ctx.rng.shuffle(SHAPES).slice(0, params.pairs + params.distractors);
+    // Themed shapes first (shuffled), geometric shapes after, so a themed session
+    // shows its theme and any leftover slots still draw from the rich neutral set.
+    const themed = themedShapes(ctx.theme);
+    const pool = [...ctx.rng.shuffle(themed), ...ctx.rng.shuffle(SHAPES)];
+    const shapes = pool.slice(0, params.pairs + params.distractors);
     const leftShapes = shapes.slice(0, params.pairs);
 
     // Right column: pairs + distractors, shuffled; remember target rows.

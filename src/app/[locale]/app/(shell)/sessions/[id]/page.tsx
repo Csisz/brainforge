@@ -11,7 +11,10 @@ import { getGenerationAllowance } from "@/lib/entitlements/queries";
 import { createClient } from "@/lib/supabase/server";
 import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
+import { SessionMeta } from "@/components/session/session-meta";
 import { UpgradeCard } from "@/components/plan/upgrade-card";
+import type { MaterialId } from "@/lib/activities/engine";
+import type { ThemeId } from "@/lib/worksheets/types";
 
 export default async function SessionViewPage({
   params,
@@ -68,10 +71,12 @@ export default async function SessionViewPage({
       <div>
         <h1 className="font-display text-2xl font-extrabold text-ink">{t("newSession")}</h1>
         <p className="text-ink-soft">{child.nickname}</p>
+        <SessionMeta theme={session.theme as ThemeId} materials={session.materials as MaterialId[]} />
       </div>
       <SessionView
         sessionId={session.id}
         childId={child.id}
+        theme={session.theme as ThemeId}
         slots={plan.slots}
         worksheetData={worksheetData}
         pictograms={pictograms}

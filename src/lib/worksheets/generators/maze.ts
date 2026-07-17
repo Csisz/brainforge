@@ -1,5 +1,6 @@
 import type { GeneratorContext, WorksheetGenerator, WorksheetContent } from "../types";
-import { line, circle, group, text, path } from "../svg";
+import { line, group, path } from "../svg";
+import { themeMarkers } from "../theme-glyphs";
 
 /**
  * MAZE — procedural, recursive-backtracker.
@@ -85,7 +86,7 @@ function solve(walls: Uint8Array, cols: number, rows: number): Cell[] {
 
 export const mazeGenerator: WorksheetGenerator<MazeParams> = {
   id: "maze",
-  version: 1,
+  version: 2, // v2: themed start/goal markers (Sprint 7 M5b)
   goals: ["visual_perception", "executive_function", "fine_motor", "problem_solving"],
   ageRange: [3, 10],
 
@@ -132,12 +133,15 @@ export const mazeGenerator: WorksheetGenerator<MazeParams> = {
       }
     }
 
-    // Start / goal markers. Theme layer will later swap these for themed art;
-    // v1 uses a friendly dot + star that prints well in low ink.
+    // Start / goal markers, themed per session (nature: leaf → sun; space:
+    // rocket → planet; ocean: fish → shell; else a neutral dot → star). Outline
+    // line art so lowInk and the two-colour print paths are unaffected.
     const s = solution[0]!, g = solution[solution.length - 1]!;
-    const mark = cell * 0.28;
-    parts.push(circle(s.x * cell + cell / 2, s.y * cell + cell / 2, mark, { fill: ctx.render.lowInk ? "none" : "#111", stroke: "#111", "stroke-width": 0.8 }));
-    parts.push(star(g.x * cell + cell / 2, g.y * cell + cell / 2, mark * 1.2));
+    const mark = cell * 0.3;
+    const markStyle = { fill: "none", stroke: "#111", "stroke-width": 0.9, "stroke-linejoin": "round" as const, "stroke-linecap": "round" as const };
+    const { start, goal } = themeMarkers(ctx.theme);
+    parts.push(start(s.x * cell + cell / 2, s.y * cell + cell / 2, mark, markStyle));
+    parts.push(goal(g.x * cell + cell / 2, g.y * cell + cell / 2, mark, markStyle));
 
     // Answer key: solution as a smooth polyline on a duplicate.
     const sol = solution.map((c) => `${c.x * cell + cell / 2},${c.y * cell + cell / 2}`).join(" L ");
@@ -154,13 +158,3 @@ export const mazeGenerator: WorksheetGenerator<MazeParams> = {
     };
   },
 };
-
-function star(cx: number, cy: number, r: number): string {
-  const pts: string[] = [];
-  for (let i = 0; i < 10; i++) {
-    const rr = i % 2 === 0 ? r : r * 0.45;
-    const a = -Math.PI / 2 + (i * Math.PI) / 5;
-    pts.push(`${(cx + rr * Math.cos(a)).toFixed(2)},${(cy + rr * Math.sin(a)).toFixed(2)}`);
-  }
-  return path(`M ${pts.join(" L ")} Z`, { fill: "none", stroke: "#111", "stroke-width": 0.8, "stroke-linejoin": "round" });
-}

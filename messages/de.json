@@ -330,6 +330,7 @@
     "doneBody": "Die heutige Einheit wurde gespeichert.",
     "backToDashboard": "Zurück zur Übersicht",
     "howToToggle": "Wie spielt ihr?",
+    "needsMaterials": "Dazu braucht ihr:",
     "printPlan": "Tagesplan drucken",
     "easeLabel": "Wie lief es?",
     "easeEasy": "Ging ganz leicht",
@@ -404,7 +405,7 @@
     },
     "creative": {
       "build_story": "Baut zusammen aus Bausteinen eine Szene (Burg, Bauernhof, Raumstation), während das Kind erzählt, was dort passiert. Du fragst nur: „Wer wohnt hier? Was war gestern los?\"",
-      "draw_theme": "Gib ein Thema aus der heutigen Welt vor und lass frei zeichnen. Nicht korrigieren — am Ende bitten, das Bild zu erklären.",
+      "draw_theme": "Lass frei zum heutigen Thema ({theme}) zeichnen. Nicht korrigieren — am Ende bitten, das Bild zu erklären.",
       "cut_collage": "Das Kind schneidet Formen aus alten Zeitschriften oder Buntpapier aus und klebt sie zu einem Bild. Das Schneiden selbst ist Feinmotorik — Thema passend zur heutigen Einheit."
     },
     "reward": {

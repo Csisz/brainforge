@@ -330,6 +330,7 @@
     "doneBody": "A mai foglalkozást elmentettük.",
     "backToDashboard": "Vissza az áttekintéshez",
     "howToToggle": "Hogyan játsszátok?",
+    "needsMaterials": "Ehhez kell:",
     "printPlan": "Napi terv nyomtatása",
     "easeLabel": "Hogy ment?",
     "easeEasy": "Könnyen ment",
@@ -404,7 +405,7 @@
     },
     "creative": {
       "build_story": "Építsetek együtt kockákból egy helyszínt (vár, tanya, űrállomás), és közben a gyerek meséli, mi történik ott. Te csak kérdezz: „És ki lakik itt? Mi történt tegnap?\"",
-      "draw_theme": "Adj egy témát a mai foglalkozás világából, és hagyd szabadon rajzolni. Ne javíts bele — a végén kérd meg, hogy mesélje el, mit rajzolt.",
+      "draw_theme": "Hagyd szabadon rajzolni a mai téma világából ({theme}). Ne javíts bele — a végén kérd meg, hogy mesélje el, mit rajzolt.",
       "cut_collage": "Régi újságból vagy színes papírból a gyerek formákat vág ki, és képpé ragasztja őket. A vágás maga is finommotorika-gyakorlat — a téma lehet a mai foglalkozásé."
     },
     "reward": {

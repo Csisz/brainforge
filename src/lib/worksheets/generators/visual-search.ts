@@ -1,5 +1,6 @@
 import type { WorksheetGenerator, WorksheetContent } from "../types";
 import { circle, group, path, rect, text } from "../svg";
+import { themeSearchGlyphs } from "../theme-glyphs";
 
 /**
  * VISUAL SEARCH — find and circle every target glyph in the field.
@@ -51,7 +52,7 @@ function starD(cx: number, cy: number, r: number): string {
 
 export const visualSearchGenerator: WorksheetGenerator<SearchParams> = {
   id: "visual_search",
-  version: 1,
+  version: 2, // v2: themed target/distractors for nature/space/ocean (Sprint 7 M5b)
   goals: ["attention", "visual_perception", "pre_reading"],
   ageRange: [3, 10],
 
@@ -64,9 +65,20 @@ export const visualSearchGenerator: WorksheetGenerator<SearchParams> = {
   generate(ctx, params): WorksheetContent {
     const W = 160, H = 185;
     const headerH = 18;
-    const family = ctx.rng.pick(FAMILIES);
-    const target = family[0]!;
-    const distractors = ctx.difficulty >= 3 && family.length > 1 ? family.slice(1) : [family[family.length - 1]!];
+    // Themed themes hunt distinct themed objects (every fish among shells and
+    // drops); other themes keep the confusable near-miss geometric families, so
+    // the harder d3+ discrimination drill is preserved where there is no theme art.
+    const themed = themeSearchGlyphs(ctx.theme);
+    let target: Glyph;
+    let distractors: Glyph[];
+    if (themed) {
+      target = (x, y, r) => themed[0]!(x, y, r, L);
+      distractors = themed.slice(1).map((g) => (x: number, y: number, r: number) => g(x, y, r, L));
+    } else {
+      const family = ctx.rng.pick(FAMILIES);
+      target = family[0]!;
+      distractors = ctx.difficulty >= 3 && family.length > 1 ? family.slice(1) : [family[family.length - 1]!];
+    }
 
     const fieldY = headerH + 4;
     const cellW = W / params.cols;

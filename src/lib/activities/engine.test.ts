@@ -1,6 +1,6 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
-import { composeSession, type SessionRequest, type WorksheetSlot } from "./engine";
+import { composeSession, candidatePool, activityMaterials, type SessionRequest, type WorksheetSlot, type MaterialId } from "./engine";
 import type { DevelopmentGoal, Difficulty } from "@/lib/worksheets/types";
 
 const req = (over: Partial<SessionRequest> = {}): SessionRequest => ({
@@ -173,6 +173,35 @@ describe("a session is always composable", () => {
     for (const s of composeSession(req({ durationMin: 45, materials: [] })).slots) {
       if (s.kind !== "worksheet") assert.match(s.activityKey, /^activity\./);
     }
+  });
+});
+
+describe("materials shift the candidate pool (M5c audit)", () => {
+  const ALL: MaterialId[] = ["pencil", "crayons", "scissors", "glue", "paper", "ball", "cups", "blocks", "tape", "dice"];
+
+  test("more materials ⇒ a strictly larger candidate pool (30 & 45 min)", () => {
+    for (const durationMin of [30, 45] as const) {
+      const few = candidatePool({ age: 6, durationMin, materials: ["pencil", "paper"] });
+      const many = candidatePool({ age: 6, durationMin, materials: ALL });
+      for (const key of few) assert.ok(many.has(key), `${key} lost when the cupboard grew`);
+      assert.ok(many.size > few.size, `${durationMin}min: pool did not grow (${few.size} → ${many.size})`);
+    }
+  });
+
+  test("adding a material can only unlock activities, never remove them", () => {
+    let prev = candidatePool({ age: 6, durationMin: 45, materials: [] });
+    for (let i = 0; i < ALL.length; i++) {
+      const cur = candidatePool({ age: 6, durationMin: 45, materials: ALL.slice(0, i + 1) });
+      for (const key of prev) assert.ok(cur.has(key), `${key} disappeared after adding ${ALL[i]}`);
+      assert.ok(cur.size >= prev.size, "pool shrank as materials grew");
+      prev = cur;
+    }
+  });
+
+  test("activityMaterials resolves an activity's needs by key", () => {
+    assert.deepEqual(activityMaterials("activity.movement.ball_target"), ["ball"]);
+    assert.deepEqual(activityMaterials("activity.warmup.simon_says"), []);
+    assert.deepEqual(activityMaterials("activity.nope"), []);
   });
 });
 

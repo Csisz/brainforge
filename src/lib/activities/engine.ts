@@ -219,6 +219,32 @@ function physicalCandidates(kind: PhysicalKind, req: SessionRequest, usedKeys: S
   return tiers.find((t) => t.length > 0) ?? all;
 }
 
+/** Every physical activity flattened, for lookups by key. */
+const ALL_ACTIVITIES = Object.values(PHYSICAL_POOL).flat();
+
+/** The materials a physical activity needs (empty for worksheet slots or unknowns). */
+export function activityMaterials(activityKey: string): MaterialId[] {
+  return ALL_ACTIVITIES.find((a) => a.key === activityKey)?.materials ?? [];
+}
+
+/**
+ * The set of physical activities this request could draw from: everything
+ * age-appropriate whose materials the family has, across the kinds this
+ * duration's template uses (tier 0 of physicalCandidates). Adding a material can
+ * only unlock activities, never hide them, so the pool grows monotonically with
+ * the materials list — the property the M5c audit test pins for 30/45-min plans.
+ */
+export function candidatePool(req: Pick<SessionRequest, "age" | "durationMin" | "materials">): Set<string> {
+  const pool = new Set<string>();
+  for (const slot of TEMPLATES[req.durationMin]) {
+    if (slot.kind === "worksheet") continue;
+    for (const a of PHYSICAL_POOL[slot.kind]) {
+      if (a.minAge <= req.age && a.materials.every((m) => req.materials.includes(m))) pool.add(a.key);
+    }
+  }
+  return pool;
+}
+
 /**
  * Pick one worksheet, and record WHICH GOAL it was picked for. That attribution
  * is the whole basis of per-goal calibration: feedback on this slot moves this

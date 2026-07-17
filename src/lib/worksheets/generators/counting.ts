@@ -1,5 +1,6 @@
 import type { WorksheetGenerator, WorksheetContent } from "../types";
-import { circle, group, path, rect, text } from "../svg";
+import { group, path, rect, text } from "../svg";
+import { themeGlyphs } from "../theme-glyphs";
 
 /**
  * COUNTING — count the objects in each row, write the number in the box.
@@ -17,32 +18,11 @@ export type CountingParams = {
   maxCount: number;
 };
 
-type Glyph = (cx: number, cy: number, r: number) => string;
 const LINE = { fill: "none", stroke: "#111", "stroke-width": 0.9, "stroke-linejoin": "round" as const, "stroke-linecap": "round" as const };
-const GLYPHS: Glyph[] = [
-  (x, y, r) => circle(x, y, r, LINE),                                                             // ball
-  (x, y, r) => path(starD(x, y, r), LINE),                                                        // star
-  (x, y, r) => path(`M ${x} ${y - r} L ${x + r} ${y + r * 0.8} L ${x - r} ${y + r * 0.8} Z`, LINE), // triangle
-  (x, y, r) => `${circle(x, y + r * 0.25, r * 0.75, LINE)}${path(`M ${x} ${y - r * 0.5} L ${x + r * 0.45} ${y - r}`, LINE)}`, // apple-ish
-  (x, y, r) => path(heartD(x, y, r), LINE),                                                       // heart
-];
-
-function starD(cx: number, cy: number, r: number): string {
-  const p: string[] = [];
-  for (let i = 0; i < 10; i++) {
-    const rr = i % 2 === 0 ? r : r * 0.45;
-    const a = -Math.PI / 2 + (i * Math.PI) / 5;
-    p.push(`${(cx + rr * Math.cos(a)).toFixed(2)},${(cy + rr * Math.sin(a)).toFixed(2)}`);
-  }
-  return `M ${p.join(" L ")} Z`;
-}
-function heartD(cx: number, cy: number, r: number): string {
-  return `M ${cx} ${cy + r} C ${cx - r * 1.4} ${cy - r * 0.1}, ${cx - r * 0.7} ${cy - r * 1.1}, ${cx} ${cy - r * 0.35} C ${cx + r * 0.7} ${cy - r * 1.1}, ${cx + r * 1.4} ${cy - r * 0.1}, ${cx} ${cy + r} Z`;
-}
 
 export const countingGenerator: WorksheetGenerator<CountingParams> = {
   id: "counting",
-  version: 1,
+  version: 2, // v2: themed count glyphs (Sprint 7 M5b)
   goals: ["math_thinking", "attention", "pre_writing"],
   ageRange: [3, 7],
 
@@ -67,9 +47,12 @@ export const countingGenerator: WorksheetGenerator<CountingParams> = {
     const counts = ctx.rng.shuffle(range).slice(0, params.rows);
     while (counts.length < params.rows) counts.push(ctx.rng.int(params.minCount, params.maxCount));
 
+    // Themed count objects (nature: leaf/flower/sun…, space: star/rocket/planet…,
+    // ocean: fish/shell/drop…; other themes keep the neutral shapes).
+    const glyphs = themeGlyphs(ctx.theme);
     counts.forEach((count, row) => {
       const rng = ctx.rng.fork(`row-${row}`);
-      const glyph = rng.pick(GLYPHS);
+      const glyph = rng.pick(glyphs);
       const y0 = row * rowH;
       const r = Math.min(6, rowH * 0.16);
 
@@ -82,7 +65,7 @@ export const countingGenerator: WorksheetGenerator<CountingParams> = {
       for (const cell of cells) {
         const cxCell = (cell % cols) * cellW + cellW / 2 + rng.int(-Math.floor(cellW * 0.18), Math.floor(cellW * 0.18));
         const cyCell = y0 + 4 + Math.floor(cell / cols) * cellH + cellH / 2 + rng.int(-Math.floor(cellH * 0.15), Math.floor(cellH * 0.15));
-        parts.push(glyph(4 + cxCell, cyCell, r));
+        parts.push(glyph(4 + cxCell, cyCell, r, LINE));
       }
 
       // Answer box.
