@@ -3,6 +3,7 @@ import { allGenerators } from "@/lib/worksheets/registry";
 import { composeWorksheet, defaultRenderOptions } from "@/lib/worksheets/page";
 import { getChildren } from "@/lib/children/queries";
 import { CatalogPrintAction } from "@/components/worksheets/catalog-print-action";
+import { GoalOutcomes } from "@/components/goals/goal-outcomes";
 import { Badge } from "@/components/ui/badge";
 import type { Age, Difficulty, ThemeId } from "@/lib/worksheets/types";
 
@@ -87,6 +88,13 @@ export default async function WorksheetsCatalogPage({ params }: { params: Promis
                     </Badge>
                   ))}
                 </div>
+                <GoalOutcomes
+                  label={tc("helpsWith")}
+                  outcomes={[
+                    ...new Set(card.goals.flatMap((goal) => t.raw(`goalOutcomes.${goal}`) as string[])),
+                  ].slice(0, 4)}
+                  className="mt-0.5"
+                />
               </div>
 
               <p className="text-xs text-ink-soft">

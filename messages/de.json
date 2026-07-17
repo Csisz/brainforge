@@ -244,6 +244,7 @@
     "subtitle": "Wähle, worauf sich das heutige Arbeitsblatt und Programm konzentrieren soll.",
     "childLabel": "Kind",
     "goalsLabel": "Förderziele",
+    "helpsWith": "Das fördert:",
     "themeLabel": "Thema",
     "durationLabel": "Dauer",
     "materialsLabel": "Vorhandene Materialien",
@@ -342,6 +343,19 @@
     "creativity": "Eigene Ideen erfinden und umsetzen — offene Aufgaben ohne falsche Antworten.",
     "problem_solving": "Ausdauer und Strategie, wenn die Lösung nicht sofort sichtbar ist."
   },
+  "goalOutcomes": {
+    "attention": ["Konzentration", "bei einer Sache bleiben"],
+    "working_memory": ["Merkfähigkeit", "im Kopf behalten"],
+    "executive_function": ["Geduld", "Selbstkontrolle", "Planen"],
+    "visual_perception": ["Beobachten", "Formen erkennen"],
+    "bilateral_coordination": ["Koordination", "beidhändige Geschicklichkeit"],
+    "fine_motor": ["Stifthaltung", "Fingergeschick"],
+    "pre_writing": ["Linienführung", "bereit zum Schreiben"],
+    "pre_reading": ["Buchstaben erkennen", "bereit zum Lesen"],
+    "math_thinking": ["Zahlenverständnis", "logisches Denken"],
+    "creativity": ["Fantasie", "eigene Ideen"],
+    "problem_solving": ["Ausdauer", "Strategie"]
+  },
   "generatorDescriptions": {
     "maze": "Das Kind sucht den Weg vom Punkt zum Stern. Es muss vorausdenken und Gängen folgen — trainiert Planung, visuelles Absuchen und Stiftkontrolle.",
     "tracing": "Gestrichelte Linien vom grünen Punkt aus nachfahren. Die klassische Schreibvorbereitung: Wellen, Zickzack und Schleifen bilden die Bausteine der Buchstaben.",
@@ -398,6 +412,7 @@
     "title": "Arbeitsblätter",
     "subtitle": "Durchstöbere alle Arbeitsblatt-Typen — jeweils mit Live-Vorschau und Lernziel.",
     "trainsLabel": "Fördert:",
+    "helpsWith": "Das fördert:",
     "ageRange": "Für {from}–{to} Jahre",
     "printForChild": "Für dieses Kind drucken",
     "preparing": "Wird vorbereitet…",

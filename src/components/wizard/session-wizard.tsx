@@ -14,6 +14,7 @@ import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { startSession } from "@/lib/sessions/actions";
+import { GoalOutcomes } from "@/components/goals/goal-outcomes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -26,6 +27,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
   const t = useTranslations("wizard");
   const tGoals = useTranslations("goals");
   const tGoalDesc = useTranslations("goalDescriptions");
+  const tGoalOutcomes = useTranslations("goalOutcomes");
   const tThemes = useTranslations("themes");
   const tMaterials = useTranslations("materials");
   const tCommon = useTranslations("common");
@@ -146,6 +148,11 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
                   {selected && <Check className="ml-auto size-4 shrink-0 text-crayon-text" aria-hidden="true" />}
                 </span>
                 <span className="text-xs leading-snug text-ink-soft">{tGoalDesc(id)}</span>
+                <GoalOutcomes
+                  label={t("helpsWith")}
+                  outcomes={tGoalOutcomes.raw(id) as string[]}
+                  className="mt-1"
+                />
               </button>
             );
           })}

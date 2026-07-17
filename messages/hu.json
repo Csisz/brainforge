@@ -244,6 +244,7 @@
     "subtitle": "Válaszd ki, mire fókuszáljon a mai feladatlap és program.",
     "childLabel": "Gyerek",
     "goalsLabel": "Fejlesztési célok",
+    "helpsWith": "Ebben segít:",
     "themeLabel": "Téma",
     "durationLabel": "Időtartam",
     "materialsLabel": "Elérhető eszközök",
@@ -342,6 +343,19 @@
     "creativity": "Saját ötletek kitalálása és megvalósítása — nyitott végű, „nincs rossz megoldás\" feladatok.",
     "problem_solving": "Kitartás és stratégia, amikor nem látszik azonnal a megoldás."
   },
+  "goalOutcomes": {
+    "attention": ["koncentráció", "egy dologra figyelés"],
+    "working_memory": ["emlékezet", "fejben tartás"],
+    "executive_function": ["türelem", "önkontroll", "tervezés"],
+    "visual_perception": ["megfigyelés", "formaérzék"],
+    "bilateral_coordination": ["mozgáskoordináció", "kétkezes ügyesség"],
+    "fine_motor": ["ceruzafogás", "kézügyesség"],
+    "pre_writing": ["vonalvezetés", "íráskészség alapozása"],
+    "pre_reading": ["betűfelismerés", "olvasásra készülés"],
+    "math_thinking": ["számérzék", "logikus gondolkodás"],
+    "creativity": ["fantázia", "önálló ötletek"],
+    "problem_solving": ["kitartás", "stratégia"]
+  },
   "generatorDescriptions": {
     "maze": "A gyerek ceruzával megkeresi az utat a ponttól a csillagig. Előre kell gondolkodnia és követnie a folyosókat — tervezést, vizuális letapogatást és ceruzakontrollt gyakorol.",
     "tracing": "Szaggatott vonalakat rajzol át a zöld ponttól indulva. Ez a klasszikus írás-előkészítő: a hullámok, cikkcakkok és hurkok a betűelemek mozdulatait építik.",
@@ -398,6 +412,7 @@
     "title": "Feladatlapok",
     "subtitle": "Böngéssz az összes feladatlaptípus között — mindegyik élő előnézettel és azzal, mit fejleszt.",
     "trainsLabel": "Fejleszti:",
+    "helpsWith": "Ebben segít:",
     "ageRange": "{from}–{to} éves korra",
     "printForChild": "Nyomtatás ehhez a gyerekhez",
     "preparing": "Előkészítés…",

@@ -244,6 +244,7 @@
     "subtitle": "Pick what today's worksheet and plan should focus on.",
     "childLabel": "Child",
     "goalsLabel": "Development goals",
+    "helpsWith": "Helps with:",
     "themeLabel": "Theme",
     "durationLabel": "Duration",
     "materialsLabel": "Materials on hand",
@@ -342,6 +343,19 @@
     "creativity": "Inventing and realizing their own ideas — open-ended, \"no wrong answers\" tasks.",
     "problem_solving": "Persistence and strategy when the solution is not immediately visible."
   },
+  "goalOutcomes": {
+    "attention": ["concentration", "focus on one thing"],
+    "working_memory": ["memory", "holding in mind"],
+    "executive_function": ["patience", "self-control", "planning"],
+    "visual_perception": ["observation", "spotting shapes"],
+    "bilateral_coordination": ["coordination", "two-handed skill"],
+    "fine_motor": ["pencil grip", "hand control"],
+    "pre_writing": ["line control", "ready to write"],
+    "pre_reading": ["letter recognition", "ready to read"],
+    "math_thinking": ["number sense", "logical thinking"],
+    "creativity": ["imagination", "own ideas"],
+    "problem_solving": ["perseverance", "strategy"]
+  },
   "generatorDescriptions": {
     "maze": "Your child finds the path from the dot to the star. They must plan ahead and follow corridors — training planning, visual scanning and pencil control.",
     "tracing": "Tracing dashed lines starting at the green dot. The classic pre-writing drill: waves, zigzags and loops build the strokes letters are made of.",
@@ -398,6 +412,7 @@
     "title": "Worksheets",
     "subtitle": "Browse every worksheet type — each with a live preview and what it trains.",
     "trainsLabel": "Trains:",
+    "helpsWith": "Helps with:",
     "ageRange": "Ages {from}–{to}",
     "printForChild": "Print for this child",
     "preparing": "Preparing…",
