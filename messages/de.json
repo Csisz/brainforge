@@ -245,7 +245,16 @@
     "cta": "Sammelblatt drucken",
     "preparing": "Wird vorbereitet…",
     "error": "Konnte nicht vorbereitet werden. Bitte erneut versuchen.",
-    "offer": "Sammelt die Erfolge der Woche — druckt ein frisches Blatt zum Ausmalen."
+    "offer": "Sammelt die Erfolge der Woche — druckt ein frisches Blatt zum Ausmalen.",
+    "pickTitle": "Wähle ein Motiv:",
+    "surprise": "Überraschung",
+    "motif": {
+      "tree": "Baum",
+      "flower": "Blume",
+      "balloon": "Ballons",
+      "fish": "Fisch",
+      "caterpillar": "Raupe"
+    }
   },
   "pack": {
     "title": "Wochenpaket",
@@ -432,7 +441,7 @@
     "sequencing": "Bildgeschichten in falscher Reihenfolge — eine wachsende Blume, ein sich füllendes Glas. Das Kind nummeriert die Schritte und übt Ursache-Wirkung und Reihenfolge.",
     "cut_and_paste": "Ein Muster mit Lücken und Ausschneideteilen unten. Das Kind schneidet und klebt jedes Teil an seinen Platz — Musterlogik und Scherenübung.",
     "hidden_objects": "Ein Gewirr überlappender Umrisse verbirgt Zielformen. Das Kind findet, umkreist und zählt jede — konzentrierte Aufmerksamkeit und Figur-Grund-Wahrnehmung.",
-    "reward_chart": "Keine Aufgabe, sondern ein Andenken. Eine Seite voller Formen, die dein Kind ausmalt oder beklebt — eine für jede erledigte Einheit oder jeden Tag. Eine ganze Woche Mühe, sichtbar gemacht."
+    "reward_chart": "Keine Aufgabe, sondern ein Andenken. Eine Seite voller Formen — Baum, Blume, Ballons, Fisch oder Raupe —, die dein Kind ausmalt oder beklebt, eine für jede erledigte Aufgabe oder jeden Tag. Eine ganze Woche Mühe, sichtbar gemacht."
   },
   "activityHowTo": {
     "warmup": {

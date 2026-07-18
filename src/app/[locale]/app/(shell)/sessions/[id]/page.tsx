@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { StoredSessionPlan } from "@/lib/activities/engine";
 import { SessionView, type WorksheetSlotData } from "@/components/session/session-view";
 import { SessionMeta } from "@/components/session/session-meta";
+import { rewardChartMotifs } from "@/lib/worksheets/reward-motifs";
 import { UpgradeCard } from "@/components/plan/upgrade-card";
 import type { MaterialId } from "@/lib/activities/engine";
 import type { ThemeId } from "@/lib/worksheets/types";
@@ -76,6 +77,7 @@ export default async function SessionViewPage({
       <SessionView
         sessionId={session.id}
         childId={child.id}
+        rewardMotifs={rewardChartMotifs()}
         theme={session.theme as ThemeId}
         slots={plan.slots}
         worksheetData={worksheetData}

@@ -245,7 +245,16 @@
     "cta": "Print collection sheet",
     "preparing": "Preparing…",
     "error": "Couldn't prepare it. Please try again.",
-    "offer": "Collect the week's wins — print a fresh sheet to color in."
+    "offer": "Collect the week's wins — print a fresh sheet to color in.",
+    "pickTitle": "Pick a motif:",
+    "surprise": "Surprise",
+    "motif": {
+      "tree": "Tree",
+      "flower": "Flower",
+      "balloon": "Balloons",
+      "fish": "Fish",
+      "caterpillar": "Caterpillar"
+    }
   },
   "pack": {
     "title": "Weekly pack",
@@ -432,7 +441,7 @@
     "sequencing": "Picture stories shown out of order — a flower growing, a glass filling. The child numbers each step, training cause-and-effect and ordering.",
     "cut_and_paste": "A pattern with gaps and cut-out pieces at the bottom. The child cuts and pastes each piece into place — pattern logic plus scissor skills.",
     "hidden_objects": "A tangle of overlapping outlines hides target shapes. The child finds, circles and counts each one — focused attention and figure-ground scanning.",
-    "reward_chart": "Not a task — a keepsake. A page of shapes your child colors or stickers, one for every finished session or day. A whole week of effort, made visible and worth finishing."
+    "reward_chart": "Not a task — a keepsake. A page of shapes — a tree, a flower, a balloon bunch, a fish or a caterpillar — your child colors or stickers, one for every finished task or day. A whole week of effort, made visible."
   },
   "activityHowTo": {
     "warmup": {

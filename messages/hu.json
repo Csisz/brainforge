@@ -245,7 +245,16 @@
     "cta": "Gyűjtőlap nyomtatása",
     "preparing": "Előkészítés…",
     "error": "Nem sikerült. Próbáld újra.",
-    "offer": "Gyűjtsétek a heti sikereket — nyomtass egy friss lapot kiszínezni!"
+    "offer": "Gyűjtsétek a heti sikereket — nyomtass egy friss lapot kiszínezni!",
+    "pickTitle": "Válassz motívumot:",
+    "surprise": "Meglepetés",
+    "motif": {
+      "tree": "Fa",
+      "flower": "Virág",
+      "balloon": "Léggömbök",
+      "fish": "Hal",
+      "caterpillar": "Hernyó"
+    }
   },
   "pack": {
     "title": "Heti csomag",
@@ -432,7 +441,7 @@
     "sequencing": "Összekevert képsorok — növő virág, telő pohár. A gyerek megszámozza a lépéseket, ezzel az ok-okozatot és a sorrendiséget gyakorolja.",
     "cut_and_paste": "Hiányos minta, alul kivágható darabokkal. A gyerek kivágja és a helyére ragasztja őket — mintafelismerés és ollóhasználat egyben.",
     "hidden_objects": "Egymásra csúszó körvonalak rejtik a keresett formákat. A gyerek megkeresi, bekarikázza és megszámolja őket — összpontosított figyelem és alak-háttér elkülönítés.",
-    "reward_chart": "Nem feladat, hanem gyűjtemény. Egy lapnyi forma, amit a gyerek kiszínez vagy matricáz — egyet minden elvégzett foglalkozás vagy nap után. Egy egész hét kitartása, láthatóvá téve."
+    "reward_chart": "Nem feladat, hanem gyűjtemény. Egy lapnyi forma — fa, virág, léggömbök, hal vagy hernyó —, amit a gyerek kiszínez vagy matricáz, egyet minden elvégzett feladat vagy nap után. Egy egész hét kitartása, láthatóvá téve."
   },
   "activityHowTo": {
     "warmup": {

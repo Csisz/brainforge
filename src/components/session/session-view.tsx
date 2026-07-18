@@ -10,7 +10,8 @@ import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import type { ThemeId } from "@/lib/worksheets/types";
 import { submitSessionFeedback, type SlotFeedback, type Ease } from "@/lib/feedback/actions";
 import { HowToPlay } from "@/components/session/how-to-play";
-import { PrintCollectionSheet } from "@/components/dashboard/print-collection-sheet";
+import { RewardChartPicker } from "@/components/dashboard/reward-chart-picker";
+import type { RewardFamily } from "@/lib/worksheets/generators/reward-chart";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const EASE_OPTIONS: Ease[] = ["easy", "ok", "hard"];
 export function SessionView({
   sessionId,
   childId,
+  rewardMotifs,
   theme,
   slots,
   worksheetData,
@@ -33,6 +35,7 @@ export function SessionView({
 }: {
   sessionId: string;
   childId: string;
+  rewardMotifs: Array<{ family: RewardFamily; svg: string }>;
   theme: ThemeId;
   slots: StoredSessionSlot[];
   worksheetData: Record<number, WorksheetSlotData>;
@@ -105,7 +108,7 @@ export function SessionView({
         {/* A finished session is exactly the moment to mark a win on the wall. */}
         <div className="mt-4 w-full max-w-xs border-t border-line pt-4">
           <p className="mb-2 text-xs leading-snug text-ink-soft">{t("collectionSheet.offer")}</p>
-          <PrintCollectionSheet childId={childId} />
+          <RewardChartPicker childId={childId} motifs={rewardMotifs} />
         </div>
       </div>
     );

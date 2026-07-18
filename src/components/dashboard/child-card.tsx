@@ -4,8 +4,9 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { GoalBadges } from "@/components/dashboard/goal-badges";
-import { PrintCollectionSheet } from "@/components/dashboard/print-collection-sheet";
+import { RewardChartPicker } from "@/components/dashboard/reward-chart-picker";
 import { AchievementBadges } from "@/components/achievements/achievement-badges";
+import { rewardChartMotifs } from "@/lib/worksheets/reward-motifs";
 import { getAvatarIcon } from "@/lib/children/avatar-list";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import type { ChildRow } from "@/lib/children/queries";
@@ -48,7 +49,7 @@ export async function ChildCard({
         <Button asChild className="mt-2 w-full">
           <Link href={{ pathname: "/app/new-session", query: { child: child.id } }}>{t("todaySessionCta")}</Link>
         </Button>
-        <PrintCollectionSheet childId={child.id} />
+        <RewardChartPicker childId={child.id} motifs={rewardChartMotifs()} />
         <Button asChild variant="ghost" size="sm" className="w-full text-ink-soft">
           <Link href={`/app/pack/${child.id}`}>{tPack("entryCta")}</Link>
         </Button>
