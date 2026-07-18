@@ -11,6 +11,7 @@ import {
   RATE_LIMIT_MAX,
   RATE_LIMIT_WINDOW_SEC,
   PLAN_LIMITS,
+  packFits,
   type PlanTier,
 } from "./limits";
 
@@ -172,5 +173,26 @@ describe("child caps (one source, PLAN_LIMITS)", () => {
       assert.ok(PLAN_LIMITS[t].children >= 1, `${t} children`);
       assert.equal(isUnlimited(t), PLAN_LIMITS[t].weeklyWorksheets === null);
     }
+  });
+});
+
+describe("weekly pack gating — all-or-nothing (M2)", () => {
+  test("a 7-day pack on a fresh free account is declined whole (not truncated)", () => {
+    const allowance = free([]); // free, remaining 3
+    assert.equal(allowance.remaining, FREE_WEEKLY_LIMIT);
+    assert.equal(packFits(allowance, 7), false, "a 7-worksheet pack must not fit 3 remaining");
+    assert.equal(packFits(allowance, 3), true, "a pack within the allowance fits");
+  });
+
+  test("a partly-used free account fits only a pack within what's left", () => {
+    const allowance = free([hoursAgo(1), hoursAgo(2)]); // used 2, remaining 1
+    assert.equal(allowance.remaining, 1);
+    assert.equal(packFits(allowance, 2), false);
+    assert.equal(packFits(allowance, 1), true);
+  });
+
+  test("an unlimited tier fits any pack", () => {
+    const allowance = evaluateAllowance({ tier: "premium", generatedAt: [], now: NOW });
+    assert.equal(packFits(allowance, 99), true);
   });
 });

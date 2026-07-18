@@ -247,6 +247,28 @@
     "error": "Konnte nicht vorbereitet werden. Bitte erneut versuchen.",
     "offer": "Sammelt die Erfolge der Woche — druckt ein frisches Blatt zum Ausmalen."
   },
+  "pack": {
+    "title": "Wochenpaket",
+    "subtitle": "Drucke mehrere Tage auf einmal — bereit für bildschirmfreie Einheiten, auch ohne Drucker in der Nähe.",
+    "daysLabel": "Für wie viele Tage?",
+    "daysCount": "{count} Tage",
+    "lengthLabel": "Länge pro Tag",
+    "themeLabel": "Thema",
+    "fixedNote": "Die Schwierigkeit bleibt auf dem heutigen Niveau; dein Feedback formt das nächste Paket.",
+    "submit": "Paket erstellen",
+    "creating": "Paket wird erstellt…",
+    "error": "Paket konnte nicht erstellt werden. Bitte versuche es erneut.",
+    "rateLimited": "Einen Moment — du hast sehr schnell viel erzeugt. Versuche es gleich noch einmal.",
+    "gatedTitle": "Dieses Paket ist größer als deine Gratis-Woche",
+    "gatedBody": "Es enthält mehr Arbeitsblätter, als von deinem kostenlosen Wochenkontingent übrig sind. Wähle weniger Tage oder upgrade für unbegrenzte Arbeitsblätter.",
+    "gatedCta": "Pläne ansehen",
+    "gatedBack": "Weniger Tage wählen",
+    "dayTitle": "Tag {day}",
+    "worksheetNote": "Das Arbeitsblatt ist auf der nächsten Seite.",
+    "printButton": "Paket drucken",
+    "entryCta": "Wochenpaket",
+    "wizardFooter": "Mehrere Tage im Voraus? Erstelle ein Wochenpaket."
+  },
   "goals": {
     "attention": "Aufmerksamkeit",
     "working_memory": "Arbeitsgedächtnis",

@@ -128,3 +128,13 @@ export function evaluateAllowance(input: {
 
   return { tier: input.tier, unlimited: false, used, limit, remaining, allowed, unlockAt };
 }
+
+/**
+ * Whether a weekly pack of `worksheetCount` worksheets fits the account's
+ * remaining free allowance (Sprint 8 M2). All-or-nothing on purpose: a 7-day
+ * pack that would exceed the free cap is declined whole and shown the upgrade
+ * notice, never truncated into a partial pack. Unlimited tiers always fit.
+ */
+export function packFits(allowance: Allowance, worksheetCount: number): boolean {
+  return allowance.unlimited || allowance.remaining >= worksheetCount;
+}

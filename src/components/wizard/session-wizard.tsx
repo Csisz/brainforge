@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { Check } from "lucide-react";
 import type { DevelopmentGoal, ThemeId, Difficulty } from "@/lib/worksheets/types";
 import type { MaterialId, SessionRequest } from "@/lib/activities/engine";
@@ -25,6 +25,7 @@ const DURATIONS: SessionRequest["durationMin"][] = [10, 20, 30, 45];
 
 export function SessionWizard({ children, defaultChildId }: { children: ChildRow[]; defaultChildId?: string }) {
   const t = useTranslations("wizard");
+  const tPack = useTranslations("pack");
   const tGoals = useTranslations("goals");
   const tGoalDesc = useTranslations("goalDescriptions");
   const tGoalOutcomes = useTranslations("goalOutcomes");
@@ -281,6 +282,12 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       <Button size="lg" className="w-full" onClick={handleSubmit} disabled={submitting}>
         {submitting ? t("submitting") : t("submit")}
       </Button>
+
+      <p className="text-center text-sm">
+        <Link href={`/app/pack/${child.id}`} className="font-medium text-crayon-text hover:underline">
+          {tPack("wizardFooter")}
+        </Link>
+      </p>
     </div>
   );
 }

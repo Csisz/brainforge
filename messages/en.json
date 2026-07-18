@@ -247,6 +247,28 @@
     "error": "Couldn't prepare it. Please try again.",
     "offer": "Collect the week's wins — print a fresh sheet to color in."
   },
+  "pack": {
+    "title": "Weekly pack",
+    "subtitle": "Print several days at once — ready to run screen-free, even without a printer nearby.",
+    "daysLabel": "How many days?",
+    "daysCount": "{count} days",
+    "lengthLabel": "Length per day",
+    "themeLabel": "Theme",
+    "fixedNote": "Difficulty is fixed at today's level; your feedback shapes the next pack.",
+    "submit": "Create the pack",
+    "creating": "Building the pack…",
+    "error": "Couldn't build the pack. Please try again.",
+    "rateLimited": "Just a moment — you've generated a lot very quickly. Try again shortly.",
+    "gatedTitle": "This pack is bigger than your free week",
+    "gatedBody": "It has more worksheets than your free weekly allowance has left. Pick fewer days, or upgrade for unlimited worksheets.",
+    "gatedCta": "See the plans",
+    "gatedBack": "Choose fewer days",
+    "dayTitle": "Day {day}",
+    "worksheetNote": "The worksheet is on the next page.",
+    "printButton": "Print the pack",
+    "entryCta": "Weekly pack",
+    "wizardFooter": "Planning several days ahead? Make a weekly pack."
+  },
   "goals": {
     "attention": "Attention",
     "working_memory": "Working memory",

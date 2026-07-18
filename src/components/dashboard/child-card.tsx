@@ -27,6 +27,7 @@ export async function ChildCard({
 }) {
   const t = await getTranslations("dashboard");
   const tAdaptive = await getTranslations("adaptive");
+  const tPack = await getTranslations("pack");
   const Icon = getAvatarIcon(child.avatar);
   const age = ageFromBirthMonth(child.birth_month);
 
@@ -48,6 +49,9 @@ export async function ChildCard({
           <Link href={{ pathname: "/app/new-session", query: { child: child.id } }}>{t("todaySessionCta")}</Link>
         </Button>
         <PrintCollectionSheet childId={child.id} />
+        <Button asChild variant="ghost" size="sm" className="w-full text-ink-soft">
+          <Link href={`/app/pack/${child.id}`}>{tPack("entryCta")}</Link>
+        </Button>
         {achievements.length > 0 && (
           <div className="mt-1">
             <AchievementBadges kinds={achievements} />

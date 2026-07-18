@@ -247,6 +247,28 @@
     "error": "Nem sikerült. Próbáld újra.",
     "offer": "Gyűjtsétek a heti sikereket — nyomtass egy friss lapot kiszínezni!"
   },
+  "pack": {
+    "title": "Heti csomag",
+    "subtitle": "Nyomtass ki több napot egyszerre — előre elkészítve, képernyő és akár nyomtató nélkül is használható.",
+    "daysLabel": "Hány napra?",
+    "daysCount": "{count} nap",
+    "lengthLabel": "Napi hossz",
+    "themeLabel": "Téma",
+    "fixedNote": "A nehézség a mai szinten rögzül; a visszajelzések a következő csomagot alakítják.",
+    "submit": "Csomag elkészítése",
+    "creating": "Csomag készül…",
+    "error": "Nem sikerült elkészíteni a csomagot. Próbáld újra.",
+    "rateLimited": "Egy pillanat — sok mindent generáltál gyorsan egymás után. Próbáld újra kicsit később.",
+    "gatedTitle": "Ez a csomag nagyobb, mint a heti ingyenes kereted",
+    "gatedBody": "Több feladatlapot tartalmaz, mint amennyi az ingyenes heti keretedből még hátravan. Válassz kevesebb napot, vagy válts csomagot a korlátlan feladatlapokért.",
+    "gatedCta": "Nézd meg a csomagokat",
+    "gatedBack": "Válassz kevesebb napot",
+    "dayTitle": "{day}. nap",
+    "worksheetNote": "A feladatlap a következő oldalon található.",
+    "printButton": "Csomag nyomtatása",
+    "entryCta": "Heti csomag",
+    "wizardFooter": "Előre több napra? Készíts heti csomagot."
+  },
   "goals": {
     "attention": "Figyelem",
     "working_memory": "Munkamemória",
