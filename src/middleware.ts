@@ -6,7 +6,7 @@ import { refreshSession } from "./lib/supabase/middleware";
 const intlMiddleware = createMiddleware(routing);
 
 /** Routes that require a signed-in user, checked with the locale prefix stripped. */
-const PROTECTED_PREFIXES = ["/app", "/onboarding"];
+const PROTECTED_PREFIXES = ["/app", "/onboarding", "/account"];
 
 function stripLocale(pathname: string): string {
   const match = pathname.match(/^\/([a-z]{2})(\/.*|$)/);

@@ -501,10 +501,42 @@ async function main() {
   const afterCancel = await readSub();
   ok("subscription.deleted drops the account back to free", afterCancel?.tier === "free" && afterCancel?.status === "canceled", `tier ${afterCancel?.tier}, status ${afterCancel?.status}`);
 
-  // 10 ── ACCOUNT DELETION (Sprint 6 M4) — GDPR erasure, cascade ------------
-  // Exactly what deleteAccount() does: admin.deleteUser(user.id) → cascade.
-  step("10. account deletion");
+  // 10 ── DELETION LINK SAFETY (Sprint 7 M7c) ------------------------------
+  // Deletion is now email-confirmed: the link lands on a confirmation PAGE, and
+  // only the explicit typed-confirm action there deletes. A bare GET on the link
+  // must never delete — assert it while the account still exists.
+  step("10. deletion link safety");
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
+    ok("SUPABASE_SERVICE_ROLE_KEY available for the deletion checks", false, "set it in .env.local");
+  } else {
+    const admin0 = createClient(SUPABASE_URL, serviceKey, { auth: { persistSession: false } });
+    const { signDeletionToken } = await import("../src/lib/account/deletion-token");
+    const delToken = signDeletionToken(user.id);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const link = `${appUrl}/hu/account/delete?token=${encodeURIComponent(delToken)}`;
+    let status = 0;
+    let reached = false;
+    try {
+      const res = await fetch(link, { redirect: "manual" });
+      status = res.status;
+      reached = true;
+    } catch {
+      /* the app (npm run dev) is not running */
+    }
+    if (!reached) {
+      console.log(`  --  skipped: confirmation page unreachable at ${appUrl} (run \`npm run dev\`)`);
+    } else {
+      const stillThere = Boolean((await admin0.auth.admin.getUserById(user.id)).data.user);
+      ok("a bare GET on the deletion link never deletes the account", stillThere, `status=${status}`);
+      ok("...the link routes to a confirmation page, not a delete", status < 500);
+    }
+  }
+
+  // 11 ── ACCOUNT DELETION (Sprint 6 M4) — GDPR erasure, cascade ------------
+  // Exactly what deleteAccount() does after the confirmation page: the auth admin
+  // deletes user.id and the DB cascades everything owned by the account.
+  step("11. account deletion");
   if (!serviceKey) {
     ok("SUPABASE_SERVICE_ROLE_KEY available for the deletion check", false, "set it in .env.local");
   } else {

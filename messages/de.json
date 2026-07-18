@@ -499,6 +499,14 @@
     "welcome": {
       "subject": "Willkommen bei Kalmo Kids! 🎉",
       "body": "Hallo! Das Profil von {childName} ist fertig. Ab jetzt könnt ihr jeden Tag ein neues, personalisiertes Arbeitsblatt und eine bildschirmfreie Einheit zusammen gestalten. Viel Spaß!\n\n— Das Kalmo Kids Team"
+    },
+    "deletion": {
+      "subject": "Kontolöschung bestätigen",
+      "heading": "Kalmo Kids Konto löschen?",
+      "body": "Du hast die Löschung deines Kalmo Kids Kontos angefragt. Das entfernt dauerhaft alles — die Profile deiner Kinder, jede Einheit, jedes Arbeitsblatt und allen Fortschritt — und kann nicht rückgängig gemacht werden. Zum Fortfahren bestätige auf der nächsten Seite:",
+      "button": "Mein Konto endgültig löschen",
+      "ignore": "Wenn du das nicht angefragt hast, ignoriere diese E-Mail einfach — es passiert nichts und dein Konto bleibt genau so, wie es ist.",
+      "footer": "Kalmo Kids · kalmokids.com"
     }
   },
   "legal": {
@@ -509,10 +517,27 @@
     "title": "Konto löschen",
     "description": "Das Löschen deines Kontos entfernt sofort und dauerhaft dein Konto, jedes Kinderprofil und alle zugehörigen Daten. Dies kann nicht rückgängig gemacht werden.",
     "open": "Konto löschen…",
+    "requestIntro": "Wir senden einen Bestätigungslink an {email}. Die Löschung wird erst endgültig, wenn du auf dieser Seite bestätigst — der Link ist eine Stunde gültig.",
+    "sendLink": "Bestätigungslink senden",
+    "sending": "Wird gesendet…",
+    "sent": "Überprüfe deine E-Mails — wir haben einen Bestätigungslink an {email} gesendet. Es wird nichts gelöscht, bis du dort bestätigst.",
+    "devLinkNote": "In dieser Umgebung ist keine E-Mail eingerichtet. Öffne die Bestätigungsseite direkt:",
+    "devLinkCta": "Bestätigungsseite öffnen",
+    "requestError": "Löschung konnte nicht gestartet werden. Bitte versuche es erneut.",
     "confirmLabel": "Gib zur Bestätigung deine E-Mail ein: {email}",
     "confirm": "Endgültig löschen",
     "deleting": "Wird gelöscht…",
     "cancel": "Abbrechen",
     "error": "Löschen fehlgeschlagen. Prüfe die eingegebene E-Mail und versuche es erneut."
+  },
+  "accountDelete": {
+    "title": "Kontolöschung bestätigen",
+    "intro": "Das löscht dauerhaft dein Kalmo Kids Konto und alles darin. Es kann nicht rückgängig gemacht werden.",
+    "whatTitle": "Was gelöscht wird",
+    "whatChildren": "{count} Kinderprofil(e) mit allen Einheiten, Arbeitsblättern und Fortschritten",
+    "whatAccount": "Dein Konto, deine Anmeldung und deine Einstellungen",
+    "expiredTitle": "Dieser Link ist abgelaufen oder ungültig",
+    "expiredBody": "Löschlinks sind eine Stunde gültig und funktionieren nur für das Konto, das sie angefordert hat. Beginne erneut in den Einstellungen.",
+    "backToSettings": "Zurück zu den Einstellungen"
   }
 }

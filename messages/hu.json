@@ -499,6 +499,14 @@
     "welcome": {
       "subject": "Üdv a Kalmo Kids-ben! 🎉",
       "body": "Szia! {childName} profilja elkészült. Mostantól minden nap új, személyre szabott feladatlapot és képernyőmentes foglalkozást készíthettek együtt. Jó játékot!\n\n— A Kalmo Kids csapata"
+    },
+    "deletion": {
+      "subject": "Fiók törlésének megerősítése",
+      "heading": "Törlöd a Kalmo Kids fiókodat?",
+      "body": "Kérted a Kalmo Kids fiókod törlését. Ez véglegesen töröl mindent — a gyerekek profiljait, minden foglalkozást, feladatlapot és haladást —, és nem vonható vissza. A folytatáshoz erősítsd meg a következő oldalon:",
+      "button": "Fiók végleges törlése",
+      "ignore": "Ha nem te kérted ezt, egyszerűen hagyd figyelmen kívül ezt a levelet — semmi nem történik, a fiókod pontosan úgy marad, ahogy van.",
+      "footer": "Kalmo Kids · kalmokids.com"
     }
   },
   "legal": {
@@ -509,10 +517,27 @@
     "title": "Fiók törlése",
     "description": "A fiók törlése véglegesen és azonnal eltávolítja a fiókodat, minden gyerekprofilt és az összes kapcsolódó adatot. Ez nem vonható vissza.",
     "open": "Fiók törlése…",
+    "requestIntro": "Küldünk egy megerősítő linket ide: {email}. A törlés csak akkor válik véglegessé, ha az ott megjelenő oldalon megerősíted — a link egy órán át érvényes.",
+    "sendLink": "Küldd el a megerősítő linket",
+    "sending": "Küldés…",
+    "sent": "Nézd meg az e-mailjeidet — küldtünk egy megerősítő linket ide: {email}. Semmi nem törlődik, amíg ott meg nem erősíted.",
+    "devLinkNote": "Ebben a környezetben nincs beállítva e-mail. Nyisd meg közvetlenül a megerősítő oldalt:",
+    "devLinkCta": "Megerősítő oldal megnyitása",
+    "requestError": "Nem sikerült elindítani a törlést. Próbáld újra.",
     "confirmLabel": "A megerősítéshez írd be az e-mail-címedet: {email}",
     "confirm": "Végleges törlés",
     "deleting": "Törlés…",
     "cancel": "Mégse",
     "error": "Nem sikerült törölni. Ellenőrizd a beírt e-mail-címet, és próbáld újra."
+  },
+  "accountDelete": {
+    "title": "Fiók törlésének megerősítése",
+    "intro": "Ez véglegesen törli a Kalmo Kids fiókodat és mindent, ami benne van. Nem vonható vissza.",
+    "whatTitle": "Mi törlődik",
+    "whatChildren": "{count} gyerekprofil, minden foglalkozással, feladatlappal és haladással együtt",
+    "whatAccount": "A fiókod, a bejelentkezésed és a beállításaid",
+    "expiredTitle": "Ez a link lejárt vagy érvénytelen",
+    "expiredBody": "A törlési linkek egy órán át érvényesek, és csak azzal a fiókkal működnek, amelyik kérte őket. Kezdd újra a Beállításokból.",
+    "backToSettings": "Vissza a Beállításokhoz"
   }
 }

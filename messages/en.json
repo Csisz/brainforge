@@ -499,6 +499,14 @@
     "welcome": {
       "subject": "Welcome to Kalmo Kids! 🎉",
       "body": "Hi! {childName}'s profile is ready. From now on you can make a fresh, personalized worksheet and a screen-free session together every day. Have fun!\n\n— The Kalmo Kids team"
+    },
+    "deletion": {
+      "subject": "Confirm your account deletion",
+      "heading": "Delete your Kalmo Kids account?",
+      "body": "You asked to delete your Kalmo Kids account. This permanently removes everything — your children's profiles, every session, worksheet and piece of progress — and cannot be undone. To go ahead, confirm on the next page:",
+      "button": "Permanently delete my account",
+      "ignore": "If you didn't request this, just ignore this email — nothing happens and your account stays exactly as it is.",
+      "footer": "Kalmo Kids · kalmokids.com"
     }
   },
   "legal": {
@@ -507,12 +515,29 @@
   },
   "deleteAccount": {
     "title": "Delete account",
-    "description": "Deleting your account permanently and immediately removes your account, every child profile, and all associated data. This cannot be undone.",
+    "description": "For safety, deleting your account is a two-step, email-confirmed process. Nothing is removed until you confirm from the link we email you.",
     "open": "Delete account…",
+    "requestIntro": "We'll email a confirmation link to {email}. Deleting is only final after you confirm on that page, and the link is valid for one hour.",
+    "sendLink": "Email me the confirmation link",
+    "sending": "Sending…",
+    "sent": "Check your email — we sent a confirmation link to {email}. Nothing is deleted until you confirm there.",
+    "devLinkNote": "Email isn't configured in this environment. Open the confirmation page directly:",
+    "devLinkCta": "Open confirmation page",
+    "requestError": "Couldn't start deletion. Please try again.",
     "confirmLabel": "Type your email to confirm: {email}",
     "confirm": "Permanently delete",
     "deleting": "Deleting…",
     "cancel": "Cancel",
     "error": "Couldn't delete. Check the email you typed and try again."
+  },
+  "accountDelete": {
+    "title": "Confirm account deletion",
+    "intro": "This permanently deletes your Kalmo Kids account and everything in it. It cannot be undone.",
+    "whatTitle": "What will be deleted",
+    "whatChildren": "{count} child profile(s), with every session, worksheet and piece of progress",
+    "whatAccount": "Your account, sign-in and settings",
+    "expiredTitle": "This link has expired or is invalid",
+    "expiredBody": "Deletion links last one hour and only work for the account that requested them. Start again from Settings.",
+    "backToSettings": "Back to Settings"
   }
 }

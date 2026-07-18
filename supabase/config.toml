@@ -249,6 +249,15 @@ otp_expiry = 3600
 # admin_email = "noreply@your-verified-domain.com"
 # sender_name = "Kalmo Kids"
 
+# Branded auth email templates (Sprint 7 M7a). config.toml carries these for
+# LOCAL `supabase start`; Supabase Cloud reads templates from the dashboard, so
+# the same HTML must be pasted there too (see README → Email). Single-language by
+# design here — Hungarian primary; full per-locale localization arrives with the
+# Resend migration (known limitation, noted in README).
+[auth.email.template.magic_link]
+subject = "Belépési link a Kalmo Kids-hez"
+content_path = "./supabase/templates/magic_link.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

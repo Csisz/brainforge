@@ -157,7 +157,10 @@ child → a session containing a `dual_path` worksheet → print render → feed
 a child from an unauthenticated client, that `unique(child,generator,seed)`
 rejects a repeat, that a recipe re-renders byte-identically, that `dual_path`
 keeps its non-gray header colors, and that re-awarding achievements is
-idempotent. Each run signs up a fresh throwaway user.
+idempotent. Each run signs up a fresh throwaway user. Its account-deletion checks
+also assert that a bare GET on the deletion confirmation link never deletes
+(Sprint 7 M7c); that one check needs the app up (`npm run dev`) and skips itself,
+with a note, if the app is unreachable.
 
 ## Known issues (don't debug these twice)
 
@@ -223,12 +226,40 @@ password = your Resend API key, sender = your verified domain address. (The same
 values are in the commented `[auth.email.smtp]` block in `supabase/config.toml`
 for local override.)
 
-**App-sent transactional email** (currently just the welcome note after a
-parent's first child) goes through `src/lib/email/` — an abstraction that mirrors
-the AI layer: set `RESEND_API_KEY` (and optionally `EMAIL_FROM`) and it sends via
-Resend; leave it empty and `sendEmail` silently returns false. It is decorative
-by design — nothing in the product depends on an email arriving, and a provider
-failure never surfaces to the user. Weekly summaries are out of scope.
+*Branding (Sprint 7 M7a).* The magic-link template is Kalmo Kids-branded and
+**version-controlled**: `supabase/templates/magic_link.html` + the
+`[auth.email.template.magic_link]` block in `supabase/config.toml`. `config.toml`
+templates apply to **local `supabase start` only** — Supabase Cloud reads
+templates from the dashboard. So in production, replicate it once by hand:
+
+> *Auth → Emails → Templates → **Magic Link*** → set the subject to
+> `Belépési link a Kalmo Kids-hez` and paste the body of
+> `supabase/templates/magic_link.html` (it uses the standard `{{ .ConfirmationURL }}`
+> variable). Save. Repeat for any other template you enable.
+
+**Known limitation:** Supabase auth templates are **single-language** — there is
+one template per type for the whole project, so the branded magic link is
+Hungarian only for now (the app is hu/en/de). Full per-locale auth email arrives
+with the Resend migration, when app-sent mail replaces Supabase-sent auth mail.
+
+**App-sent transactional email** goes through `src/lib/email/` — an abstraction
+that mirrors the AI layer: set `RESEND_API_KEY` (and optionally `EMAIL_FROM`) and
+it sends via Resend; leave it empty and `sendEmail` silently returns false. Two
+kinds today:
+
+- **Welcome note** after a parent's first child — purely decorative; nothing
+  depends on it arriving.
+- **Account-deletion confirmation** (Sprint 7 M7b) — sent by
+  `requestAccountDeletion`, it carries a signed one-hour link to an in-app
+  confirmation *page* (`/[locale]/account/delete`), never a delete-on-click.
+  Deletion is finalized only by the typed-email action on that page, gated
+  server-side on both the token and the email — so a bare GET on the link never
+  deletes (asserted by `flow:test`). Because app email is best-effort, the
+  request action also returns the link so the flow works where email is not
+  configured (local dev shows it in Settings). This email is *not* decorative:
+  it is unmistakably a deletion notice (red accent, explicit erasure copy, "ignore
+  this and nothing happens"), deliberately unlike a login email. It is localized
+  per the account's locale (hu/en/de), unlike the Supabase auth templates above.
 
 ## Production deployment
 
