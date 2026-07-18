@@ -205,6 +205,36 @@ describe("materials shift the candidate pool (M5c audit)", () => {
   });
 });
 
+describe("cross-session activity anti-repetition (M1b)", () => {
+  const physicalKeys = (p: ReturnType<typeof composeSession>) =>
+    p.slots.flatMap((s) => (s.kind === "worksheet" ? [] : [s.activityKey]));
+
+  test("two consecutive sessions with identical inputs share no physical activity", () => {
+    const base = req({
+      durationMin: 45,
+      materials: ["pencil", "paper", "crayons", "scissors", "glue", "ball", "cups", "blocks", "tape", "dice"],
+    });
+    for (let i = 0; i < 30; i++) {
+      const first = physicalKeys(composeSession(base));
+      const second = physicalKeys(composeSession({ ...base, recentActivities: first }));
+      const overlap = second.filter((k) => first.includes(k));
+      assert.equal(overlap.length, 0, `repeated across sessions: ${overlap.join(", ")}`);
+    }
+  });
+
+  test("avoiding recent activities degrades gracefully — a slot is still filled", () => {
+    // Feed every warmup key as recent: the fresh tier is empty, so it must fall
+    // back rather than throw, exactly like the material tiers.
+    const allWarmups = [
+      "activity.warmup.simon_says", "activity.warmup.finger_gym", "activity.warmup.rhythm_copy",
+      "activity.warmup.breathing_balloon", "activity.warmup.mirror_me", "activity.warmup.wake_up_stretch",
+      "activity.warmup.name_clap",
+    ];
+    const plan = composeSession(req({ durationMin: 20, materials: [], recentActivities: allWarmups }));
+    assert.ok(plan.slots.some((s) => s.kind === "warmup"), "warmup slot must still be composed");
+  });
+});
+
 describe("determinism of the contract", () => {
   test("difficulty is always a valid Difficulty even from odd calibration", () => {
     for (const level of [1, 2, 3, 4, 5] as Difficulty[]) {

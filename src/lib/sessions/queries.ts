@@ -14,6 +14,30 @@ export async function getRecentWorksheets(
   return (data ?? []).map((w) => ({ generatorId: w.generator_id, seed: w.seed }));
 }
 
+/**
+ * Physical activity keys from the child's most recent sessions (Sprint 8 M1b),
+ * for cross-session anti-repetition. Reads the stored plans (the activity keys
+ * are already there — nothing new to persist) and flattens the non-worksheet
+ * slots. RLS scopes it to the owner.
+ */
+export async function getRecentActivityKeys(childId: string, sessions = 2): Promise<string[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("sessions")
+    .select("plan")
+    .eq("child_id", childId)
+    .order("created_at", { ascending: false })
+    .limit(sessions);
+  const keys: string[] = [];
+  for (const row of data ?? []) {
+    const plan = row.plan as { slots?: Array<{ kind: string; activityKey?: string }> } | null;
+    for (const slot of plan?.slots ?? []) {
+      if (slot.kind !== "worksheet" && slot.activityKey) keys.push(slot.activityKey);
+    }
+  }
+  return keys;
+}
+
 export type SessionRow = {
   id: string;
   child_id: string;

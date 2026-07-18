@@ -112,31 +112,57 @@
     "warmup": {
       "simon_says": "Simon sagt",
       "finger_gym": "Fingergymnastik",
-      "rhythm_copy": "Rhythmus nachmachen"
+      "rhythm_copy": "Rhythmus nachmachen",
+      "breathing_balloon": "Ballon-Atmung",
+      "mirror_me": "Spiegel-Spiel",
+      "wake_up_stretch": "Aufwach-Dehnung",
+      "name_clap": "Namen klatschen"
     },
     "movement": {
       "cross_crawl": "Überkreuz-Krabbeln",
       "ball_target": "Ball-Zielwurf",
       "obstacle_course": "Hindernisparcours",
-      "animal_walks": "Tiergänge"
+      "animal_walks": "Tiergänge",
+      "balloon_keep_up": "Ballon oben halten",
+      "hopscotch": "Himmel und Hölle",
+      "bean_bag_balance": "Balance-Gang",
+      "freeze_dance": "Stopptanz"
     },
     "memory": {
       "cup_shuffle": "Becher-Mischen",
       "whats_missing": "Was fehlt?",
-      "sound_sequence": "Klangfolge"
+      "sound_sequence": "Klangfolge",
+      "what_changed": "Was ist anders?",
+      "story_chain": "Geschichten-Kette",
+      "touch_and_tell": "Fühl-Beutel",
+      "copy_the_tower": "Turm nachbauen"
     },
     "creative": {
       "build_story": "Geschichte bauen",
       "draw_theme": "Thema zeichnen",
-      "cut_collage": "Schneide-Collage"
+      "cut_collage": "Schneide-Collage",
+      "shadow_shapes": "Schattenfiguren",
+      "paper_fold": "Papierfalten",
+      "object_faces": "Gesichter aus Dingen",
+      "junk_build": "Kram-Bauen"
     },
     "reward": {
       "sticker_moment": "Sticker-Moment",
-      "victory_dance": "Siegestanz"
+      "victory_dance": "Siegestanz",
+      "high_five_tower": "Abklatsch-Turm",
+      "proud_moment": "Stolzer Moment",
+      "choose_the_song": "Du wählst das Lied",
+      "cheer_chant": "Euer Jubelspruch",
+      "reward_stamp": "Stern auf die Hand"
     },
     "reflection": {
       "favorite_part": "Lieblingsteil",
-      "show_and_tell": "Zeig und erzähl"
+      "show_and_tell": "Zeig und erzähl",
+      "thumbs_check": "Daumen-Check",
+      "one_word": "Ein Wort",
+      "hardest_easiest": "Am schwersten, am leichtesten",
+      "teach_me": "Bring es mir bei",
+      "tomorrow_wish": "Wunsch für morgen"
     }
   },
   "auth": {
@@ -390,31 +416,57 @@
     "warmup": {
       "simon_says": "Stell dich vor dein Kind und gib Befehle: „Simon sagt: Fass dir an die Nase!\" Nur ausführen, wenn „Simon sagt\" dabei ist — sonst von vorn. 5-6 Runden reichen zum Aufwärmen.",
       "finger_gym": "Setzt euch gegenüber. Zeig es vor: Daumen nacheinander an jeden Finger tippen, erst langsam, dann schneller, dann beide Hände gleichzeitig. Das Kind macht es nach.",
-      "rhythm_copy": "Klatsche einen kurzen Rhythmus (klatsch-klatsch-Pause-klatsch); das Kind klatscht ihn nach. Jede Runde einen Schlag länger. Später: Klatschen durch Knietippen oder Stampfen ersetzen."
+      "rhythm_copy": "Klatsche einen kurzen Rhythmus (klatsch-klatsch-Pause-klatsch); das Kind klatscht ihn nach. Jede Runde einen Schlag länger. Später: Klatschen durch Knietippen oder Stampfen ersetzen.",
+      "breathing_balloon": "Setzt euch bequem hin. Legt die Hände auf den Bauch und „pustet den Ballon auf“, während ihr einatmet, dann lasst die Luft heraus. Fünfmal wiederholen, jedes Mal langsamer.",
+      "mirror_me": "Stell dich deinem Kind gegenüber. Beweg dich ganz langsam — heb eine Hand, lehn dich zur Seite — und dein Kind spiegelt dich. Dann tauschen: es führt, du spiegelst.",
+      "wake_up_stretch": "Streckt euch groß wie ein Baum, dann rollt euch klein wie ein Samen. Schüttelt Hände und Füße aus und atmet einmal tief durch. Jetzt ist der Körper bereit.",
+      "name_clap": "Klatscht die Silben eurer Namen: Mi-a, zwei Klatscher. Dann andere Wörter probieren — Tiere, Essen. Zählt, wie viele Klatscher jedes braucht."
     },
     "movement": {
       "cross_crawl": "Im Stehen berührt das Kind mit dem rechten Ellbogen das linke Knie, dann umgekehrt, langsam im Wechsel. 10-15 Wiederholungen. Das Überkreuzen aktiviert beide Hirnhälften.",
       "ball_target": "Stell ein Ziel auf (Korb, Topf, Kissen), ein paar Schritte entfernt. Das Kind wirft einen Ball — nach jedem Treffer einen Schritt weiter zurück. Schwerer: schwache Hand oder von unten.",
       "obstacle_course": "Klebe Linien auf den Boden: gerade, Zickzack, Schnecke. Das Kind geht sie auf Zehenspitzen, Fersen, seitwärts oder hüpfend entlang — du sagst an, wie.",
-      "animal_walks": "Rufe Tiere; das Kind bewegt sich so: Bärengang (Vierfüßler, Knie hoch), Krebsgang (Bauch nach oben), Froschsprünge, Storchenschritte. 3-4 Meter pro Abschnitt, 2-3 Runden."
+      "animal_walks": "Rufe Tiere; das Kind bewegt sich so: Bärengang (Vierfüßler, Knie hoch), Krebsgang (Bauch nach oben), Froschsprünge, Storchenschritte. 3-4 Meter pro Abschnitt, 2-3 Runden.",
+      "balloon_keep_up": "Blast einen Ballon auf (oder nehmt einen weichen Ball). Dein Kind tippt ihn hoch, damit er nicht den Boden berührt. Schwerer: nur mit den Händen, nur mit dem Kopf, oder im Sitzen.",
+      "hopscotch": "Klebt mit Klebeband ein Hüpffeld auf den Boden (ein Fuß, zwei Füße, ein Fuß). Dein Kind hüpft hin und zurück. Zählt die Felder laut mit.",
+      "bean_bag_balance": "Legt einen kleinen weichen Gegenstand (Sockenknäuel, Kissen) auf den Kopf des Kindes. Es geht langsam durch den Raum, ohne dass er fällt. Schwerer: auf Zehenspitzen oder im Zickzack.",
+      "freeze_dance": "Klatsch oder summ einen Takt — dein Kind tanzt. Wenn du aufhörst, erstarrt es wie eine Statue. Wer wackelt, lacht kurz und macht weiter. Tauscht: es stoppt dich."
     },
     "memory": {
       "cup_shuffle": "Verstecke einen kleinen Gegenstand unter einem von drei umgedrehten Bechern. Vertausche die Becher langsam, das Kind verfolgt sie und zeigt dann auf den richtigen. Nach Treffern: schneller oder vierter Becher.",
       "whats_missing": "Lege 4-6 kleine Gegenstände aus; das Kind prägt sie sich 10 Sekunden ein. Abdecken, einen wegnehmen, aufdecken: Was fehlt? Mit mehr Gegenständen steigern.",
-      "sound_sequence": "Mit geschlossenen Augen hört das Kind zu, während du 2-3 Geräusche machst (Klatschen, Schlüsselklimpern, Klopfen). Es nennt die Geräusche und ihre Reihenfolge. Schrittweise verlängern."
+      "sound_sequence": "Mit geschlossenen Augen hört das Kind zu, während du 2-3 Geräusche machst (Klatschen, Schlüsselklimpern, Klopfen). Es nennt die Geräusche und ihre Reihenfolge. Schrittweise verlängern.",
+      "what_changed": "Setz dich deinem Kind gegenüber. Während es die Augen zu hat, verändere eine Sache an dir — Ärmel hochkrempeln, Mütze abnehmen. Augen auf: Was ist anders? Dann tauschen.",
+      "story_chain": "Beginne: „Ich war im Laden und habe einen Apfel gekauft.“ Dein Kind wiederholt und fügt eine Sache hinzu. Abwechselnd die Liste verlängern und jedes Mal alles aufsagen.",
+      "touch_and_tell": "Legt 4-5 kleine Gegenstände in einen Beutel oder eine Socke. Dein Kind greift hinein, ertastet einen und benennt ihn, bevor es ihn herauszieht. Danach: Was war alles drin?",
+      "copy_the_tower": "Bau einen kleinen Turm aus Bauklötzen (3-5 Teile). Dein Kind schaut ihn zehn Sekunden an, dann deck ihn ab. Es baut ihn aus dem Gedächtnis nach. Vergleicht sie."
     },
     "creative": {
       "build_story": "Baut zusammen aus Bausteinen eine Szene (Burg, Bauernhof, Raumstation), während das Kind erzählt, was dort passiert. Du fragst nur: „Wer wohnt hier? Was war gestern los?\"",
       "draw_theme": "Lass frei zum heutigen Thema ({theme}) zeichnen. Nicht korrigieren — am Ende bitten, das Bild zu erklären.",
-      "cut_collage": "Das Kind schneidet Formen aus alten Zeitschriften oder Buntpapier aus und klebt sie zu einem Bild. Das Schneiden selbst ist Feinmotorik — Thema passend zur heutigen Einheit."
+      "cut_collage": "Das Kind schneidet Formen aus alten Zeitschriften oder Buntpapier aus und klebt sie zu einem Bild. Das Schneiden selbst ist Feinmotorik — Thema passend zur heutigen Einheit.",
+      "shadow_shapes": "Richtet eine Lampe oder Taschenlampe an die Wand. Formt mit den Händen Schatten: Hund, Vogel, Hase. Ratet einander, dann erfindet eine kleine Geschichte dazu.",
+      "paper_fold": "Faltet aus einem Blatt Papier etwas: Flieger, Boot, Hut. Es muss nicht perfekt sein — es geht um saubere Falten. Danach probiert aus, ob es funktioniert.",
+      "object_faces": "Sammelt ein paar kleine Dinge (Knöpfe, Steine, Nudeln, Blätter). Legt daraus ein Gesicht oder Tier auf den Tisch. Frag, wer das ist und welche Laune er hat.",
+      "junk_build": "Legt ein paar saubere Wertstoffe bereit (Schachtel, Deckel, Papprolle). Dein Kind baut daraus etwas — Fahrzeug, Roboter, Burg. Lenk nicht, frag am Ende nur nach."
     },
     "reward": {
       "sticker_moment": "Am Ende wählt das Kind einen Sticker und klebt ihn auf sein Sammelblatt oder das fertige Arbeitsblatt. Es entscheidet selbst, wohin.",
-      "victory_dance": "Eine Minute freier Freudentanz zum Lieblingslied — oder du klatschst den Takt. Wichtig ist das gemeinsame Feiern."
+      "victory_dance": "Eine Minute freier Freudentanz zum Lieblingslied — oder du klatschst den Takt. Wichtig ist das gemeinsame Feiern.",
+      "high_five_tower": "Klatscht euch der Reihe nach ab: oben, unten, seitlich, beide Hände, langsam und dann blitzschnell. Zählt, wie viele ihr ohne Fehler schafft.",
+      "proud_moment": "Bitte dein Kind, die heutige Arbeit jemandem zu zeigen — Geschwister, Großeltern, auch per Anruf. In einem Satz sagt es, was es gemacht hat und worauf es am stolzesten ist.",
+      "choose_the_song": "Dein Kind wählt ein Lieblingslied, und ihr feiert gemeinsam dazu: tanzen, klatschen oder einfach mitnicken. Ein Lied reicht — es ist die Belohnung für die heutige Arbeit.",
+      "cheer_chant": "Erfindet zusammen einen kurzen Jubelspruch mit dem Namen des Kindes: „Mi-a, hurra, heute warst du klasse!“ Sagt ihn laut mit Klatschen. So könnt ihr auch künftig abschließen.",
+      "reward_stamp": "Mal einen kleinen Stern oder Stempel auf den Handrücken des Kindes oder auf sein Sammelblatt. Sag laut, wofür — eine konkrete Sache, die es heute gut gemacht hat."
     },
     "reflection": {
       "favorite_part": "Frag: „Was war heute dein Lieblingsteil? Was war am schwersten?\" Zuhören, nicht bewerten — Ziel ist, das Erlebnis in Worte zu fassen.",
-      "show_and_tell": "Das Kind zeigt jemandem das fertige Blatt (anderes Elternteil, Geschwister, Großeltern per Videoanruf) und erklärt, was es gemacht hat. Stolz verankert das Gelernte."
+      "show_and_tell": "Das Kind zeigt jemandem das fertige Blatt (anderes Elternteil, Geschwister, Großeltern per Videoanruf) und erklärt, was es gemacht hat. Stolz verankert das Gelernte.",
+      "thumbs_check": "Frag, wie sich heute angefühlt hat, und lass es mit dem Daumen zeigen: hoch (gut), zur Seite (okay), runter (schwer). Es gibt keine falsche Antwort — frag sanft nach dem Warum.",
+      "one_word": "Bitte dein Kind, den heutigen Tag in einem einzigen Wort zusammenzufassen — egal was: „lustig“, „schwer“, „gut“. Sag auch eins. Es muss nichts erklären, aber du kannst zuhören.",
+      "hardest_easiest": "Frag: Was war heute am leichtesten, was am schwersten? Nimm jede Antwort an — es geht nicht um Leistung, sondern darum, dass das Kind merkt, wie es lief.",
+      "teach_me": "Bitte dein Kind, dir eine Sache beizubringen, die es heute gemacht hat — eine Form, eine Bewegung, eine Regel. Als „Lehrer“ versteht und behält es sie besser.",
+      "tomorrow_wish": "Frag, was es beim nächsten Mal ausprobieren oder wiederholen möchte. Kein Versprechen, nur ein Wunsch — aber es zeigt, was es interessiert und worauf es sich freut."
     }
   },
   "worksheetsCatalog": {

@@ -58,6 +58,10 @@ const motionArrow = (x1: number, y1: number, x2: number, y2: number) => {
 const cup = (cx: number, baseY: number, w = 7, h = 8) =>
   path(`M ${cx - w / 2} ${baseY} L ${cx - w / 2 + 1.2} ${baseY - h} L ${cx + w / 2 - 1.2} ${baseY - h} L ${cx + w / 2} ${baseY} Z`, S);
 
+const sq = (x: number, y: number, w: number, h = w, style = S) => path(`M ${x} ${y} h ${w} v ${h} h ${-w} Z`, style);
+const balloon = (cx: number, cy: number, r = 4) =>
+  circle(cx, cy, r, S) + path(`M ${cx} ${cy + r} l -1.2 2 l 2.4 0 Z`, S);
+
 /* ---------- pictogram definitions ---------- */
 
 const PICTOGRAMS: Record<string, string[]> = {
@@ -117,6 +121,46 @@ const PICTOGRAMS: Record<string, string[]> = {
     path("M 14 34 L 14 22 M 17 20 L 17 10 M 20 20 L 20 9 M 23 20 L 23 10 M 26 22 L 26 13", S) +
       path("M 14 34 C 14 28, 26 28, 26 34 M 26 22 L 26 28", S) +
       path("M 14 22 C 13 16, 15 11, 17 10", S) + circle(17, 10, 1.6, { fill: "none", stroke: "#ff6b5e", "stroke-width": 0.9 }),
+  ],
+  "movement.hopscotch": [
+    // hopscotch grid (1 / 2-3 / 4) and a figure hopping on one foot toward it
+    sq(16, 30, 8) + sq(11, 22, 8) + sq(19, 22, 8) + sq(16, 14, 8) +
+      figure({ hx: 6, hy: 9, arms: [[-3, 2, -5, 5], [3, 2, 5, 4]], legs: [[-1, 6, -1, 12], [2, 3, 4, 4]] }) +
+      motionArrow(9, 18, 15, 12),
+  ],
+  "movement.bean_bag_balance": [
+    // walk across the room with a small soft object balanced on the head
+    figure({ hx: 20, hy: 13, arms: [[-6, 1, -9, 3], [6, 1, 9, 3]], legs: [[-3, 6, -3, 12], [3, 6, 5, 12]] }) +
+      sq(16, 5, 8, 3) +
+      motionArrow(28, 30, 36, 30),
+  ],
+  "movement.balloon_keep_up": [
+    // tap a balloon upward to keep it off the floor
+    figure({ hx: 14, hy: 18, arms: [[3, -7, 7, -11], [-4, 4, -5, 9]], legs: [[-2, 6, -2, 12], [3, 6, 4, 12]] }) +
+      balloon(26, 7) + motionArrow(24, 11, 22, 6),
+  ],
+  "movement.freeze_dance": [
+    // P1: dancing to a beat
+    figure({ hx: 16, hy: 11, arms: [[-5, -3, -8, -7], [5, 3, 8, 6]], legs: [[-3, 5, -6, 11], [3, 6, 4, 12]] }) +
+      circle(31, 8, 1, { ...S, stroke: "#ff6b5e" }) + path("M 32 8 L 32 3 L 35 4", { ...S, stroke: "#ff6b5e", "stroke-width": 1.1 }),
+    // P2: freeze like a statue when the beat stops
+    figure({ hx: 20, hy: 11, arms: [[-5, 0, -8, 0], [5, 0, 8, 0]], legs: [[-2, 6, -2, 12], [2, 6, 2, 12]] }) +
+      path("M 11 5 L 29 5", SOFT) + path("M 14 3 L 14 7 M 26 3 L 26 7", SOFT),
+  ],
+  "memory.copy_the_tower": [
+    // P1: study the model tower
+    sq(8, 26, 9) + sq(8, 17, 9) + sq(8, 8, 9) +
+      path("M 24 15 C 27 12, 33 12, 36 15 C 33 18, 27 18, 24 15 Z", S) + circle(30, 15, 1.6, S),
+    // P2: rebuild it from memory (top block being placed)
+    sq(20, 26, 9) + sq(20, 17, 9) + sq(20, 8, 9, 9, SOFT) +
+      circle(24.5, 3, 2, S) + path("M 24.5 5 L 24.5 8", S) + motionArrow(24.5, 5.5, 24.5, 8),
+  ],
+  "memory.touch_and_tell": [
+    // reach into a feely bag and name what you touch
+    path("M 11 16 C 13 12, 27 12, 29 16 L 31 33 C 31 36, 9 36, 9 33 Z", S) +
+      path("M 13 15 C 15 12, 25 12, 27 15", SOFT) +
+      path("M 20 4 L 20 14", S) + circle(20, 4, 2, S) +
+      path("M 33 21 c 3 -3 5 1 1 3", SOFT) + circle(34, 26, 0.6, SOFT),
   ],
 };
 

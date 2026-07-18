@@ -27,6 +27,14 @@ export type SessionRequest = {
   difficulty: Difficulty;
   /** (generatorId, paramsHash) pairs used recently — never repeat (PRD §6). */
   recentWorksheets: Array<{ generatorId: string; seed: string }>;
+  /**
+   * Physical activity keys from the child's last couple of sessions (Sprint 8
+   * M1b). The composer deprioritizes them per category, mirroring worksheet
+   * anti-repetition, so a family that plays every day does not get "Simon says"
+   * five mornings running — with the same graceful fallback as materials when
+   * avoiding them would leave a category empty.
+   */
+  recentActivities?: string[];
   locale: string;
   /**
    * Adaptive calibration (Sprint 5). Absent ⇒ every worksheet uses
@@ -104,30 +112,56 @@ const PHYSICAL_POOL: Record<"warmup" | "movement" | "memory_game" | "creative" |
     { key: "activity.warmup.simon_says", materials: [], minAge: 3 },
     { key: "activity.warmup.finger_gym", materials: [], minAge: 2 },
     { key: "activity.warmup.rhythm_copy", materials: [], minAge: 3 },
+    { key: "activity.warmup.breathing_balloon", materials: [], minAge: 2 },
+    { key: "activity.warmup.mirror_me", materials: [], minAge: 2 },
+    { key: "activity.warmup.wake_up_stretch", materials: [], minAge: 2 },
+    { key: "activity.warmup.name_clap", materials: [], minAge: 3 },
   ],
   movement: [
     { key: "activity.movement.cross_crawl", materials: [], minAge: 4 },
     { key: "activity.movement.ball_target", materials: ["ball"], minAge: 3 },
     { key: "activity.movement.obstacle_course", materials: ["tape"], minAge: 3 },
     { key: "activity.movement.animal_walks", materials: [], minAge: 2 },
+    { key: "activity.movement.balloon_keep_up", materials: [], minAge: 3 },
+    { key: "activity.movement.hopscotch", materials: ["tape"], minAge: 4 },
+    { key: "activity.movement.bean_bag_balance", materials: [], minAge: 3 },
+    { key: "activity.movement.freeze_dance", materials: [], minAge: 2 },
   ],
   memory_game: [
     { key: "activity.memory.cup_shuffle", materials: ["cups"], minAge: 3 },
     { key: "activity.memory.whats_missing", materials: [], minAge: 3 },
     { key: "activity.memory.sound_sequence", materials: [], minAge: 4 },
+    { key: "activity.memory.what_changed", materials: [], minAge: 4 },
+    { key: "activity.memory.story_chain", materials: [], minAge: 5 },
+    { key: "activity.memory.touch_and_tell", materials: [], minAge: 4 },
+    { key: "activity.memory.copy_the_tower", materials: ["blocks"], minAge: 4 },
   ],
   creative: [
     { key: "activity.creative.build_story", materials: ["blocks"], minAge: 3 },
     { key: "activity.creative.draw_theme", materials: ["crayons", "paper"], minAge: 2 },
     { key: "activity.creative.cut_collage", materials: ["scissors", "glue", "paper"], minAge: 4 },
+    { key: "activity.creative.shadow_shapes", materials: [], minAge: 3 },
+    { key: "activity.creative.paper_fold", materials: ["paper"], minAge: 4 },
+    { key: "activity.creative.object_faces", materials: [], minAge: 3 },
+    { key: "activity.creative.junk_build", materials: [], minAge: 3 },
   ],
   reward: [
     { key: "activity.reward.sticker_moment", materials: [], minAge: 2 },
     { key: "activity.reward.victory_dance", materials: [], minAge: 2 },
+    { key: "activity.reward.high_five_tower", materials: [], minAge: 2 },
+    { key: "activity.reward.proud_moment", materials: [], minAge: 2 },
+    { key: "activity.reward.choose_the_song", materials: [], minAge: 2 },
+    { key: "activity.reward.cheer_chant", materials: [], minAge: 2 },
+    { key: "activity.reward.reward_stamp", materials: [], minAge: 2 },
   ],
   reflection: [
     { key: "activity.reflection.favorite_part", materials: [], minAge: 3 },
     { key: "activity.reflection.show_and_tell", materials: [], minAge: 2 },
+    { key: "activity.reflection.thumbs_check", materials: [], minAge: 3 },
+    { key: "activity.reflection.one_word", materials: [], minAge: 4 },
+    { key: "activity.reflection.hardest_easiest", materials: [], minAge: 4 },
+    { key: "activity.reflection.teach_me", materials: [], minAge: 4 },
+    { key: "activity.reflection.tomorrow_wish", materials: [], minAge: 4 },
   ],
 };
 
@@ -210,7 +244,12 @@ type PhysicalKind = Exclude<SessionSlot["kind"], "worksheet">;
 function physicalCandidates(kind: PhysicalKind, req: SessionRequest, usedKeys: Set<string>) {
   const all = PHYSICAL_POOL[kind];
   const fits = (a: (typeof all)[number]) => a.materials.every((m) => req.materials.includes(m));
+  const recent = new Set(req.recentActivities ?? []);
   const tiers = [
+    // Best: age fits, materials on hand, unused this session, AND not seen in the
+    // last couple of sessions. Cross-session freshness is a *preference*, so it
+    // degrades exactly like the material tiers below when it would empty the pool.
+    all.filter((a) => a.minAge <= req.age && fits(a) && !usedKeys.has(a.key) && !recent.has(a.key)),
     all.filter((a) => a.minAge <= req.age && fits(a) && !usedKeys.has(a.key)),
     all.filter((a) => a.materials.length === 0 && a.minAge <= req.age),
     all.filter((a) => a.minAge <= req.age),

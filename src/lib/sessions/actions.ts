@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { getChild } from "@/lib/children/queries";
-import { getRecentWorksheets } from "./queries";
+import { getRecentWorksheets, getRecentActivityKeys } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
@@ -41,7 +41,10 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
   if (await isRateLimited(user.id)) return { error: "rate_limited" };
 
   const age = ageFromBirthMonth(child.birth_month);
-  const recentWorksheets = await getRecentWorksheets(input.childId);
+  const [recentWorksheets, recentActivities] = await Promise.all([
+    getRecentWorksheets(input.childId),
+    getRecentActivityKeys(input.childId),
+  ]);
 
   // Adaptive is consulted only when the parent left the slider on Automatic AND
   // this child has it enabled. A manual override wins for this session.
@@ -61,6 +64,7 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
     materials: input.materials,
     difficulty: sessionDifficulty,
     recentWorksheets,
+    recentActivities,
     locale: input.locale,
     adaptive,
   });

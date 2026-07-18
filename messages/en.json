@@ -112,31 +112,57 @@
     "warmup": {
       "simon_says": "Simon says",
       "finger_gym": "Finger gym",
-      "rhythm_copy": "Rhythm copy"
+      "rhythm_copy": "Rhythm copy",
+      "breathing_balloon": "Balloon breathing",
+      "mirror_me": "Mirror me",
+      "wake_up_stretch": "Wake-up stretch",
+      "name_clap": "Name clapping"
     },
     "movement": {
       "cross_crawl": "Cross-crawl",
       "ball_target": "Ball target toss",
       "obstacle_course": "Obstacle course",
-      "animal_walks": "Animal walks"
+      "animal_walks": "Animal walks",
+      "balloon_keep_up": "Keep it up",
+      "hopscotch": "Hopscotch",
+      "bean_bag_balance": "Balance walk",
+      "freeze_dance": "Freeze dance"
     },
     "memory": {
       "cup_shuffle": "Cup shuffle",
       "whats_missing": "What's missing?",
-      "sound_sequence": "Sound sequence"
+      "sound_sequence": "Sound sequence",
+      "what_changed": "What changed?",
+      "story_chain": "Story chain",
+      "touch_and_tell": "Feely bag",
+      "copy_the_tower": "Copy the tower"
     },
     "creative": {
       "build_story": "Build a story",
       "draw_theme": "Draw the theme",
-      "cut_collage": "Cut & paste collage"
+      "cut_collage": "Cut & paste collage",
+      "shadow_shapes": "Shadow shapes",
+      "paper_fold": "Paper folding",
+      "object_faces": "Object faces",
+      "junk_build": "Junk build"
     },
     "reward": {
       "sticker_moment": "Sticker moment",
-      "victory_dance": "Victory dance"
+      "victory_dance": "Victory dance",
+      "high_five_tower": "High-five tower",
+      "proud_moment": "Proud moment",
+      "choose_the_song": "You pick the song",
+      "cheer_chant": "Your own cheer",
+      "reward_stamp": "Star on the hand"
     },
     "reflection": {
       "favorite_part": "Favorite part",
-      "show_and_tell": "Show and tell"
+      "show_and_tell": "Show and tell",
+      "thumbs_check": "Thumbs check",
+      "one_word": "One word",
+      "hardest_easiest": "Hardest and easiest",
+      "teach_me": "Teach me",
+      "tomorrow_wish": "Tomorrow's wish"
     }
   },
   "auth": {
@@ -390,31 +416,57 @@
     "warmup": {
       "simon_says": "Face your child and give commands: \"Simon says: touch your nose!\" They only act when \"Simon says\" is included — if they move without it, start over. 5-6 rounds warm up nicely.",
       "finger_gym": "Sit facing each other. Demonstrate: touch your thumb to each finger in turn, slow then faster, then both hands at once. Your child mirrors you.",
-      "rhythm_copy": "Clap a short rhythm (clap-clap-pause-clap); your child claps it back. Add one beat each round. Once easy, switch claps for knee taps or stomps."
+      "rhythm_copy": "Clap a short rhythm (clap-clap-pause-clap); your child claps it back. Add one beat each round. Once easy, switch claps for knee taps or stomps.",
+      "breathing_balloon": "Sit comfortably. Put your hands on your bellies and slowly “inflate the balloon” as you breathe in, then let the air out. Repeat five times, slower each round.",
+      "mirror_me": "Stand facing your child. Move very slowly — raise a hand, lean to one side — and your child mirrors you. Then swap: they lead and you mirror them.",
+      "wake_up_stretch": "Stretch up tall like a tree, then curl up small like a seed. Shake out your hands and feet, then take one big breath. Now the body is ready to focus.",
+      "name_clap": "Clap out the syllables of your names: Mi-a, two claps. Then try other words — animals, foods. Count how many claps each one takes."
     },
     "movement": {
       "cross_crawl": "Standing, your child touches right elbow to left knee, then the reverse, slowly alternating. 10-15 reps. Crossing the midline stimulates the two brain halves to cooperate.",
       "ball_target": "Set a target (basket, pot, cushion) a few steps away. Your child throws a ball at it — after each hit, one step further back. Harder: non-dominant hand or underarm throw.",
       "obstacle_course": "Tape lines on the floor: straight, zigzag, spiral. Your child walks them on tiptoe, on heels, sideways or hopping — you call which way per segment.",
-      "animal_walks": "Call out animals; your child moves like them: bear walk (all fours, knees up), crab walk (belly up), frog jumps, stork steps. 3-4 meters per segment, 2-3 rounds."
+      "animal_walks": "Call out animals; your child moves like them: bear walk (all fours, knees up), crab walk (belly up), frog jumps, stork steps. 3-4 meters per segment, 2-3 rounds.",
+      "balloon_keep_up": "Blow up a balloon (or use a soft ball). Your child taps it to keep it off the floor. Make it harder: only palms, only head, or sitting down.",
+      "hopscotch": "Tape a hopscotch grid on the floor (one foot, two feet, one foot). Your child hops down and back. Count the squares out loud together.",
+      "bean_bag_balance": "Put a small soft object (a rolled sock, a cushion) on your child's head. They walk slowly across the room without it falling. Make it harder: on tiptoe, or winding.",
+      "freeze_dance": "Clap or hum a beat — your child dances. When you stop, they freeze like a statue. If they move, share a laugh and carry on. Swap: let them stop you."
     },
     "memory": {
       "cup_shuffle": "Hide a small object under one of three upturned cups. Slowly swap the cups while your child watches, then they point to the object. After a hit, speed up or add a fourth cup.",
       "whats_missing": "Lay out 4-6 small objects; your child studies them for 10 seconds. Cover them, remove one, reveal: what is missing? Add objects to raise difficulty.",
-      "sound_sequence": "Eyes closed, your child listens as you make 2-3 sounds in a row (clap, jingling keys, knocking). They name the sounds and their order. Extend the sequence gradually."
+      "sound_sequence": "Eyes closed, your child listens as you make 2-3 sounds in a row (clap, jingling keys, knocking). They name the sounds and their order. Extend the sequence gradually.",
+      "what_changed": "Sit facing your child. While their eyes are closed, change one thing about yourself — roll up a sleeve, take off a hat. Eyes open: what changed? Then swap.",
+      "story_chain": "Start: “I went to the shop and bought an apple.” Your child repeats it and adds one thing. Take turns growing the list, trying to recall the whole chain each time.",
+      "touch_and_tell": "Put 4-5 small objects in a bag or sock. Your child reaches in, feels one, and names it before pulling it out. Afterwards, see if they can recall everything inside.",
+      "copy_the_tower": "Build a small tower of blocks (3-5 pieces). Your child studies it for ten seconds, then cover it. They build the same one from memory. Compare them together."
     },
     "creative": {
       "build_story": "Build a scene together from blocks (castle, farm, space station) while your child narrates what happens there. You only ask: \"Who lives here? What happened yesterday?\"",
       "draw_theme": "Let them draw freely on today’s theme ({theme}). No corrections — at the end, ask them to tell you about the drawing.",
-      "cut_collage": "Your child cuts shapes from old magazines or colored paper and glues them into a picture. The cutting itself is fine-motor work — theme it to today's session."
+      "cut_collage": "Your child cuts shapes from old magazines or colored paper and glues them into a picture. The cutting itself is fine-motor work — theme it to today's session.",
+      "shadow_shapes": "Shine a lamp or torch on the wall. Make shadow shapes with your hands: a dog, a bird, a rabbit. Guess each other's, then make up a little story about them.",
+      "paper_fold": "Fold a sheet of paper into something: a plane, a boat, a hat. It doesn't need to be perfect — careful creases are the point. Then test it out together.",
+      "object_faces": "Gather a few small things (buttons, pebbles, pasta, leaves). Arrange them into a face or an animal on the table. Ask who it is and what kind of mood they're in.",
+      "junk_build": "Set out a few clean bits of recycling (a box, caps, a cardboard tube). Your child builds something from them — a vehicle, a robot, a castle. Don't steer it; just ask about it at the end."
     },
     "reward": {
       "sticker_moment": "At the end, your child picks a sticker and places it on their collection sheet or finished worksheet. Let them decide where.",
-      "victory_dance": "One minute of free celebration dancing to their favorite song — or you clap the beat. What matters is celebrating together."
+      "victory_dance": "One minute of free celebration dancing to their favorite song — or you clap the beat. What matters is celebrating together.",
+      "high_five_tower": "Give each other a run of high-fives: up high, down low, to the side, both hands, slow then lightning fast. Count how many you land without a miss.",
+      "proud_moment": "Ask your child to show today's work to someone — a sibling, a grandparent, even over a call. In one sentence, they say what they did and what they're proudest of.",
+      "choose_the_song": "Your child picks a favourite song and you celebrate to it together: dancing, clapping, or just nodding along. One song is enough — it's their reward for today's work.",
+      "cheer_chant": "Make up a short cheer together using your child's name: “Mi-a, hooray, you rocked today!” Say it out loud with claps. You can end future sessions the same way.",
+      "reward_stamp": "Draw a little star or stamp on the back of your child's hand or on their collection sheet. Say out loud why they earned it — one specific thing they did well today."
     },
     "reflection": {
       "favorite_part": "Ask: \"What was your favorite part today? What was hardest?\" Listen without judging — the goal is putting the experience into words.",
-      "show_and_tell": "Your child shows the finished sheet to someone (other parent, sibling, grandparent on a call) and explains what they did. Pride locks in the learning."
+      "show_and_tell": "Your child shows the finished sheet to someone (other parent, sibling, grandparent on a call) and explains what they did. Pride locks in the learning.",
+      "thumbs_check": "Ask how today felt and have them answer with a thumb: up (good), sideways (okay), down (hard). There's no wrong answer — whatever they show, gently ask why.",
+      "one_word": "Ask your child to sum up today in a single word — anything: “funny”, “tricky”, “good”. You say one too. No need to explain it, but you can listen if they want to.",
+      "hardest_easiest": "Ask: what was the easiest thing today, and what was the hardest? Accept whatever they say — the point isn't performance, it's helping them notice how things went.",
+      "teach_me": "Ask your child to teach you one thing they did today — a shape, a move, a rule. When they're the “teacher”, they understand and remember it better.",
+      "tomorrow_wish": "Ask what they'd like to try or do again next time. It's not a promise, just a wish — but it shows you what they're drawn to and looking forward to."
     }
   },
   "worksheetsCatalog": {

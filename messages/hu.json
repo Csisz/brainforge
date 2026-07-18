@@ -112,31 +112,57 @@
     "warmup": {
       "simon_says": "Simon mondja",
       "finger_gym": "Ujjtorna",
-      "rhythm_copy": "Ritmus-utánzás"
+      "rhythm_copy": "Ritmus-utánzás",
+      "breathing_balloon": "Léggömb-légzés",
+      "mirror_me": "Tükör-játék",
+      "wake_up_stretch": "Ébredő nyújtózás",
+      "name_clap": "Név-tapsolás"
     },
     "movement": {
       "cross_crawl": "Keresztmászás",
       "ball_target": "Labdacélzás",
       "obstacle_course": "Akadálypálya",
-      "animal_walks": "Állat-járások"
+      "animal_walks": "Állat-járások",
+      "balloon_keep_up": "Léggömb a levegőben",
+      "hopscotch": "Ugróiskola",
+      "bean_bag_balance": "Fejen egyensúlyozás",
+      "freeze_dance": "Szoborjáték"
     },
     "memory": {
       "cup_shuffle": "Pohár-keverés",
       "whats_missing": "Mi hiányzik?",
-      "sound_sequence": "Hangsorozat"
+      "sound_sequence": "Hangsorozat",
+      "what_changed": "Mi változott?",
+      "story_chain": "Mesélő lánc",
+      "touch_and_tell": "Tapintós zsák",
+      "copy_the_tower": "Torony emlékezetből"
     },
     "creative": {
       "build_story": "Épített történet",
       "draw_theme": "Témarajzolás",
-      "cut_collage": "Vágott kollázs"
+      "cut_collage": "Vágott kollázs",
+      "shadow_shapes": "Árnyékfigurák",
+      "paper_fold": "Papírhajtogatás",
+      "object_faces": "Arcok tárgyakból",
+      "junk_build": "Kacat-építés"
     },
     "reward": {
       "sticker_moment": "Matrica-pillanat",
-      "victory_dance": "Győzelmi tánc"
+      "victory_dance": "Győzelmi tánc",
+      "high_five_tower": "Pacsi-torony",
+      "proud_moment": "Büszke pillanat",
+      "choose_the_song": "Én választok zenét",
+      "cheer_chant": "Saját rigmus",
+      "reward_stamp": "Csillag a kézre"
     },
     "reflection": {
       "favorite_part": "Kedvenc rész",
-      "show_and_tell": "Megmutatom, elmesélem"
+      "show_and_tell": "Megmutatom, elmesélem",
+      "thumbs_check": "Hüvelykujj-jelzés",
+      "one_word": "Egy szó a mairól",
+      "hardest_easiest": "Legnehezebb, legkönnyebb",
+      "teach_me": "Taníts meg rá",
+      "tomorrow_wish": "Holnapi kívánság"
     }
   },
   "auth": {
@@ -390,31 +416,57 @@
     "warmup": {
       "simon_says": "Állj a gyerekkel szembe, és adj utasításokat: „Simon mondja: érintsd meg az orrod!\" Csak akkor szabad végrehajtani, ha elhangzik a „Simon mondja\" — ha nem, és mégis megmozdul, kezdjétek újra. 5-6 kör elég bemelegítésnek.",
       "finger_gym": "Üljetek le egymással szemben. Mutasd: érintsd a hüvelykujjad sorban minden ujjadhoz, előbb lassan, majd gyorsabban, aztán mindkét kézzel egyszerre. A gyerek utánozza.",
-      "rhythm_copy": "Tapsolj el egy rövid ritmust (pl. taps-taps-szünet-taps), a gyerek visszatapsolja. Minden körben eggyel hosszabb ritmust adj. Ha megy, válts: taps helyett combra ütés vagy dobbantás."
+      "rhythm_copy": "Tapsolj el egy rövid ritmust (pl. taps-taps-szünet-taps), a gyerek visszatapsolja. Minden körben eggyel hosszabb ritmust adj. Ha megy, válts: taps helyett combra ütés vagy dobbantás.",
+      "breathing_balloon": "Üljetek le kényelmesen. Tegyétek a kezeteket a hasatokra, és lassan „fújjátok fel a léggömböt\" belégzéssel, majd engedjétek ki a levegőt. Ismételjétek ötször, egyre lassabban.",
+      "mirror_me": "Állj a gyerekkel szembe. Mozogj nagyon lassan — emeld a kezed, dőlj oldalra —, és a gyerek tükörként utánoz. Utána cseréljetek: ő vezet, te tükrözöl.",
+      "wake_up_stretch": "Nyújtózzatok nagyra, mint egy fa, majd gömbölyödjetek kicsire, mint egy mag. Rázzátok ki a kezeteket, lábatokat, végül vegyetek egy nagy levegőt. Kész a test a figyelemre.",
+      "name_clap": "Tapsoljátok el a nevetek szótagjait: Zsó-fi, két taps. Aztán próbáljatok más szavakat — állatokat, ételeket. Számoljátok meg, hány tapsból áll mindegyik."
     },
     "movement": {
       "cross_crawl": "Álljatok fel. A gyerek a jobb könyökével érinti a bal térdét, majd fordítva, lassan, váltakozva. 10-15 ismétlés. A keresztező mozgás a két agyfélteke együttműködését serkenti.",
       "ball_target": "Tegyél ki egy célt (kosár, edény, párna) pár lépésre. A gyerek labdával célba dob — találat után egy lépéssel hátrébb. Nehezítés: nem domináns kézzel vagy alsó dobással.",
       "obstacle_course": "Ragasztószalagból készíts vonalat a padlón: egyenes, cikkcakk, csiga. A gyerek végigmegy rajta lábujjhegyen, sarkon, oldalazva vagy ugrálva — te mondod, melyik szakaszon hogyan.",
-      "animal_walks": "Mondj állatokat, a gyerek úgy közlekedik: medvejárás (négykézláb, térd a levegőben), rákjárás (hason felfelé), békaugrás, gólyalépés. Szakaszonként 3-4 méter, 2-3 kör."
+      "animal_walks": "Mondj állatokat, a gyerek úgy közlekedik: medvejárás (négykézláb, térd a levegőben), rákjárás (hason felfelé), békaugrás, gólyalépés. Szakaszonként 3-4 méter, 2-3 kör.",
+      "balloon_keep_up": "Fújjatok fel egy léggömböt (vagy használjatok puha labdát). A gyerek üti a levegőben, hogy ne érjen földet. Nehezítsd: csak tenyérrel, csak fejjel, vagy ülve.",
+      "hopscotch": "Ragasztószalagból rajzoljatok a padlóra ugróiskolát (egy láb, két láb, egy láb). A gyerek végigugrálja oda-vissza. Számoljátok hangosan a mezőket.",
+      "bean_bag_balance": "Tegyetek egy kis puha tárgyat (zokni-gombóc, kispárna) a gyerek fejére. Sétáljon lassan a szobán át úgy, hogy ne essen le. Nehezítsd: lábujjhegyen vagy kanyarogva.",
+      "freeze_dance": "Tapsolj vagy dúdolj egy ritmust — a gyerek táncol. Amikor abbahagyod, szoborrá kell merevednie. Aki mozog, nevet egyet, és megy tovább. Váltsatok: ő állítson meg téged."
     },
     "memory": {
       "cup_shuffle": "Tegyél egy kis tárgyat az egyik felfordított pohár alá (3 pohárból). Lassan cserélgesd a poharakat, a gyerek követi a szemével, majd rámutat, hol a tárgy. Találat után gyorsíts vagy vegyél be negyedik poharat.",
       "whats_missing": "Tegyél ki 4-6 apró tárgyat az asztalra, a gyerek 10 másodpercig nézi. Takard le, vegyél el egyet, majd mutasd meg újra: mi hiányzik? Egyre több tárggyal nehezíthető.",
-      "sound_sequence": "Csukott szemmel hallgatózik a gyerek, te 2-3 hangot adsz ki sorban (taps, kulcscsörgés, kopogás). Ki kell találnia, mik voltak és milyen sorrendben. Fokozatosan bővítsd a sort."
+      "sound_sequence": "Csukott szemmel hallgatózik a gyerek, te 2-3 hangot adsz ki sorban (taps, kulcscsörgés, kopogás). Ki kell találnia, mik voltak és milyen sorrendben. Fokozatosan bővítsd a sort.",
+      "what_changed": "Ülj le a gyerekkel szemben. Amíg csukva a szeme, változtass meg valamit magadon — húzd fel a kabát ujját, vedd le a sapkád. Nyisd ki: mi változott? Cseréljetek.",
+      "story_chain": "Kezdd: „Elmentem a boltba, és vettem egy almát.\" A gyerek megismétli, és hozzátesz egy dolgot. Felváltva bővítsétek a listát, és próbáljátok végig felsorolni.",
+      "touch_and_tell": "Tegyetek 4-5 apró tárgyat egy zsákba vagy zokniba. A gyerek benyúl, kitapint egyet, és megpróbálja megnevezni, mielőtt kihúzza. Utána emlékezzen, mi volt benne.",
+      "copy_the_tower": "Építs kockákból egy kis tornyot (3-5 elem). A gyerek tíz másodpercig nézi, aztán takard le. Építse fel ő is ugyanúgy emlékezetből. Hasonlítsátok össze."
     },
     "creative": {
       "build_story": "Építsetek együtt kockákból egy helyszínt (vár, tanya, űrállomás), és közben a gyerek meséli, mi történik ott. Te csak kérdezz: „És ki lakik itt? Mi történt tegnap?\"",
       "draw_theme": "Hagyd szabadon rajzolni a mai téma világából ({theme}). Ne javíts bele — a végén kérd meg, hogy mesélje el, mit rajzolt.",
-      "cut_collage": "Régi újságból vagy színes papírból a gyerek formákat vág ki, és képpé ragasztja őket. A vágás maga is finommotorika-gyakorlat — a téma lehet a mai foglalkozásé."
+      "cut_collage": "Régi újságból vagy színes papírból a gyerek formákat vág ki, és képpé ragasztja őket. A vágás maga is finommotorika-gyakorlat — a téma lehet a mai foglalkozásé.",
+      "shadow_shapes": "Világítsatok egy lámpával vagy zseblámpával a falra. A kezetekkel formáljatok árnyékokat: kutya, madár, nyuszi. Találgassátok egymáséit, majd meséljetek róluk.",
+      "paper_fold": "Egy lap papírból hajtogassatok valamit: repülőt, csónakot, kalapot. Nem baj, ha nem tökéletes — a lényeg a pontos hajtás. Utána próbáljátok ki, működik-e.",
+      "object_faces": "Gyűjtsetek pár apró tárgyat (gombok, kavicsok, tészta, levelek). Rakjatok ki belőlük egy arcot vagy állatot az asztalon. Kérdezd meg, kit ábrázol, és milyen a kedve.",
+      "junk_build": "Tegyetek elő pár tiszta háztartási hulladékot (doboz, kupak, WC-papír gurigája). A gyerek épít belőle valamit — járművet, robotot, várat. Ne irányítsd, csak kérdezz rá a végén."
     },
     "reward": {
       "sticker_moment": "A foglalkozás végén a gyerek matricát választ és felragasztja a gyűjtőlapjára vagy a kész munkalapjára. Hagyd, hogy ő döntse el, hová.",
-      "victory_dance": "Egy perc szabad örömtánc a gyerek kedvenc zenéjére — vagy zene nélkül, te tapsolod a ritmust. A lényeg a közös ünneplés."
+      "victory_dance": "Egy perc szabad örömtánc a gyerek kedvenc zenéjére — vagy zene nélkül, te tapsolod a ritmust. A lényeg a közös ünneplés.",
+      "high_five_tower": "Adjatok egymásnak egy sor pacsit: fent, lent, oldalt, két kézzel, lassan majd villámgyorsan. Számoljátok, hányat sikerül elvétés nélkül.",
+      "proud_moment": "Kérd meg a gyereket, mutassa meg a mai munkáját valakinek — testvérnek, nagyszülőnek, akár telefonon. Mondja el egy mondatban, mit csinált, és mire a legbüszkébb.",
+      "choose_the_song": "A gyerek választ egy kedvenc dalt, és együtt ünneplitek vele: tánccal, tapssal vagy csak fejbólogatással. Egy szám elég — ez az ő jutalma a mai munkáért.",
+      "cheer_chant": "Találjatok ki együtt egy rövid rigmust a gyerek nevével: „Zsó-fi, hajrá, szuper volt ma!\" Mondjátok el hangosan, tapssal. Legközelebb is ezzel zárhatjátok a foglalkozást.",
+      "reward_stamp": "Rajzolj egy kis csillagot vagy pecsétet a gyerek kézfejére vagy a gyűjtőlapjára. Mondd ki hangosan, miért kapta — egy konkrét dologért, amit ma ügyesen csinált."
     },
     "reflection": {
       "favorite_part": "Kérdezd meg: „Mi volt ma a kedvenc részed? Mi volt a legnehezebb?\" Hallgasd végig, ne értékeld — a cél, hogy szavakba öntse az élményt.",
-      "show_and_tell": "A gyerek megmutatja a kész lapját valakinek (másik szülő, testvér, akár videóhívásban nagyszülő), és elmondja, mit csinált. A büszkeség rögzíti a tanulást."
+      "show_and_tell": "A gyerek megmutatja a kész lapját valakinek (másik szülő, testvér, akár videóhívásban nagyszülő), és elmondja, mit csinált. A büszkeség rögzíti a tanulást.",
+      "thumbs_check": "Kérdezd meg, milyen volt a mai foglalkozás, és jelezze hüvelykujjal: fel (jó), oldalra (közepes), le (nehéz). Nincs rossz válasz — bármit mutat, kérdezz rá: miért?",
+      "one_word": "Kérd meg a gyereket, foglalja össze a mai foglalkozást egyetlen szóban — bármi lehet: „vicces\", „nehéz\", „jó\". Te is mondj egyet. Nem kell megmagyarázni, de meghallgathatod.",
+      "hardest_easiest": "Kérdezd meg: mi volt ma a legkönnyebb, és mi volt a legnehezebb? Fogadd el, bármit válaszol — a cél nem a teljesítmény, hanem hogy a gyerek észrevegye, mi hogyan ment.",
+      "teach_me": "Kérd meg a gyereket, tanítson meg neked egy dolgot, amit ma csinált — egy formát, egy mozdulatot, egy szabályt. Ha ő a „tanár\", jobban megérti és megjegyzi.",
+      "tomorrow_wish": "Kérdezd meg, mit szeretne legközelebb kipróbálni vagy újra csinálni. Nem ígéret, csak egy kívánság — de megmutatja, mi érdekli, és mihez van kedve."
     }
   },
   "worksheetsCatalog": {
