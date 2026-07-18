@@ -472,7 +472,9 @@
     "title": "Elfogyott a heti ingyenes kereted",
     "body": "Az ingyenes csomagban hetente 3 feladatlapot készíthetsz. A foglalkozás többi része megvan — csak a feladatlap vár.",
     "unlockAt": "A következő ingyenes feladatlap {date}-kor nyílik meg.",
-    "cta": "Nézd meg a Premium csomagot"
+    "cta": "Nézd meg a Premium csomagot",
+    "betaNotice": "A fizetős csomagok hamarosan érkeznek — a béta idején írj nekünk, és beállítjuk.",
+    "betaContact": "Írj nekünk"
   },
   "children": {
     "addChild": "Új gyerek",

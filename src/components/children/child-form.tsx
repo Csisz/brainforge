@@ -10,6 +10,7 @@ import { AVATARS, type AvatarId } from "@/lib/children/avatar-list";
 import { createChild, updateChild } from "@/lib/children/actions";
 import { isValidBirthMonth } from "@/lib/children/age";
 import { BirthMonthPicker } from "@/components/children/birth-month-picker";
+import { UpgradeNotice } from "@/components/plan/upgrade-notice";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,10 +36,14 @@ export function ChildForm({
   mode,
   childId,
   initial,
+  stripeConfigured = true,
 }: {
   mode: "create" | "edit";
   childId?: string;
   initial?: ChildFormValues;
+  /** Beta runs without Stripe — the child-limit prompt then shows the beta
+   * notice instead of a plan CTA that dead-ends (Sprint 7 M8). */
+  stripeConfigured?: boolean;
 }) {
   const t = useTranslations("onboarding");
   const tThemes = useTranslations("themes");
@@ -109,10 +114,13 @@ export function ChildForm({
           </span>
           <CardTitle>{t("childLimit.title")}</CardTitle>
           <p className="max-w-sm text-sm text-ink-soft">{t("childLimit.body")}</p>
+          {!stripeConfigured && <UpgradeNotice className="mt-1 flex flex-col items-center" />}
           <div className="mt-2 flex gap-2">
-            <Button asChild>
-              <Link href="/app/settings">{t("childLimit.cta")}</Link>
-            </Button>
+            {stripeConfigured && (
+              <Button asChild>
+                <Link href="/app/settings">{t("childLimit.cta")}</Link>
+              </Button>
+            )}
             <Button asChild variant="outline">
               <Link href="/app">{t("childLimit.back")}</Link>
             </Button>

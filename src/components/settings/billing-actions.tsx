@@ -5,19 +5,20 @@ import { useTranslations } from "next-intl";
 import { createCheckoutSession, createPortalSession } from "@/lib/billing/actions";
 import type { PurchasableTier } from "@/lib/stripe/config";
 import { Button } from "@/components/ui/button";
+import { UpgradeNotice } from "@/components/plan/upgrade-notice";
 
 /**
  * Plan controls. A free account is offered the two paid tiers; a paying account
  * gets the Stripe customer portal to manage or cancel. When Stripe is not
- * configured (local dev without keys), the actions return `billing_unavailable`
- * and we show a quiet note instead of dead buttons.
+ * configured (the beta runs without it), we show the beta notice instead of dead
+ * checkout buttons (Sprint 7 M8).
  */
 export function BillingActions({ tier, configured }: { tier: string; configured: boolean }) {
   const t = useTranslations("billing");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  if (!configured) return <p className="text-sm text-ink-soft">{t("unavailable")}</p>;
+  if (!configured) return <UpgradeNotice />;
 
   const go = (run: () => Promise<{ url?: string; error?: string }>) =>
     startTransition(async () => {

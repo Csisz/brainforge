@@ -472,7 +472,9 @@
     "title": "You've used this week's free worksheets",
     "body": "The free plan includes 3 worksheets a week. The rest of the session is ready — only the worksheet is waiting.",
     "unlockAt": "Your next free worksheet unlocks {date}.",
-    "cta": "See the Premium plan"
+    "cta": "See the Premium plan",
+    "betaNotice": "Paid plans are coming soon — during the beta, write to us and we'll set it up for you.",
+    "betaContact": "Email us"
   },
   "children": {
     "addChild": "Add child",

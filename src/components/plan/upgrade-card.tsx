@@ -2,6 +2,8 @@ import { getTranslations, getFormatter } from "next-intl/server";
 import { Sparkles } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { UpgradeNotice } from "@/components/plan/upgrade-notice";
+import { stripeConfigured } from "@/lib/stripe/config";
 
 /**
  * Shown in place of a gated worksheet. No dark patterns: it states plainly that
@@ -24,9 +26,15 @@ export async function UpgradeCard({ unlockAt }: { unlockAt: Date | null }) {
           {t("unlockAt", { date: format.dateTime(unlockAt, { dateStyle: "medium", timeStyle: "short" }) })}
         </p>
       )}
-      <Button asChild className="mt-4">
-        <Link href="/app/settings">{t("cta")}</Link>
-      </Button>
+      {/* Beta runs without Stripe: point to settings only when there is a real
+          plan to buy; otherwise say plans are coming (Sprint 7 M8). */}
+      {stripeConfigured() ? (
+        <Button asChild className="mt-4">
+          <Link href="/app/settings">{t("cta")}</Link>
+        </Button>
+      ) : (
+        <UpgradeNotice className="mt-4 flex flex-col items-center" />
+      )}
     </div>
   );
 }

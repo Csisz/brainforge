@@ -472,7 +472,9 @@
     "title": "Deine kostenlosen Arbeitsblätter dieser Woche sind aufgebraucht",
     "body": "Der kostenlose Plan enthält 3 Arbeitsblätter pro Woche. Der Rest der Einheit ist fertig — nur das Arbeitsblatt wartet.",
     "unlockAt": "Dein nächstes kostenloses Arbeitsblatt gibt es am {date}.",
-    "cta": "Premium-Plan ansehen"
+    "cta": "Premium-Plan ansehen",
+    "betaNotice": "Bezahlpläne kommen bald — schreib uns während der Beta, und wir richten es für dich ein.",
+    "betaContact": "Schreib uns"
   },
   "children": {
     "addChild": "Kind hinzufügen",
