@@ -226,7 +226,9 @@ enable_signup = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# Sprint 9 M0: password auth requires email confirmation — signUp creates no
+# session until the address is confirmed via the emailed link.
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
@@ -257,6 +259,11 @@ otp_expiry = 3600
 [auth.email.template.magic_link]
 subject = "Belépési link a Kalmo Kids-hez"
 content_path = "./supabase/templates/magic_link.html"
+
+# Sprint 9 M0: signup email-confirmation template (email+password registration).
+[auth.email.template.confirmation]
+subject = "Erősítsd meg az e-mail-címed – Kalmo Kids"
+content_path = "./supabase/templates/confirm_signup.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

@@ -177,7 +177,57 @@
     "checkEmailBody": "Wir haben einen Anmeldelink an {email} gesendet.",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     "checkEmailLocalHint": "In der lokalen Entwicklung landet die E-Mail im Mailpit-Testpostfach, nicht in deinem echten — öffne <url>http://localhost:54324</url>",
-    "errorWithReason": "Anmeldelink konnte nicht gesendet werden: {reason}"
+    "errorWithReason": "Anmeldelink konnte nicht gesendet werden: {reason}",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Mindestens 6 Zeichen",
+    "confirmPasswordLabel": "Passwort bestätigen",
+    "login": {
+      "title": "Anmelden",
+      "subtitle": "Willkommen zurück — melde dich an, um fortzufahren.",
+      "submit": "Anmelden",
+      "submitting": "Anmeldung…",
+      "forgotPassword": "Passwort vergessen?",
+      "noAccount": "Noch kein Konto?",
+      "registerLink": "Erstelle eins"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Registriere dich, um die heutige Einheit zu starten.",
+      "submit": "Registrieren",
+      "submitting": "Konto wird erstellt…",
+      "haveAccount": "Schon ein Konto?",
+      "loginLink": "Anmelden",
+      "checkEmailTitle": "Bestätige deine E-Mail",
+      "checkEmailBody": "Wir haben einen Bestätigungslink an {email} gesendet. Klick ihn an, komm dann zurück und melde dich an."
+    },
+    "forgot": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Gib deine E-Mail ein, und wir senden dir einen Link zum Zurücksetzen.",
+      "submit": "Link senden",
+      "submitting": "Wird gesendet…",
+      "sentTitle": "Überprüfe deine E-Mails",
+      "sentBody": "Falls ein Konto für {email} existiert, ist ein Link zum Zurücksetzen unterwegs.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "reset": {
+      "title": "Neues Passwort festlegen",
+      "subtitle": "Wähle ein neues Passwort für dein Konto.",
+      "submit": "Passwort aktualisieren",
+      "submitting": "Wird aktualisiert…",
+      "successTitle": "Passwort aktualisiert",
+      "successBody": "Du kannst dich jetzt mit deinem neuen Passwort anmelden.",
+      "toLogin": "Zur Anmeldung",
+      "invalidLink": "Dieser Link ist ungültig oder abgelaufen. Fordere auf der Anmeldeseite einen neuen an."
+    },
+    "confirmedBanner": "E-Mail bestätigt — du kannst dich jetzt anmelden.",
+    "errors": {
+      "invalidCredentials": "Falsche E-Mail oder falsches Passwort.",
+      "emailNotConfirmed": "Bitte bestätige zuerst deine E-Mail — den Bestätigungslink findest du in deinem Posteingang.",
+      "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+      "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+      "emailInUse": "Mit dieser E-Mail existiert bereits ein Konto. Versuche dich anzumelden.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
   },
   "onboarding": {
     "title": "Lern dein Kind kennen lassen",

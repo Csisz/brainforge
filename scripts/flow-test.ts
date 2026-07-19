@@ -1,8 +1,9 @@
 /**
  * M5 acceptance flow test (headless).
  * Drives the real chain against local Supabase:
- *   signup (magic link via Mailpit) → child → session containing a dual_path
- *   worksheet → print render → feedback → achievement row.
+ *   signup (email + password, email confirmed via the admin API) → child →
+ *   session containing a dual_path worksheet → print render → feedback →
+ *   achievement row.
  *
  * Run: npx tsx scripts/flow-test.ts
  */
@@ -22,7 +23,6 @@ import { freshSeed } from "../src/lib/random";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const MAILPIT = "http://localhost:54324";
 const OUT = process.env.FLOW_OUT ?? ".";
 
 let failures = 0;
@@ -38,32 +38,33 @@ async function main() {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  // 1 ── SIGNUP via magic link -------------------------------------------
+  // 1 ── SIGNUP with email + password (Sprint 9 M0) ----------------------
+  // Confirm email is ON, so signUp creates no session. The headless test stands
+  // in for the emailed confirmation link by confirming the address via the admin
+  // API, then signs in with the password — the real product's post-confirm path.
   step(`1. signup — ${email}`);
-  await fetch(`${MAILPIT}/api/v1/messages`, { method: "DELETE" });
-  const { error: otpErr } = await supabase.auth.signInWithOtp({
-    email,
-    options: { shouldCreateUser: true },
-  });
-  ok("magic link requested", !otpErr, otpErr?.message);
-  if (otpErr) return;
-
-  // Poll Mailpit for the message.
-  let token = "";
-  for (let i = 0; i < 25 && !token; i++) {
-    await new Promise((r) => setTimeout(r, 200));
-    const list = await (await fetch(`${MAILPIT}/api/v1/messages?limit=1`)).json();
-    if (!list.messages?.length) continue;
-    const raw = await (await fetch(`${MAILPIT}/api/v1/message/${list.messages[0].ID}`)).json();
-    const body = `${raw.Text ?? ""} ${raw.HTML ?? ""}`;
-    token = (body.match(/token_hash=([a-zA-Z0-9._-]+)/) ?? body.match(/[?&]token=([a-zA-Z0-9._-]+)/) ?? [])[1] ?? "";
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
+    ok("SUPABASE_SERVICE_ROLE_KEY available for confirming the signup", false, "set it in .env.local");
+    return;
   }
-  ok("magic link delivered to Mailpit", Boolean(token), token ? `token_hash=${token.slice(0, 10)}…` : "no token found");
-  if (!token) return;
+  const admin = createClient(SUPABASE_URL, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
 
-  const { data: verified, error: vErr } = await supabase.auth.verifyOtp({ token_hash: token, type: "email" });
-  ok("magic link verifies → session", !vErr && Boolean(verified?.user), vErr?.message);
-  const user = verified!.user!;
+  const password = "flow-test-pw-9182";
+  const { data: signUpData, error: suErr } = await supabase.auth.signUp({ email, password });
+  ok("signUp creates a user", !suErr && Boolean(signUpData?.user), suErr?.message);
+  ok("...with no session until the email is confirmed", signUpData?.session === null);
+  const userId = signUpData?.user?.id;
+  if (!userId) return;
+
+  // Stand in for clicking the confirmation link: confirm the address.
+  const { error: confErr } = await admin.auth.admin.updateUserById(userId, { email_confirm: true });
+  ok("the confirmation link marks the email confirmed", !confErr, confErr?.message);
+
+  const { data: signIn, error: siErr } = await supabase.auth.signInWithPassword({ email, password });
+  ok("email + password signs in → session", !siErr && Boolean(signIn?.user), siErr?.message);
+  if (siErr || !signIn?.user) return;
+  const user = signIn.user;
 
   // The signup trigger must have created profile + free subscription.
   const { data: prof } = await supabase.from("profiles").select("id").eq("id", user.id).single();
@@ -506,11 +507,7 @@ async function main() {
   // only the explicit typed-confirm action there deletes. A bare GET on the link
   // must never delete — assert it while the account still exists.
   step("10. deletion link safety");
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceKey) {
-    ok("SUPABASE_SERVICE_ROLE_KEY available for the deletion checks", false, "set it in .env.local");
-  } else {
-    const admin0 = createClient(SUPABASE_URL, serviceKey, { auth: { persistSession: false } });
+  {
     const { signDeletionToken } = await import("../src/lib/account/deletion-token");
     const delToken = signDeletionToken(user.id);
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -527,7 +524,7 @@ async function main() {
     if (!reached) {
       console.log(`  --  skipped: confirmation page unreachable at ${appUrl} (run \`npm run dev\`)`);
     } else {
-      const stillThere = Boolean((await admin0.auth.admin.getUserById(user.id)).data.user);
+      const stillThere = Boolean((await admin.auth.admin.getUserById(user.id)).data.user);
       ok("a bare GET on the deletion link never deletes the account", stillThere, `status=${status}`);
       ok("...the link routes to a confirmation page, not a delete", status < 500);
     }
@@ -537,10 +534,7 @@ async function main() {
   // Exactly what deleteAccount() does after the confirmation page: the auth admin
   // deletes user.id and the DB cascades everything owned by the account.
   step("11. account deletion");
-  if (!serviceKey) {
-    ok("SUPABASE_SERVICE_ROLE_KEY available for the deletion check", false, "set it in .env.local");
-  } else {
-    const admin = createClient(SUPABASE_URL, serviceKey, { auth: { persistSession: false } });
+  {
     const childrenBefore = (await admin.from("children").select("id").eq("owner_id", user.id)).data ?? [];
     ok("the account has data to erase before deletion", childrenBefore.length > 0, `${childrenBefore.length} children`);
 

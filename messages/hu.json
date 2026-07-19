@@ -177,7 +177,57 @@
     "checkEmailBody": "Küldtünk egy belépési linket ide: {email}.",
     "errorGeneric": "Hiba történt. Próbáld újra.",
     "checkEmailLocalHint": "Lokális fejlesztésben a levél nem a valódi postafiókodba érkezik — nyisd meg a Mailpitet: <url>http://localhost:54324</url>",
-    "errorWithReason": "Nem sikerült elküldeni a belépő linket: {reason}"
+    "errorWithReason": "Nem sikerült elküldeni a belépő linket: {reason}",
+    "passwordLabel": "Jelszó",
+    "passwordPlaceholder": "Legalább 6 karakter",
+    "confirmPasswordLabel": "Jelszó megerősítése",
+    "login": {
+      "title": "Bejelentkezés",
+      "subtitle": "Üdv újra — jelentkezz be a folytatáshoz.",
+      "submit": "Bejelentkezés",
+      "submitting": "Bejelentkezés…",
+      "forgotPassword": "Elfelejtetted a jelszavad?",
+      "noAccount": "Még nincs fiókod?",
+      "registerLink": "Hozz létre egyet"
+    },
+    "register": {
+      "title": "Fiók létrehozása",
+      "subtitle": "Regisztrálj, hogy elkezdhesd a mai foglalkozást.",
+      "submit": "Regisztráció",
+      "submitting": "Fiók létrehozása…",
+      "haveAccount": "Már van fiókod?",
+      "loginLink": "Jelentkezz be",
+      "checkEmailTitle": "Erősítsd meg az e-mail-címed",
+      "checkEmailBody": "Küldtünk egy megerősítő linket ide: {email}. Kattints rá, majd gyere vissza és jelentkezz be."
+    },
+    "forgot": {
+      "title": "Jelszó visszaállítása",
+      "subtitle": "Add meg az e-mail-címed, és küldünk egy visszaállító linket.",
+      "submit": "Visszaállító link küldése",
+      "submitting": "Küldés…",
+      "sentTitle": "Nézd meg az e-mailjeidet",
+      "sentBody": "Ha van fiók a(z) {email} címhez, a visszaállító link úton van.",
+      "backToLogin": "Vissza a bejelentkezéshez"
+    },
+    "reset": {
+      "title": "Új jelszó beállítása",
+      "subtitle": "Válassz új jelszót a fiókodhoz.",
+      "submit": "Jelszó frissítése",
+      "submitting": "Frissítés…",
+      "successTitle": "Jelszó frissítve",
+      "successBody": "Mostantól az új jelszavaddal jelentkezhetsz be.",
+      "toLogin": "Tovább a bejelentkezéshez",
+      "invalidLink": "Ez a visszaállító link érvénytelen vagy lejárt. Kérj újat a bejelentkezési oldalon."
+    },
+    "confirmedBanner": "E-mail-cím megerősítve — most már bejelentkezhetsz.",
+    "errors": {
+      "invalidCredentials": "Hibás e-mail-cím vagy jelszó.",
+      "emailNotConfirmed": "Előbb erősítsd meg az e-mail-címed — a megerősítő linket az e-mailjeidben találod.",
+      "passwordTooShort": "A jelszónak legalább 6 karakter hosszúnak kell lennie.",
+      "passwordMismatch": "A két jelszó nem egyezik.",
+      "emailInUse": "Ezzel az e-mail-címmel már létezik fiók. Próbálj inkább bejelentkezni.",
+      "generic": "Hiba történt. Próbáld újra."
+    }
   },
   "onboarding": {
     "title": "Ismerkedjünk meg gyermekeddel",

@@ -26,7 +26,7 @@ export default async function PublicLayout({
               <Link href="/login">{t("nav.login")}</Link>
             </Button>
             <Button asChild size="sm">
-              <Link href="/login">{t("nav.signupCta")}</Link>
+              <Link href="/register">{t("nav.signupCta")}</Link>
             </Button>
           </div>
         </div>
