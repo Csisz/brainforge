@@ -4,6 +4,7 @@ import { allGenerators } from "./registry";
 import { composeWorksheet, defaultRenderOptions } from "./page";
 import { createRng, freshSeed } from "@/lib/random";
 import type { Age, Difficulty, ThemeId } from "./types";
+import type { GalleryItem } from "./gallery-types";
 
 /**
  * Marketing-page rendering (landing gallery). Kept server-side per the
@@ -13,8 +14,6 @@ import type { Age, Difficulty, ThemeId } from "./types";
 const DEMO_AGE: Age = 5;
 const DEMO_DIFFICULTY: Difficulty = 3;
 const DEMO_THEME: ThemeId = "nature";
-
-export type GalleryItem = { generatorId: string; seed: string; svg: string };
 
 export async function regenerateGallery(locale: string): Promise<GalleryItem[]> {
   const ctx = {

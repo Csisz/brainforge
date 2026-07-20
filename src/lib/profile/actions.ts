@@ -3,7 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import type { PaperSize } from "@/lib/worksheets/types";
 
-export type UpdateProfileInput = {
+// Internal-only input type — not exported (see the "use server" export rule).
+type UpdateProfileInput = {
   displayName: string;
   paperSize: PaperSize;
 };

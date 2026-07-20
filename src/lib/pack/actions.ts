@@ -11,9 +11,8 @@ import { getGenerationAllowance, isRateLimited } from "@/lib/entitlements/querie
 import { packFits } from "@/lib/entitlements/limits";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
-import type { DevelopmentGoal, ThemeId } from "@/lib/worksheets/types";
-
-export type PackDays = 3 | 5 | 7;
+import type { DevelopmentGoal } from "@/lib/worksheets/types";
+import type { CreatePackInput } from "./types";
 
 /** A weekly pack draws worksheets from a broad goal set so the days vary; the
  * composer's own anti-repetition (now accumulated across the pack) keeps them
@@ -23,14 +22,6 @@ const PACK_GOALS: DevelopmentGoal[] = [
   "attention", "fine_motor", "visual_perception", "problem_solving", "pre_writing", "math_thinking",
 ];
 const PACK_MATERIALS: MaterialId[] = ["pencil", "paper", "crayons", "scissors", "glue", "blocks", "tape"];
-
-export type CreatePackInput = {
-  childId: string;
-  days: PackDays;
-  durationMin: 10 | 20 | 30 | 45;
-  theme: ThemeId;
-  locale: string;
-};
 
 /**
  * Compose a whole "Heti csomag" at once (Sprint 8 M2). Calibration is FIXED for

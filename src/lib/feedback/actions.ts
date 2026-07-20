@@ -1,26 +1,17 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import type { SessionSlot } from "@/lib/activities/engine";
 import { evaluateAchievements } from "@/lib/achievements";
 import { runCalibrationForSession } from "@/lib/adaptive/queries";
 import { getChild } from "@/lib/children/queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
-import { EASE_SUCCESS, type Ease } from "./ease";
+import { EASE_SUCCESS } from "./ease";
+import type { SlotFeedback } from "./types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-// EASE_SUCCESS and the Ease type live in ./ease — a "use server" file may export
-// only async functions, so they cannot be declared or re-exported here. Callers
-// import them from "@/lib/feedback/ease" directly.
-
-export type SlotFeedback = {
-  slotIndex: number;
-  slotKind: SessionSlot["kind"];
-  completed: boolean;
-  enjoyment: number | null;
-  /** Worksheet slots only — drives adaptive calibration. */
-  ease?: Ease | null;
-};
+// EASE_SUCCESS (./ease) and SlotFeedback (./types) live outside this module — a
+// "use server" file may export only async functions, so no value or type is
+// declared or re-exported here. Callers import them from those modules directly.
 
 export async function submitSessionFeedback(
   sessionId: string,

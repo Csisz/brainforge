@@ -5,7 +5,9 @@ import { canAddChild, type PlanTier } from "@/lib/entitlements/limits";
 import { sendWelcomeEmail } from "@/lib/email/welcome";
 import type { ThemeId } from "@/lib/worksheets/types";
 
-export type CreateChildInput = {
+// Internal-only input type — not exported: a "use server" file must export only
+// async functions (a stray non-async export fails at action-module load).
+type CreateChildInput = {
   nickname: string;
   birthMonth: string; // "YYYY-MM" from <input type="month">
   avatar: string;
@@ -53,7 +55,7 @@ export async function createChild(input: CreateChildInput): Promise<{ error?: st
   return {};
 }
 
-export type UpdateChildInput = {
+type UpdateChildInput = {
   nickname: string;
   birthMonth: string; // "YYYY-MM" from the birth-month dropdowns
   avatar: string;

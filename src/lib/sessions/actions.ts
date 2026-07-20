@@ -11,7 +11,8 @@ import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
 
-export type StartSessionInput = {
+// Internal-only input type — not exported (see the "use server" export rule).
+type StartSessionInput = {
   childId: string;
   goals: DevelopmentGoal[];
   theme: ThemeId;

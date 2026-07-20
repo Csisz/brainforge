@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { RefreshCw } from "lucide-react";
-import { regenerateGallery, type GalleryItem } from "@/lib/worksheets/actions";
+import { regenerateGallery } from "@/lib/worksheets/actions";
+import type { GalleryItem } from "@/lib/worksheets/gallery-types";
 import { Button } from "@/components/ui/button";
 import { SeedChip } from "./seed-chip";
 
