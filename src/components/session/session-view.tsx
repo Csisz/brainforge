@@ -8,7 +8,8 @@ import { activityMaterials, type StoredSessionSlot, type MaterialId } from "@/li
 import { MATERIALS } from "@/lib/activities/material-list";
 import { SLOT_ICON } from "@/lib/activities/slot-icons";
 import type { ThemeId } from "@/lib/worksheets/types";
-import { submitSessionFeedback, type SlotFeedback, type Ease } from "@/lib/feedback/actions";
+import { submitSessionFeedback, type SlotFeedback } from "@/lib/feedback/actions";
+import type { Ease } from "@/lib/feedback/ease";
 import { HowToPlay } from "@/components/session/how-to-play";
 import { RewardChartPicker } from "@/components/dashboard/reward-chart-picker";
 import type { RewardFamily } from "@/lib/worksheets/generators/reward-chart";

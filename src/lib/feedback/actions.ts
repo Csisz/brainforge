@@ -6,19 +6,12 @@ import { evaluateAchievements } from "@/lib/achievements";
 import { runCalibrationForSession } from "@/lib/adaptive/queries";
 import { getChild } from "@/lib/children/queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
+import { EASE_SUCCESS, type Ease } from "./ease";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/**
- * How the sheet went, in the parent's words. We never ask a parent to score
- * their child out of 100 — they pick one of three honest descriptions and we
- * map it to the success signal the calibration engine needs.
- */
-export const EASE_SUCCESS: Record<Ease, number> = {
-  easy: 1,
-  ok: 0.65,
-  hard: 0.3,
-};
-export type Ease = "easy" | "ok" | "hard";
+// EASE_SUCCESS and the Ease type live in ./ease — a "use server" file may export
+// only async functions, so they cannot be declared or re-exported here. Callers
+// import them from "@/lib/feedback/ease" directly.
 
 export type SlotFeedback = {
   slotIndex: number;

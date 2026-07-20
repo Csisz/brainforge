@@ -16,7 +16,7 @@ import { composeWorksheet, defaultRenderOptions } from "../src/lib/worksheets/pa
 import { evaluateAchievements, ACHIEVEMENT_KINDS } from "../src/lib/achievements";
 import { runCalibrationForSession, bestGeneratorForGoal, recentGeneratorsForGoal } from "../src/lib/adaptive/queries";
 import { coldStartLevel } from "../src/lib/adaptive/engine";
-import { EASE_SUCCESS } from "../src/lib/feedback/actions";
+import { EASE_SUCCESS } from "../src/lib/feedback/ease";
 import { getGenerationAllowance } from "../src/lib/entitlements/queries";
 import { applyStripeEvent } from "../src/lib/stripe/webhook";
 import { freshSeed } from "../src/lib/random";
