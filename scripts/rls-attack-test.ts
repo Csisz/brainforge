@@ -14,14 +14,13 @@
  * subscription), plus their own child/session/worksheet/feedback/achievement/
  * calibration/ledger rows; an anon client (no auth); a service-role client.
  *
- * Output reads as a matrix: table | actor | operation → expected.
+ * Output reads as a matrix: table | actor | operation → expected. Every assertion
+ * is a security regression guard — `regressions` must always be 0.
  *
- * TWO tallies, kept separate on purpose:
- *   • CONFIDENTIALITY failures  — a real regression. Must always be 0.
- *   • KNOWN GAP (A3b)           — the cross-tenant-reference-write hole this suite
- *                                 surfaced. Asserted at its SECURE expectation, so
- *                                 it FAILS (holds CI red) until the separate A3b
- *                                 RLS fix lands. Not papered over.
+ * History: A3 first shipped this suite RED on four isolated "known gap" assertions
+ * (cross-tenant reference writes). A3b closed that gap (with-check reference
+ * integrity, migration 0009); those four assertions were flipped to their secure
+ * expectation and are now permanent guards proving the gap stays closed.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
@@ -31,21 +30,18 @@ const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 let regressions = 0;
-let gaps = 0;
 const pad = (s: string, n: number) => (s.length >= n ? s : s + " ".repeat(n - s.length));
 
-/** A confidentiality/self-access assertion. A failure here is a real regression. */
+/** A confidentiality/self-access/reference-integrity assertion. A failure here is
+ *  a real security regression. */
 const check = (table: string, actor: string, op: string, expected: string, pass: boolean, detail = "") => {
   console.log(`${pass ? "  ok  " : " FAIL "} ${pad(table, 18)} ${pad(actor, 6)} ${pad(op, 26)} → ${expected}${detail ? "   (" + detail + ")" : ""}`);
   if (!pass) regressions++;
 };
 
-/** A cross-tenant-reference assertion — the known A3b gap. Asserted secure, so a
- *  failure (gap still present) is EXPECTED for now and holds the suite red. */
-const gapCheck = (table: string, op: string, secure: boolean, detail = "") => {
-  console.log(`${secure ? "  ok  " : " GAP! "} ${pad(table, 18)} ${pad("userB", 6)} ${pad(op, 26)} → rejected${detail ? "   (" + detail + ")" : ""}`);
-  if (!secure) gaps++;
-};
+/** An insert is "rejected" when it neither errored-out-clean nor created a row. */
+const rejected = (res: { error: unknown; data: unknown }) =>
+  Boolean(res.error) || (Array.isArray(res.data) ? res.data.length : 0) === 0;
 
 const step = (n: string) => console.log(`\n── ${n}`);
 const rowsOf = (res: { data: unknown }) => (Array.isArray(res.data) ? res.data.length : 0);
@@ -177,20 +173,22 @@ async function main() {
     check("children", "anon", "DELETE userA row", "0 rows", rowsOf(await anon.from("children").delete().eq("id", fxA.child).select("id")) === 0);
   }
 
-  // ── KNOWN GAP (A3b) — isolated so it's obvious THIS is what holds CI red ──
-  step("⚠ KNOWN GAP (A3b) — cross-tenant reference writes (must reject; RED until the A3b fix)");
+  // ── tenant reference integrity (A3b — closed) ──
+  // Permanent regression guard: userB creates its OWN row (owner_id = userB) that
+  // REFERENCES userA's child / session. The with check now requires the referenced
+  // row to belong to the caller, so every one of these must be REJECTED. (These
+  // were the four RED "known gap" assertions before A3b — kept, flipped to secure.)
+  step("tenant reference integrity — cross-tenant reference writes rejected (A3b)");
   {
-    // userB creates its OWN row (owner_id = userB) that REFERENCES userA's child /
-    // session. Secure expectation: rejected. Today only owner_id is checked, so
-    // these succeed — the gap. Rows land under userB and are cleaned by teardown.
     const s = await B.client.from("sessions").insert({ owner_id: B.id, child_id: fxA.child, goals: ["attention"], theme: "nature", duration_min: 20, difficulty: 3, seed: "xref-" + rnd(), plan: { slots: [] } }).select("id");
-    gapCheck("sessions", "INSERT ref userA.child", !s.error && rowsOf(s) === 0, s.error ? s.error.code : `created row ${(s.data?.[0]?.id ?? "").slice(0, 8)}`);
+    check("sessions", "userB", "INSERT ref userA.child", "rejected", rejected(s), s.error?.code ?? `created row ${(s.data?.[0]?.id ?? "").slice(0, 8)}`);
     const w = await B.client.from("worksheets").insert({ owner_id: B.id, child_id: fxA.child, generator_id: "maze", generator_version: 1, seed: "xref-" + rnd() }).select("id");
-    gapCheck("worksheets", "INSERT ref userA.child", !w.error && rowsOf(w) === 0, w.error ? w.error.code : `created row ${(w.data?.[0]?.id ?? "").slice(0, 8)}`);
+    check("worksheets", "userB", "INSERT ref userA.child", "rejected", rejected(w), w.error?.code ?? `created row ${(w.data?.[0]?.id ?? "").slice(0, 8)}`);
     const f = await B.client.from("feedback").insert({ owner_id: B.id, session_id: fxA.session, slot_index: 9, slot_kind: "worksheet", completed: true }).select("id");
-    gapCheck("feedback", "INSERT ref userA.session", !f.error && rowsOf(f) === 0, f.error ? f.error.code : `created row ${(f.data?.[0]?.id ?? "").slice(0, 8)}`);
+    check("feedback", "userB", "INSERT ref userA.session", "rejected", rejected(f), f.error?.code ?? `created row ${(f.data?.[0]?.id ?? "").slice(0, 8)}`);
+    // calibration PK is (child_id, goal) — this also proves the PK-squat is closed.
     const cal = await B.client.from("calibration").insert({ owner_id: B.id, child_id: fxA.child, goal: "problem_solving", level: 2 }).select("child_id");
-    gapCheck("calibration", "INSERT ref userA.child", !cal.error && rowsOf(cal) === 0, cal.error ? cal.error.code : "created row (PK squat on userA.child)");
+    check("calibration", "userB", "INSERT ref userA.child", "rejected", rejected(cal), cal.error?.code ?? "created row (PK squat!)");
   }
 
   // ── teardown — deleting the auth users cascades every owned row ──
@@ -200,11 +198,9 @@ async function main() {
   console.log("  test owners deleted (cascade removed all fixtures + gap rows)");
 
   console.log(`\n── SUMMARY`);
-  console.log(`  confidentiality / self-access:  ${regressions === 0 ? "ALL SECURE" : regressions + " REGRESSION(S) — investigate immediately"}`);
-  console.log(`  known gap (A3b, cross-ref):      ${gaps === 0 ? "closed ✓" : gaps + " assertion(s) failing — expected until the A3b RLS fix"}`);
-  const red = regressions > 0 || gaps > 0;
-  console.log(`\n${red ? "SUITE RED" : "ALL CHECKS PASSED"} — regressions=${regressions}, known-gaps=${gaps}`);
-  process.exit(red ? 1 : 0);
+  console.log(`  confidentiality / self-access / reference integrity:  ${regressions === 0 ? "ALL SECURE" : regressions + " REGRESSION(S) — investigate immediately"}`);
+  console.log(`\n${regressions === 0 ? "ALL CHECKS PASSED" : "SUITE RED"} — regressions=${regressions}`);
+  process.exit(regressions > 0 ? 1 : 0);
 }
 
 main().catch((e) => {
