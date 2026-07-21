@@ -37,13 +37,17 @@ export function PackForm({
   const [error, setError] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const [gated, setGated] = useState(false);
+  // One pack id per visit — a double-submit reuses it, so the server returns the
+  // same pack instead of building two (B1). Success redirects, so a new visit
+  // gets a fresh id.
+  const [packId] = useState(() => crypto.randomUUID());
 
   function submit() {
     startTransition(async () => {
       setError(false);
       setRateLimited(false);
       setGated(false);
-      const result = await createPack({ childId, days, durationMin, theme, locale });
+      const result = await createPack({ childId, days, durationMin, theme, packId, locale });
       if (result?.gated) return setGated(true);
       if (result?.error === "rate_limited") return setRateLimited(true);
       if (result?.error) return setError(true);

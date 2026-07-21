@@ -7,7 +7,6 @@ import { getRecentWorksheets, getRecentActivityKeys } from "@/lib/sessions/queri
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan } from "@/lib/adaptive/queries";
-import { reserveGeneration } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
@@ -77,59 +76,41 @@ export async function createPack(
     return plan;
   });
 
-  // Reserve the WHOLE pack atomically — all-or-nothing (Security A2). The RPC
-  // reserves N units only if all N fit under the free cap, so a 7-day pack that
-  // would exceed the allowance is declined whole (never a partial pack). Rate
-  // limit hard-fails; being over the weekly cap soft-gates to the upgrade notice.
-  const worksheetCount = plans.reduce(
-    (n, p) => n + p.slots.filter((s) => s.kind === "worksheet").length,
-    0,
-  );
-  const reservation = await reserveGeneration(user.id, { count: worksheetCount });
-  if (reservation.reason === "rate_limited") return { error: "rate_limited" };
-  if (!reservation.allowed) return { gated: true };
-
-  // Persist: one pack_id, N planned sessions + their worksheet rows (which count
-  // toward the weekly limit, exactly like a normal session's).
-  const packId = crypto.randomUUID();
-  for (const plan of plans) {
-    const { data: session, error: sErr } = await supabase
-      .from("sessions")
-      .insert({
-        child_id: input.childId,
-        owner_id: user.id,
-        goals: PACK_GOALS,
-        theme: input.theme,
-        duration_min: input.durationMin,
-        materials: PACK_MATERIALS,
-        difficulty,
-        seed: freshSeed(),
-        plan,
-        status: "planned",
-        worksheets_gated: false,
-        pack_id: packId,
-      })
-      .select("id")
-      .single();
-    if (sErr || !session) return { error: sErr?.message ?? "session_insert_failed" };
-
-    const worksheetRows = plan.slots
+  // Persist the WHOLE pack in one transaction via the RPC (Stability B1): all N
+  // sessions + their worksheets are inserted all-or-nothing, and the quota is
+  // reserved for the pack's worksheet count in the SAME transaction — so a failure
+  // (or an over-cap decline) leaves neither a partial pack nor a consumed unit.
+  // The client-supplied pack_id is the idempotency key: a resubmit is a no-op.
+  const packSessions = plans.map((plan) => ({
+    seed: freshSeed(),
+    plan,
+    worksheets: plan.slots
       .filter((s) => s.kind === "worksheet")
       .map((s) => ({
-        session_id: session.id,
-        child_id: input.childId,
-        owner_id: user.id,
-        generator_id: s.recipe.generatorId,
-        generator_version: s.recipe.generatorVersion,
+        generatorId: s.recipe.generatorId,
+        generatorVersion: s.recipe.generatorVersion,
         params: s.recipe.params,
         seed: s.recipe.seed,
         goal: s.goal,
-      }));
-    if (worksheetRows.length) {
-      const { error: wErr } = await supabase.from("worksheets").insert(worksheetRows);
-      if (wErr) return { error: wErr.message };
-    }
-  }
+      })),
+  }));
 
-  redirect(`/${input.locale}/app/pack/${packId}/print`);
+  const { data, error } = await supabase.rpc("create_pack", {
+    p_owner: user.id,
+    p_child: input.childId,
+    p_pack_id: input.packId,
+    p_theme: input.theme,
+    p_duration: input.durationMin,
+    p_materials: PACK_MATERIALS,
+    p_goals: PACK_GOALS,
+    p_difficulty: difficulty,
+    p_sessions: packSessions,
+  });
+  if (error) return { error: error.message };
+  const result = data as { pack_id?: string; gated?: boolean; error?: string };
+  if (result.error === "rate_limited") return { error: "rate_limited" };
+  if (result.error) return { error: result.error };
+  if (result.gated) return { gated: true };
+
+  redirect(`/${input.locale}/app/pack/${input.packId}/print`);
 }

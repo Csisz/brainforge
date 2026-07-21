@@ -11,5 +11,7 @@ export type CreatePackInput = {
   days: PackDays;
   durationMin: 10 | 20 | 30 | 45;
   theme: ThemeId;
+  /** Client-supplied pack id — the idempotency key so a resubmit is a no-op (B1). */
+  packId: string;
   locale: string;
 };

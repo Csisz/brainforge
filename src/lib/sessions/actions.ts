@@ -6,7 +6,6 @@ import { getRecentWorksheets, getRecentActivityKeys } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
-import { reserveGeneration } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
@@ -25,6 +24,8 @@ type StartSessionInput = {
    * toggle is never a one-way door.
    */
   difficulty: Difficulty | null;
+  /** Per-submit key so a double-submit yields one session, not two (B1). */
+  idempotencyKey: string;
   locale: string;
 };
 
@@ -37,14 +38,6 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
 
   const child = await getChild(input.childId);
   if (!child) return { error: "child_not_found" };
-
-  // One atomic reserve for this session's single worksheet (Security A2). Rate
-  // limit (all tiers) hard-fails before any work; being over the weekly free cap
-  // does NOT fail — it soft-gates below (session composed, worksheet held back),
-  // and reserves nothing, so a gated session consumes no quota.
-  const reservation = await reserveGeneration(user.id);
-  if (reservation.reason === "rate_limited") return { error: "rate_limited" };
-  const gated = !reservation.allowed;
 
   const age = ageFromBirthMonth(child.birth_month);
   const [recentWorksheets, recentActivities] = await Promise.all([
@@ -82,61 +75,47 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
       (s) => s.kind === "worksheet" && s.recipe.generatorId === adaptive.anchor!.generatorId,
     );
 
-  // Gating decided by the reserve above (authoritative, server-side): a free
-  // account over its weekly limit still gets the full plan — physical activities
-  // and all — but the worksheet is held back (worksheets_gated), so it neither
-  // prints nor consumes a unit.
-  const { data: session, error: sessionError } = await supabase
-    .from("sessions")
-    .insert({
-      child_id: input.childId,
-      owner_id: user.id,
-      goals: input.goals,
-      theme: input.theme,
-      duration_min: input.durationMin,
-      materials: input.materials,
-      difficulty: sessionDifficulty,
-      seed: freshSeed(),
-      plan,
-      status: "active",
-      worksheets_gated: gated,
-    })
-    .select("id")
-    .single();
+  // The session's worksheet recipes for the atomic insert (B1). Gating/rate limit
+  // and the quota reservation are decided INSIDE the RPC, in one transaction with
+  // the inserts: a rate limit hard-fails, being over the weekly cap soft-gates
+  // (session with no worksheet, no unit consumed), and any failure rolls the whole
+  // thing back — no orphaned session, no consumed quota.
+  const worksheets = plan.slots
+    .filter((slot) => slot.kind === "worksheet")
+    .map((slot) => ({
+      generatorId: slot.recipe.generatorId,
+      generatorVersion: slot.recipe.generatorVersion,
+      params: slot.recipe.params,
+      seed: slot.recipe.seed,
+      goal: slot.goal,
+    }));
 
-  if (sessionError || !session) return { error: sessionError?.message ?? "session_insert_failed" };
+  const { data, error } = await supabase.rpc("create_session", {
+    p_owner: user.id,
+    p_child: input.childId,
+    p_goals: input.goals,
+    p_theme: input.theme,
+    p_duration: input.durationMin,
+    p_materials: input.materials,
+    p_difficulty: sessionDifficulty,
+    p_seed: freshSeed(),
+    p_plan: plan,
+    p_worksheets: worksheets,
+    p_idempotency_key: input.idempotencyKey,
+  });
+  if (error) return { error: error.message };
+  const result = data as { session_id?: string; gated?: boolean; error?: string };
+  if (result.error) return { error: result.error };
+  if (!result.session_id) return { error: "session_insert_failed" };
 
-  // Clear the anchor only after the session it was owed to exists.
+  // The session exists (committed): spend the one-shot anchor/rotate now. Both
+  // are idempotent flag clears, so a resubmit that returned the same session is
+  // harmless.
   if (anchorUsed && adaptive?.anchor) await clearAnchor(input.childId, adaptive.anchor.goal);
-
-  // A rotation is consumed once a session composed against its avoid list
-  // exists. Clear it for every rotate-pending goal (the avoidByGoal keys) that
-  // this plan actually produced a worksheet for — same lifecycle as the anchor.
   const worksheetGoals = new Set(plan.slots.filter((s) => s.kind === "worksheet").map((s) => s.goal));
   for (const goal of Object.keys(adaptive?.avoidByGoal ?? {}) as DevelopmentGoal[]) {
     if (worksheetGoals.has(goal)) await clearRotate(input.childId, goal);
   }
 
-  // Gated sessions create no worksheet rows — the upgrade card renders instead.
-  const worksheetRows = gated
-    ? []
-    : plan.slots
-        .filter((slot) => slot.kind === "worksheet")
-        .map((slot) => ({
-          session_id: session.id,
-          child_id: input.childId,
-          owner_id: user.id,
-          generator_id: slot.recipe.generatorId,
-          generator_version: slot.recipe.generatorVersion,
-          params: slot.recipe.params,
-          seed: slot.recipe.seed,
-          goal: slot.goal,
-        }));
-
-  if (worksheetRows.length > 0) {
-    const { error: worksheetsError } = await supabase.from("worksheets").insert(worksheetRows);
-    if (worksheetsError) return { error: worksheetsError.message };
-  }
-
-  return { sessionId: session.id };
+  return { sessionId: result.session_id };
 }

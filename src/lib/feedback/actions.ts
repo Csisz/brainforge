@@ -23,45 +23,42 @@ export async function submitSessionFeedback(
   } = await supabase.auth.getUser();
   if (!user) return { error: "not_authenticated" };
 
-  const { error: feedbackError } = await supabase.from("feedback").insert(
-    entries.map((e) => ({
-      session_id: sessionId,
-      owner_id: user.id,
-      slot_index: e.slotIndex,
-      slot_kind: e.slotKind,
+  // Atomic finalize (Stability B1): the feedback rows (upserted on the slot key,
+  // so a double-submit writes no duplicates) and the session-completion state are
+  // written in ONE transaction inside finalize_feedback. Ownership is re-enforced
+  // in the RPC (A3b). Calibration runs only AFTER this commits, so it never sees a
+  // partially-written session.
+  const { data, error } = await supabase.rpc("finalize_feedback", {
+    p_owner: user.id,
+    p_session: sessionId,
+    p_entries: entries.map((e) => ({
+      slotIndex: e.slotIndex,
+      slotKind: e.slotKind,
       completed: e.completed,
       enjoyment: e.enjoyment,
-      success_rate: e.ease ? EASE_SUCCESS[e.ease] : null,
+      successRate: e.ease ? EASE_SUCCESS[e.ease] : null,
     })),
-  );
-  if (feedbackError) return { error: feedbackError.message };
+  });
+  if (error) return { error: error.message };
+  const result = data as { child_id?: string; error?: string };
+  if (result.error) return { error: result.error };
 
-  const { data: session, error: sessionError } = await supabase
-    .from("sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
-    .eq("id", sessionId)
-    .select("child_id")
-    .single();
-  if (sessionError) return { error: sessionError.message };
-
-  // Achievements are a best-effort side effect — never fail the feedback save.
-  if (session?.child_id) {
+  // Achievements + calibration are best-effort side effects on the now-committed,
+  // complete session — never fail the feedback save. Calibration is idempotent
+  // per session inside.
+  if (result.child_id) {
     try {
-      await awardAchievements(supabase, session.child_id, user.id);
+      await awardAchievements(supabase, result.child_id, user.id);
     } catch {
       /* ignore — feedback already saved */
     }
-
-    // Calibration likewise: a child's next session being mis-levelled is a
-    // worse outcome than a lost update, but neither justifies losing feedback
-    // the parent already gave us. Idempotent per session inside.
     try {
-      const child = await getChild(session.child_id);
+      const child = await getChild(result.child_id);
       if (child) {
         await runCalibrationForSession(
           supabase,
           sessionId,
-          session.child_id,
+          result.child_id,
           user.id,
           ageFromBirthMonth(child.birth_month),
         );

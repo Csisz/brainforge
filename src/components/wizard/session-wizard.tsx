@@ -49,6 +49,10 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
+  // One key per wizard visit — a double-submit (or a retried request) reuses it,
+  // so the server returns the same session instead of creating two (B1). Success
+  // navigates away, so the next visit gets a fresh key.
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
 
   function toggleGoal(goal: DevelopmentGoal) {
     setGoals((prev) => (prev.includes(goal) ? prev.filter((g) => g !== goal) : [...prev, goal]));
@@ -69,6 +73,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       materials,
       // null ⇒ let calibration pick a level per goal.
       difficulty: manualDifficulty,
+      idempotencyKey,
       locale,
     });
     if (result.error === "rate_limited") {

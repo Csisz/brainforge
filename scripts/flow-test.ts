@@ -10,6 +10,7 @@
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { composeSession, type SessionSlot } from "../src/lib/activities/engine";
 import type { DevelopmentGoal } from "../src/lib/worksheets/types";
 import { composeWorksheet, defaultRenderOptions } from "../src/lib/worksheets/page";
@@ -547,11 +548,98 @@ async function main() {
   const afterCancel = await readSub();
   ok("subscription.deleted drops the account back to free", afterCancel?.tier === "free" && afterCancel?.status === "canceled", `tier ${afterCancel?.tier}, status ${afterCancel?.status}`);
 
-  // 10 ── DELETION LINK SAFETY (Sprint 7 M7c) ------------------------------
+  // 10 ── ATOMIC LIFECYCLE — create_session / create_pack / finalize_feedback (B1)
+  // The lifecycles are now single security-definer RPCs: all writes in one
+  // transaction, composing reserve_generation, re-enforcing A3b ownership, and
+  // idempotent on a per-submit key. We call them exactly as the actions do — via
+  // the signed-in USER client, so auth.uid() = the owner and the caller checks run.
+  step("10. atomic lifecycle RPCs (B1)");
+
+  const ledgerCount = async () =>
+    (await admin.from("generation_ledger").select("*", { count: "exact", head: true }).eq("owner_id", user.id)).count ?? 0;
+  const sessionsWithKey = async (key: string) =>
+    (await admin.from("sessions").select("id").eq("owner_id", user.id).eq("idempotency_key", key)).data ?? [];
+  const goodWorksheet = () => [{ generatorId: "dual_path", generatorVersion: 1, params: {}, seed: freshSeed(), goal: "attention" }];
+  const createSession = (worksheets: unknown[], key: string, over: Record<string, unknown> = {}) =>
+    supabase.rpc("create_session", {
+      p_owner: user.id, p_child: child.id, p_goals: ["attention"], p_theme: "space",
+      p_duration: 20, p_materials: ["pencil", "paper"], p_difficulty: 3, p_seed: freshSeed(),
+      p_plan: { slots: [] }, p_worksheets: worksheets, p_idempotency_key: key, ...over,
+    });
+
+  // --- Fault injection: a mid-transaction failure rolls back everything --------
+  // A non-numeric generatorVersion makes the worksheet insert (which runs AFTER
+  // the session insert, in the same transaction) throw. Nothing must survive: no
+  // orphan session, and crucially no consumed quota.
+  await clearLedger();
+  const badKey = randomUUID();
+  const { data: faultData, error: faultErr } = await createSession(
+    [{ generatorId: "dual_path", generatorVersion: "boom", params: {}, seed: freshSeed(), goal: "attention" }],
+    badKey,
+  );
+  ok("fault injection: a bad worksheet aborts the whole RPC", Boolean(faultErr) && !faultData, faultErr?.message);
+  ok("...leaving no orphan session (transaction rolled back)", (await sessionsWithKey(badKey)).length === 0);
+  ok("...and consuming no quota (reserve rolled back too)", (await ledgerCount()) === 0);
+
+  // --- Double-submit: the same idempotency key yields ONE session -------------
+  // Two concurrent creates with one key — the advisory lock + idempotency lookup
+  // make the second a no-op returning the first's id. Quota is spent exactly once.
+  await clearLedger();
+  const dupKey = randomUUID();
+  const dupWorksheets = goodWorksheet();
+  const [d1, d2] = await Promise.all([createSession(dupWorksheets, dupKey), createSession(dupWorksheets, dupKey)]);
+  const id1 = (d1.data as { session_id?: string })?.session_id;
+  const id2 = (d2.data as { session_id?: string })?.session_id;
+  ok("double-submit: both concurrent calls return a session id", Boolean(id1 && id2), `${d1.error?.message ?? ""}${d2.error?.message ?? ""}`);
+  ok("...the SAME session id (server-side idempotency)", Boolean(id1) && id1 === id2, `${id1} / ${id2}`);
+  ok("...only one session row exists for the key", (await sessionsWithKey(dupKey)).length === 1);
+  ok("...and quota is consumed exactly once", (await ledgerCount()) === 1);
+
+  // --- Ownership re-enforced inside the RPC (A3b, security definer bypasses RLS)
+  const notMine = await createSession(goodWorksheet(), randomUUID(), { p_child: randomUUID() });
+  ok("ownership: a child not owned by the caller is rejected", (notMine.data as { error?: string })?.error === "forbidden_child", JSON.stringify(notMine.data));
+  const notCaller = await createSession(goodWorksheet(), randomUUID(), { p_owner: randomUUID() });
+  ok("ownership: p_owner ≠ the signed-in caller is rejected", (notCaller.data as { error?: string })?.error === "forbidden", JSON.stringify(notCaller.data));
+
+  // --- finalize_feedback: idempotent upsert + ownership ----------------------
+  const fbEntries = [
+    { slotIndex: 0, slotKind: "worksheet", completed: true, enjoyment: 5, successRate: 1.0 },
+    { slotIndex: 1, slotKind: "creative", completed: true, enjoyment: 4, successRate: null },
+  ];
+  const ff1 = await supabase.rpc("finalize_feedback", { p_owner: user.id, p_session: id1, p_entries: fbEntries });
+  await supabase.rpc("finalize_feedback", { p_owner: user.id, p_session: id1, p_entries: fbEntries }); // replay
+  ok("finalize_feedback returns the session's child id", (ff1.data as { child_id?: string })?.child_id === child.id, JSON.stringify(ff1.data ?? ff1.error));
+  const fbRows = (await admin.from("feedback").select("slot_index").eq("session_id", id1!)).data ?? [];
+  ok("a double finalize does not duplicate feedback (upsert on slot key)", fbRows.length === fbEntries.length, `${fbRows.length} rows`);
+  const finalized = (await admin.from("sessions").select("status").eq("id", id1!).single()).data;
+  ok("...and the session is marked completed", finalized?.status === "completed", finalized?.status);
+  const ffForbidden = await supabase.rpc("finalize_feedback", { p_owner: user.id, p_session: randomUUID(), p_entries: fbEntries });
+  ok("ownership: finalizing a session not owned is rejected", (ffForbidden.data as { error?: string })?.error === "forbidden_session", JSON.stringify(ffForbidden.data));
+
+  // --- create_pack: whole pack atomic + idempotent on the pack id ------------
+  await clearLedger();
+  const packKey = randomUUID();
+  const packSessions = [
+    { seed: freshSeed(), plan: { slots: [] }, worksheets: goodWorksheet() },
+    { seed: freshSeed(), plan: { slots: [] }, worksheets: goodWorksheet() },
+  ];
+  const createPack = () =>
+    supabase.rpc("create_pack", {
+      p_owner: user.id, p_child: child.id, p_pack_id: packKey, p_theme: "space",
+      p_duration: 20, p_materials: ["pencil"], p_goals: ["attention"], p_difficulty: 3, p_sessions: packSessions,
+    });
+  const [pk1, pk2] = await Promise.all([createPack(), createPack()]);
+  ok("pack double-submit: both concurrent calls return the pack id", (pk1.data as { pack_id?: string })?.pack_id === packKey && (pk2.data as { pack_id?: string })?.pack_id === packKey, `${pk1.error?.message ?? ""}${pk2.error?.message ?? ""}`);
+  const packRows = (await admin.from("sessions").select("id").eq("pack_id", packKey)).data ?? [];
+  ok("...only one pack's worth of sessions is created (no duplicate pack)", packRows.length === packSessions.length, `${packRows.length} sessions`);
+  ok("...and quota is consumed once for the pack's worksheets", (await ledgerCount()) === packSessions.length);
+  await clearLedger();
+
+  // 11 ── DELETION LINK SAFETY (Sprint 7 M7c) ------------------------------
   // Deletion is now email-confirmed: the link lands on a confirmation PAGE, and
   // only the explicit typed-confirm action there deletes. A bare GET on the link
   // must never delete — assert it while the account still exists.
-  step("10. deletion link safety");
+  step("11. deletion link safety");
   {
     const { signDeletionToken } = await import("../src/lib/account/deletion-token");
     const delToken = signDeletionToken(user.id);
@@ -575,10 +663,10 @@ async function main() {
     }
   }
 
-  // 11 ── ACCOUNT DELETION (Sprint 6 M4) — GDPR erasure, cascade ------------
+  // 12 ── ACCOUNT DELETION (Sprint 6 M4) — GDPR erasure, cascade ------------
   // Exactly what deleteAccount() does after the confirmation page: the auth admin
   // deletes user.id and the DB cascades everything owned by the account.
-  step("11. account deletion");
+  step("12. account deletion");
   {
     const childrenBefore = (await admin.from("children").select("id").eq("owner_id", user.id)).data ?? [];
     ok("the account has data to erase before deletion", childrenBefore.length > 0, `${childrenBefore.length} children`);
