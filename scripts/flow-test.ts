@@ -437,13 +437,30 @@ async function main() {
   ok("a free account over its weekly limit is blocked", blocked.allowed === false, `used ${blocked.used}, tier ${blocked.tier}`);
   ok("...with a real unlock time in the future", Boolean(blocked.unlockAt) && blocked.unlockAt!.getTime() > Date.now());
 
-  // The gate reads subscriptions, never a client claim: upgrading lifts it.
-  await supabase.from("subscriptions").update({ tier: "premium" }).eq("owner_id", user.id);
+  // Tier is written ONLY via the service-role key (the webhook) — never by the
+  // client (Security A1). Prove the bypass is closed: a USER-client attempt to
+  // grant premium must be denied by RLS (no write policy ⇒ 0 rows), leaving the
+  // row free and the gate applied.
+  const bypass = await supabase
+    .from("subscriptions")
+    .update({ tier: "premium" })
+    .eq("owner_id", user.id)
+    .select("tier");
+  const afterBypass = await getGenerationAllowance(user.id, new Date(), supabase);
+  ok(
+    "a USER-client tier write is denied by RLS — the paid-tier bypass is closed",
+    afterBypass.tier === "free" && afterBypass.allowed === false,
+    `rowsWritten=${bypass.data?.length ?? 0}, tierAfter=${afterBypass.tier}, err=${bypass.error?.code ?? "none"}`,
+  );
+
+  // The legitimate path: the webhook writes tier with the service-role key, which
+  // bypasses RLS. Upgrading via service-role lifts the gate.
+  await admin.from("subscriptions").update({ tier: "premium" }).eq("owner_id", user.id);
   const premium = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok("upgrading to premium unlocks generation", premium.allowed && premium.unlimited, `tier ${premium.tier}`);
-  await supabase.from("subscriptions").update({ tier: "free" }).eq("owner_id", user.id);
+  ok("service-role upgrade to premium unlocks generation", premium.allowed && premium.unlimited, `tier ${premium.tier}`);
+  await admin.from("subscriptions").update({ tier: "free" }).eq("owner_id", user.id);
   const backToFree = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok("downgrading re-applies the gate", backToFree.allowed === false, `tier ${backToFree.tier}`);
+  ok("downgrading (service-role) re-applies the gate", backToFree.allowed === false, `tier ${backToFree.tier}`);
 
   // 9 ── STRIPE WEBHOOK (Sprint 6 M2) — mocked, signed with the test secret ---
   step("9. stripe webhook");
@@ -481,7 +498,9 @@ async function main() {
   });
   ok("a valid signature verifies to an event", checkout.type === "checkout.session.completed");
 
-  const applied = await applyStripeEvent(supabase, checkout);
+  // applyStripeEvent runs with the service-role client — exactly like the real
+  // webhook route (subscriptions are no longer client-writable, Security A1).
+  const applied = await applyStripeEvent(admin, checkout);
   const readSub = async () =>
     (await supabase.from("subscriptions").select("tier, status, provider_customer_id").eq("owner_id", user.id).single()).data;
   const afterCheckout = await readSub();
@@ -489,7 +508,7 @@ async function main() {
   ok("...and links the Stripe customer", afterCheckout?.provider_customer_id === "cus_flowtest");
 
   // Idempotency: replaying the same event lands on the same state, not a dupe.
-  await applyStripeEvent(supabase, checkout);
+  await applyStripeEvent(admin, checkout);
   const afterReplay = await readSub();
   ok("replaying the same event is idempotent", afterReplay?.tier === "premium" && afterReplay?.status === afterCheckout?.status);
 
@@ -498,7 +517,7 @@ async function main() {
     type: "customer.subscription.deleted",
     data: { object: { id: "sub_flow", object: "subscription", customer: "cus_flowtest", status: "canceled", items: { data: [] } } },
   });
-  await applyStripeEvent(supabase, canceled);
+  await applyStripeEvent(admin, canceled);
   const afterCancel = await readSub();
   ok("subscription.deleted drops the account back to free", afterCancel?.tier === "free" && afterCancel?.status === "canceled", `tier ${afterCancel?.tier}, status ${afterCancel?.status}`);
 
