@@ -11,7 +11,8 @@
     "test": "tsx --test \"src/**/*.test.ts\"",
     "verify": "tsx scripts/verify-worksheets.ts",
     "demo:worksheets": "tsx scripts/demo-worksheets.ts",
-    "flow:test": "tsx --env-file=.env.local scripts/flow-test.ts"
+    "flow:test": "tsx --env-file=.env.local scripts/flow-test.ts",
+    "test:rls": "tsx --env-file=.env.local scripts/rls-attack-test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

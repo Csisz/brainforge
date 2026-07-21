@@ -162,6 +162,20 @@ also assert that a bare GET on the deletion confirmation link never deletes
 (Sprint 7 M7c); that one check needs the app up (`npm run dev`) and skips itself,
 with a note, if the app is unreachable.
 
+**`npm run test:rls`** — the RLS attack-matrix negative suite (Security A3). Against
+real local Postgres, it stands up two independent owners (via the real signup
+path), an anon client and a service-role client, then asserts the full
+_table × actor × operation → expected_ matrix for every sensitive table: no
+cross-tenant read/write, anon fully denied, self-access still works, and
+`subscriptions` + `generation_ledger` read-only for users (locking in A1/A2). It
+keeps two tallies — **confidentiality** (must always be 0 failures — any failure
+is a real regression) and **known gap (A3b)** — and currently exits **RED** on a
+deliberately-isolated block: cross-tenant _reference_ writes (a user creating its
+own row that references another tenant's `child_id`/`session_id`) are not yet
+rejected. That is a tracked gap, fixed in a separate change (A3b); the suite goes
+green when it lands. **CI: not wired yet (no CI workflow exists) — `test:rls` must
+join CI once CI is set up, running against real Postgres (internet-independent).**
+
 ## Known issues (don't debug these twice)
 
 - **`npm run build` warns that `process.version` is unsupported in the Edge
