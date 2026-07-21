@@ -295,6 +295,7 @@
     "cta": "Sammelblatt drucken",
     "preparing": "Wird vorbereitet…",
     "error": "Konnte nicht vorbereitet werden. Bitte erneut versuchen.",
+    "rateLimited": "Einen Moment — du hast sehr schnell viel erzeugt. Versuche es gleich noch einmal.",
     "offer": "Sammelt die Erfolge der Woche — druckt ein frisches Blatt zum Ausmalen.",
     "pickTitle": "Wähle ein Motiv:",
     "surprise": "Überraschung",
@@ -561,7 +562,9 @@
     "chooseChild": "Kind auswählen",
     "noChildren": "Füge zuerst ein Kind hinzu, um zu drucken.",
     "addChildCta": "Kind hinzufügen",
-    "error": "Das Arbeitsblatt konnte nicht vorbereitet werden. Bitte versuche es erneut."
+    "error": "Das Arbeitsblatt konnte nicht vorbereitet werden. Bitte versuche es erneut.",
+    "quotaReached": "Deine kostenlosen Arbeitsblätter dieser Woche sind aufgebraucht. Upgrade für unbegrenzt, oder versuche es erneut, wenn dein Kontingent erneuert wird.",
+    "rateLimited": "Einen Moment — du hast sehr schnell viel erzeugt. Versuche es gleich noch einmal."
   },
   "achievements": {
     "sectionTitle": "Auszeichnungen",

@@ -6,7 +6,7 @@ import { getRecentWorksheets, getRecentActivityKeys } from "./queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
-import { getGenerationAllowance, isRateLimited } from "@/lib/entitlements/queries";
+import { reserveGeneration } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
@@ -38,8 +38,13 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
   const child = await getChild(input.childId);
   if (!child) return { error: "child_not_found" };
 
-  // Abuse rate limit (all tiers) — reject before doing any work.
-  if (await isRateLimited(user.id)) return { error: "rate_limited" };
+  // One atomic reserve for this session's single worksheet (Security A2). Rate
+  // limit (all tiers) hard-fails before any work; being over the weekly free cap
+  // does NOT fail — it soft-gates below (session composed, worksheet held back),
+  // and reserves nothing, so a gated session consumes no quota.
+  const reservation = await reserveGeneration(user.id);
+  if (reservation.reason === "rate_limited") return { error: "rate_limited" };
+  const gated = !reservation.allowed;
 
   const age = ageFromBirthMonth(child.birth_month);
   const [recentWorksheets, recentActivities] = await Promise.all([
@@ -77,13 +82,10 @@ export async function startSession(input: StartSessionInput): Promise<{ sessionI
       (s) => s.kind === "worksheet" && s.recipe.generatorId === adaptive.anchor!.generatorId,
     );
 
-  // Plan gating (server-side, authoritative). A free account over its weekly
-  // limit still gets the full plan — physical activities and all — but the
-  // worksheet is held back: the session is marked gated and no worksheet row is
-  // created, so it neither prints nor counts against the next window.
-  const allowance = await getGenerationAllowance(user.id);
-  const gated = !allowance.allowed;
-
+  // Gating decided by the reserve above (authoritative, server-side): a free
+  // account over its weekly limit still gets the full plan — physical activities
+  // and all — but the worksheet is held back (worksheets_gated), so it neither
+  // prints nor consumes a unit.
   const { data: session, error: sessionError } = await supabase
     .from("sessions")
     .insert({

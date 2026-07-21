@@ -26,13 +26,15 @@ export function RewardChartPicker({
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState(false);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   function pick(family: RewardFamily | null) {
-    setError(false);
+    setErrorKey(null);
     startTransition(async () => {
       const result = await printRewardChart(childId, family, locale);
-      if (result?.error) setError(true);
+      // Reward charts are quota-exempt, so the only expected failure is the
+      // anti-abuse rate limit.
+      if (result?.error) setErrorKey(result.error === "rate_limited" ? "rateLimited" : "error");
     });
   }
 
@@ -72,7 +74,7 @@ export function RewardChartPicker({
           <span className="text-[11px] font-medium">{t("surprise")}</span>
         </button>
       </div>
-      {error && <p className="text-xs text-destructive">{t("error")}</p>}
+      {errorKey && <p className="text-xs text-destructive">{t(errorKey)}</p>}
     </div>
   );
 }

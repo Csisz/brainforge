@@ -25,7 +25,7 @@ export function CatalogPrintAction({
   const locale = useLocale();
   const [childId, setChildId] = useState(childOptions[0]?.id ?? "");
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState(false);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   if (childOptions.length === 0) {
     return (
@@ -39,10 +39,14 @@ export function CatalogPrintAction({
   }
 
   function handlePrint() {
-    setError(false);
+    setErrorKey(null);
     startTransition(async () => {
       const result = await printWorksheetForChild(generatorId, childId, locale);
-      if (result?.error) setError(true);
+      if (result?.error) {
+        setErrorKey(
+          result.error === "quota_exceeded" ? "quotaReached" : result.error === "rate_limited" ? "rateLimited" : "error",
+        );
+      }
     });
   }
 
@@ -72,7 +76,7 @@ export function CatalogPrintAction({
           {pending ? t("preparing") : t("printForChild")}
         </Button>
       </div>
-      {error && <p className="text-xs text-destructive">{t("error")}</p>}
+      {errorKey && <p className="text-xs text-destructive">{t(errorKey)}</p>}
     </div>
   );
 }

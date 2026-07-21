@@ -430,37 +430,63 @@ async function main() {
   ok("the next session's worksheet avoids the recently-seen generators", !avoided.includes(rotatedGen), `picked ${rotatedGen}, avoided ${avoided.join(",")}`);
   ok("...and the rotation flag is cleared after the session is composed", (await levelNow(BORE))?.rotate_pending === false);
 
-  // 8 ── PLAN GATING (Sprint 6 M1) -----------------------------------------
-  // By now this free account has generated well over the weekly limit.
-  step("8. plan gating");
+  // 8 ── GENERATION QUOTA — atomic reserve across all paths (Security A2) ----
+  // reserve_generation is the ONE gate every worksheet-creating path uses
+  // (startSession, pack, catalog print, reward print). We exercise it directly
+  // here — the actions delegate to it, so proving the RPC proves the gate. The
+  // calibration phase above inserted worksheets directly (deliberately bypassing
+  // the gate to drive levels), which do NOT touch the ledger, so this account
+  // starts with a clean quota.
+  step("8. generation quota (atomic reserve, A2)");
+
+  type Reserve = { allowed: boolean; reason: string | null; remaining: number; unlimited: boolean };
+  const reserve = async (count = 1, countsQuota = true): Promise<Reserve> =>
+    (await admin.rpc("reserve_generation", { p_owner: user.id, p_count: count, p_counts_quota: countsQuota }))
+      .data as Reserve;
+  const clearLedger = () => admin.from("generation_ledger").delete().eq("owner_id", user.id);
+
+  await clearLedger();
+  const r1 = await reserve(), r2 = await reserve(), r3 = await reserve();
+  ok("free tier: the first 3 reserves succeed (weekly cap)", r1.allowed && r2.allowed && r3.allowed, `remaining ${r1.remaining}/${r2.remaining}/${r3.remaining}`);
+
+  // NEGATIVE GUARD (the whole point of A2): at the cap the shared reserve DENIES.
+  // This is exactly what printWorksheetForChild returns as an error and what
+  // startSession soft-gates on — the catalog/reward quota bypass is closed.
+  const r4 = await reserve();
+  ok("at the cap, a further reserve is DENIED — catalog/session bypass closed", r4.allowed === false && r4.reason === "quota_exceeded", `allowed=${r4.allowed}, reason=${r4.reason}`);
+
   const blocked = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok("a free account over its weekly limit is blocked", blocked.allowed === false, `used ${blocked.used}, tier ${blocked.tier}`);
+  ok("the usage display agrees the account is over its weekly limit", blocked.allowed === false && blocked.used >= 3, `used ${blocked.used}`);
   ok("...with a real unlock time in the future", Boolean(blocked.unlockAt) && blocked.unlockAt!.getTime() > Date.now());
 
-  // Tier is written ONLY via the service-role key (the webhook) — never by the
-  // client (Security A1). Prove the bypass is closed: a USER-client attempt to
-  // grant premium must be denied by RLS (no write policy ⇒ 0 rows), leaving the
-  // row free and the gate applied.
-  const bypass = await supabase
-    .from("subscriptions")
-    .update({ tier: "premium" })
-    .eq("owner_id", user.id)
-    .select("tier");
-  const afterBypass = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok(
-    "a USER-client tier write is denied by RLS — the paid-tier bypass is closed",
-    afterBypass.tier === "free" && afterBypass.allowed === false,
-    `rowsWritten=${bypass.data?.length ?? 0}, tierAfter=${afterBypass.tier}, err=${bypass.error?.code ?? "none"}`,
-  );
+  // Reward charts are intentionally quota-EXEMPT (motivation tool): still allowed
+  // at the cap (rate limit would still apply).
+  const reward = await reserve(1, false);
+  ok("reward-chart printing stays free at the cap (quota-exempt)", reward.allowed === true, `allowed=${reward.allowed}, reason=${reward.reason}`);
 
-  // The legitimate path: the webhook writes tier with the service-role key, which
-  // bypasses RLS. Upgrading via service-role lifts the gate.
+  // CONCURRENCY: two near-simultaneous reserves at cap-1 must not BOTH pass —
+  // the atomic in-DB check-and-reserve makes exactly one win (no TOCTOU race).
+  await clearLedger();
+  await reserve(); await reserve(); // used 2 of 3 ⇒ one unit left
+  const [c1, c2] = await Promise.all([reserve(), reserve()]);
+  const passed = [c1, c2].filter((r) => r.allowed).length;
+  ok("two concurrent reserves at cap-1 — exactly one succeeds (atomic)", passed === 1, `passed=${passed}, reasons=${c1.reason}/${c2.reason}`);
+
+  // A1 (unchanged): a USER-client tier write is still denied by RLS.
+  const bypass = await supabase.from("subscriptions").update({ tier: "premium" }).eq("owner_id", user.id).select("tier");
+  const afterBypass = await getGenerationAllowance(user.id, new Date(), supabase);
+  ok("a USER-client tier write is denied by RLS — the paid-tier bypass is closed", afterBypass.tier === "free", `rowsWritten=${bypass.data?.length ?? 0}, tier=${afterBypass.tier}`);
+
+  // Premium: unlimited across every path (a 10-unit reserve — well over the free
+  // cap — passes), via the legitimate service-role tier write.
   await admin.from("subscriptions").update({ tier: "premium" }).eq("owner_id", user.id);
+  await clearLedger();
+  const pBig = await reserve(10);
+  ok("premium: reserve is unlimited across all paths", pBig.allowed && pBig.unlimited, `allowed=${pBig.allowed}, unlimited=${pBig.unlimited}`);
   const premium = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok("service-role upgrade to premium unlocks generation", premium.allowed && premium.unlimited, `tier ${premium.tier}`);
+  ok("...and the display shows unlimited", premium.allowed && premium.unlimited, `tier ${premium.tier}`);
   await admin.from("subscriptions").update({ tier: "free" }).eq("owner_id", user.id);
-  const backToFree = await getGenerationAllowance(user.id, new Date(), supabase);
-  ok("downgrading (service-role) re-applies the gate", backToFree.allowed === false, `tier ${backToFree.tier}`);
+  await clearLedger();
 
   // 9 ── STRIPE WEBHOOK (Sprint 6 M2) — mocked, signed with the test secret ---
   step("9. stripe webhook");

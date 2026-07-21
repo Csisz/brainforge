@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getGenerator } from "@/lib/worksheets/registry";
+import { reserveGeneration } from "@/lib/entitlements/queries";
 import { freshSeed } from "@/lib/random";
 import type { RewardFamily } from "@/lib/worksheets/generators/reward-chart";
 
@@ -25,6 +26,12 @@ export async function printWorksheetForChild(
   if (!user) return { error: "not_authenticated" };
 
   const generator = getGenerator(generatorId); // throws on unknown id (trusted catalog input)
+
+  // Security A2: catalog printing counts against the weekly free cap, like any
+  // other generation. Reserve atomically BEFORE the insert; if denied (over the
+  // weekly cap or rate-limited), return the typed error and create nothing.
+  const reservation = await reserveGeneration(user.id);
+  if (!reservation.allowed) return { error: reservation.reason ?? "quota_exceeded" };
 
   const { data, error } = await supabase
     .from("worksheets")
@@ -63,6 +70,14 @@ export async function printRewardChart(
   if (!user) return { error: "not_authenticated" };
 
   const generator = getGenerator("reward_chart");
+
+  // reward_chart is intentionally quota-exempt (motivation tool, not learning
+  // content), see A2 skip — it does NOT consume the weekly free cap. The
+  // anti-abuse rate limit still applies, so we reserve a non-quota unit
+  // (countsQuota: false). If the product decision changes to count it, flip this
+  // to the default reserve.
+  const reservation = await reserveGeneration(user.id, { countsQuota: false });
+  if (!reservation.allowed) return { error: reservation.reason ?? "rate_limited" };
 
   const { data, error } = await supabase
     .from("worksheets")

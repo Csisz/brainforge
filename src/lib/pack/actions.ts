@@ -7,8 +7,7 @@ import { getRecentWorksheets, getRecentActivityKeys } from "@/lib/sessions/queri
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan } from "@/lib/adaptive/queries";
-import { getGenerationAllowance, isRateLimited } from "@/lib/entitlements/queries";
-import { packFits } from "@/lib/entitlements/limits";
+import { reserveGeneration } from "@/lib/entitlements/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
@@ -32,7 +31,7 @@ const PACK_MATERIALS: MaterialId[] = ["pencil", "paper", "crayons", "scissors", 
  */
 export async function createPack(
   input: CreatePackInput,
-): Promise<{ error?: string; gated?: { unlockAt: string | null } }> {
+): Promise<{ error?: string; gated?: boolean }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -41,7 +40,6 @@ export async function createPack(
 
   const child = await getChild(input.childId);
   if (!child) return { error: "child_not_found" };
-  if (await isRateLimited(user.id)) return { error: "rate_limited" };
 
   const age = ageFromBirthMonth(child.birth_month);
   const [recentWorksheets, recentActivities] = await Promise.all([
@@ -79,15 +77,17 @@ export async function createPack(
     return plan;
   });
 
-  // Gate the WHOLE pack against the free allowance — all-or-nothing.
+  // Reserve the WHOLE pack atomically — all-or-nothing (Security A2). The RPC
+  // reserves N units only if all N fit under the free cap, so a 7-day pack that
+  // would exceed the allowance is declined whole (never a partial pack). Rate
+  // limit hard-fails; being over the weekly cap soft-gates to the upgrade notice.
   const worksheetCount = plans.reduce(
     (n, p) => n + p.slots.filter((s) => s.kind === "worksheet").length,
     0,
   );
-  const allowance = await getGenerationAllowance(user.id);
-  if (!packFits(allowance, worksheetCount)) {
-    return { gated: { unlockAt: allowance.unlockAt?.toISOString() ?? null } };
-  }
+  const reservation = await reserveGeneration(user.id, { count: worksheetCount });
+  if (reservation.reason === "rate_limited") return { error: "rate_limited" };
+  if (!reservation.allowed) return { gated: true };
 
   // Persist: one pack_id, N planned sessions + their worksheet rows (which count
   // toward the weekly limit, exactly like a normal session's).

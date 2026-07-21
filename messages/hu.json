@@ -295,6 +295,7 @@
     "cta": "Gyűjtőlap nyomtatása",
     "preparing": "Előkészítés…",
     "error": "Nem sikerült. Próbáld újra.",
+    "rateLimited": "Egy pillanat — sok mindent generáltál gyorsan egymás után. Próbáld újra kicsit később.",
     "offer": "Gyűjtsétek a heti sikereket — nyomtass egy friss lapot kiszínezni!",
     "pickTitle": "Válassz motívumot:",
     "surprise": "Meglepetés",
@@ -561,7 +562,9 @@
     "chooseChild": "Válassz gyereket",
     "noChildren": "Előbb vegyél fel egy gyereket a nyomtatáshoz.",
     "addChildCta": "Gyerek hozzáadása",
-    "error": "Nem sikerült előkészíteni a feladatlapot. Próbáld újra."
+    "error": "Nem sikerült előkészíteni a feladatlapot. Próbáld újra.",
+    "quotaReached": "Elfogyott a heti ingyenes kereted. Válts csomagot a korlátlan feladatlapokért, vagy próbáld újra, amikor a kereted megújul.",
+    "rateLimited": "Egy pillanat — sok mindent generáltál gyorsan egymás után. Próbáld újra kicsit később."
   },
   "achievements": {
     "sectionTitle": "Kitüntetések",

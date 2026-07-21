@@ -295,6 +295,7 @@
     "cta": "Print collection sheet",
     "preparing": "Preparing…",
     "error": "Couldn't prepare it. Please try again.",
+    "rateLimited": "Just a moment — you've generated a lot very quickly. Try again shortly.",
     "offer": "Collect the week's wins — print a fresh sheet to color in.",
     "pickTitle": "Pick a motif:",
     "surprise": "Surprise",
@@ -561,7 +562,9 @@
     "chooseChild": "Choose a child",
     "noChildren": "Add a child first to print.",
     "addChildCta": "Add a child",
-    "error": "Couldn't prepare the worksheet. Please try again."
+    "error": "Couldn't prepare the worksheet. Please try again.",
+    "quotaReached": "You've used this week's free worksheets. Upgrade for unlimited, or try again when your allowance renews.",
+    "rateLimited": "Just a moment — you've generated a lot very quickly. Try again shortly."
   },
   "achievements": {
     "sectionTitle": "Achievements",
