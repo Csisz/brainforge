@@ -1,4 +1,15 @@
 {
+  "errorBoundary": {
+    "title": "Da ist etwas schiefgelaufen",
+    "body": "Ein kleiner Aussetzer bei uns — nicht deine Schuld. Versuchen wir es noch einmal.",
+    "retry": "Erneut versuchen",
+    "back": "Zurück zum Dashboard"
+  },
+  "notFound": {
+    "title": "Diese Seite finden wir nicht",
+    "body": "Vielleicht wurde sie verschoben oder ist nicht mehr hier.",
+    "back": "Zurück zum Dashboard"
+  },
   "nav": {
     "overview": "Übersicht",
     "children": "Kinder",

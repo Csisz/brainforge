@@ -1,4 +1,15 @@
 {
+  "errorBoundary": {
+    "title": "Valami félrecsúszott",
+    "body": "Egy kis zökkenő nálunk — nem miattad történt. Próbáljuk meg újra.",
+    "retry": "Újrapróbálom",
+    "back": "Vissza az irányítópultra"
+  },
+  "notFound": {
+    "title": "Ezt az oldalt nem találjuk",
+    "body": "Lehet, hogy elköltözött, vagy már nincs itt.",
+    "back": "Vissza az irányítópultra"
+  },
   "nav": {
     "overview": "Áttekintés",
     "children": "Gyerekek",
