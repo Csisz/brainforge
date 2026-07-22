@@ -92,7 +92,35 @@ jobs:
         run: npm run test:rls
 
       - name: End-to-end flow test (flow:test)
-        run: npm run flow:test
+        run: |
+          set -o pipefail
+          npm run flow:test 2>&1 | tee /tmp/flow.log
+
+      # ── TEMP B4 diagnostics: localize a flow:test failure via step conclusions
+      - name: "diag: reached §8 quota"
+        if: always()
+        run: grep -q "8. generation quota" /tmp/flow.log
+      - name: "diag: reached §9 stripe"
+        if: always()
+        run: grep -q "9. stripe webhook" /tmp/flow.log
+      - name: "diag: reached §10 B1 lifecycle"
+        if: always()
+        run: grep -q "10. atomic lifecycle" /tmp/flow.log
+      - name: "diag: reached §12 account deletion"
+        if: always()
+        run: grep -q "12. account deletion" /tmp/flow.log
+      - name: "diag: no uncaught throw"
+        if: always()
+        run: "! grep -q 'flow test threw' /tmp/flow.log"
+      - name: "diag: no FAIL lines"
+        if: always()
+        run: "! grep -q ' FAIL ' /tmp/flow.log"
+      - name: "diag: reached ALL CHECKS PASSED"
+        if: always()
+        run: grep -q "ALL CHECKS PASSED" /tmp/flow.log
+      - name: "diag: dump FAIL/throw lines"
+        if: always()
+        run: grep -nE ' FAIL |threw|Error' /tmp/flow.log || echo "(no FAIL/throw/Error lines)"
 
       # ── Production build — self-hosted fonts, no network needed ───────────
       - name: Build
