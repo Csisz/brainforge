@@ -70,6 +70,20 @@ jobs:
             echo "NEXT_PUBLIC_APP_URL=http://localhost:3000"
           } >> "$GITHUB_ENV"
 
+      - name: Wait for Auth + REST to be ready
+        # `supabase start` returns when containers are healthy, but a freshly
+        # started GoTrue can still be warming up. The DB suites hit it immediately
+        # with signups, so block until auth health and PostgREST both respond.
+        run: |
+          for i in $(seq 1 60); do
+            auth=$(curl -s -o /dev/null -w "%{http_code}" "$NEXT_PUBLIC_SUPABASE_URL/auth/v1/health" || echo 000)
+            rest=$(curl -s -o /dev/null -w "%{http_code}" -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" "$NEXT_PUBLIC_SUPABASE_URL/rest/v1/" || echo 000)
+            echo "attempt $i: auth=$auth rest=$rest"
+            [ "$auth" = "200" ] && { [ "$rest" = "200" ] || [ "$rest" = "404" ]; } && { echo "Supabase ready"; exit 0; }
+            sleep 2
+          done
+          echo "Supabase did not become ready in time"; exit 1
+
       # ── Security regression gate — MUST run and MUST pass ─────────────────
       - name: RLS attack matrix (test:rls)
         run: npm run test:rls
