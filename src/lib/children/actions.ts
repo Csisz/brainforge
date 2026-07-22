@@ -3,6 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { canAddChild, type PlanTier } from "@/lib/entitlements/limits";
 import { sendWelcomeEmail } from "@/lib/email/welcome";
+import { createChildSchema, updateChildSchema } from "./schemas";
+import { zUuid } from "@/lib/validation/common";
 import type { ThemeId } from "@/lib/worksheets/types";
 
 // Internal-only input type — not exported: a "use server" file must export only
@@ -20,6 +22,8 @@ type CreateChildInput = {
 /** `error: "child_limit_reached"` is a signal, not a message — the UI shows a
  * warm upgrade prompt for it, never a raw error. */
 export async function createChild(input: CreateChildInput): Promise<{ error?: string }> {
+  if (!createChildSchema.safeParse(input).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -69,6 +73,10 @@ type UpdateChildInput = {
  * alone here — it has its own toggle.
  */
 export async function updateChild(childId: string, input: UpdateChildInput): Promise<{ error?: string }> {
+  if (!zUuid.safeParse(childId).success || !updateChildSchema.safeParse(input).success) {
+    return { error: "invalid_input" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -94,6 +102,8 @@ export async function updateChild(childId: string, input: UpdateChildInput): Pro
  * this child go with it. The UI gates this behind a typed nickname confirmation.
  */
 export async function deleteChild(childId: string): Promise<{ error?: string }> {
+  if (!zUuid.safeParse(childId).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -109,6 +119,10 @@ export async function deleteChild(childId: string): Promise<{ error?: string }> 
  * the owner, so a child id from another account simply matches no row.
  */
 export async function setAdaptiveEnabled(childId: string, enabled: boolean): Promise<{ error?: string }> {
+  if (!zUuid.safeParse(childId).success || typeof enabled !== "boolean") {
+    return { error: "invalid_input" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

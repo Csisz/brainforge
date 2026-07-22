@@ -8,6 +8,7 @@ import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan, clearAnchor, clearRotate } from "@/lib/adaptive/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
+import { startSessionSchema } from "./schemas";
 import type { DevelopmentGoal, Difficulty, ThemeId } from "@/lib/worksheets/types";
 
 // Internal-only input type — not exported (see the "use server" export rule).
@@ -30,6 +31,12 @@ type StartSessionInput = {
 };
 
 export async function startSession(input: StartSessionInput): Promise<{ sessionId?: string; error?: string }> {
+  // B2: validate the raw payload before anything touches the DB or the RPC. A
+  // malformed call (bad uuid, unknown goal/theme, out-of-range difficulty) is
+  // rejected here as invalid_input; the RPC's failure paths stay for genuine
+  // business rejections (forbidden_child, quota).
+  if (!startSessionSchema.safeParse(input).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },

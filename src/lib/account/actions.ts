@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendDeletionEmail } from "@/lib/email/deletion";
 import { signDeletionToken, verifyDeletionToken } from "./deletion-token";
+import { requestAccountDeletionSchema, deleteAccountSchema } from "./schemas";
 
 /**
  * ACCOUNT DELETION (GDPR erasure) — restructured in Sprint 7 M7 into a two-step,
@@ -21,6 +22,8 @@ import { signDeletionToken, verifyDeletionToken } from "./deletion-token";
  * link directly. Never deletes anything.
  */
 export async function requestAccountDeletion(locale: string): Promise<{ url?: string; emailed?: boolean; error?: string }> {
+  if (!requestAccountDeletionSchema.safeParse({ locale }).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -44,6 +47,8 @@ export async function requestAccountDeletion(locale: string): Promise<{ url?: st
  * Irreversible by design.
  */
 export async function deleteAccount(confirmation: string, token: string): Promise<{ error?: string }> {
+  if (!deleteAccountSchema.safeParse({ confirmation, token }).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },

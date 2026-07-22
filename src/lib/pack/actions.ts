@@ -9,6 +9,7 @@ import { composeSession, type MaterialId } from "@/lib/activities/engine";
 import { resolveAdaptivePlan } from "@/lib/adaptive/queries";
 import { defaultDifficulty } from "@/lib/activities/difficulty";
 import { freshSeed } from "@/lib/random";
+import { createPackSchema } from "./schemas";
 import type { DevelopmentGoal } from "@/lib/worksheets/types";
 import type { CreatePackInput } from "./types";
 
@@ -31,6 +32,8 @@ const PACK_MATERIALS: MaterialId[] = ["pencil", "paper", "crayons", "scissors", 
 export async function createPack(
   input: CreatePackInput,
 ): Promise<{ error?: string; gated?: boolean }> {
+  if (!createPackSchema.safeParse(input).success) return { error: "invalid_input" };
+
   const supabase = await createClient();
   const {
     data: { user },

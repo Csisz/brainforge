@@ -46,6 +46,7 @@ export function ChildForm({
   stripeConfigured?: boolean;
 }) {
   const t = useTranslations("onboarding");
+  const tCommon = useTranslations("common");
   const tThemes = useTranslations("themes");
   const tAvatars = useTranslations("avatars");
   const locale = useLocale();
@@ -60,6 +61,7 @@ export function ChildForm({
   const [motorSupport, setMotorSupport] = useState(initial?.accessibility.motorSupport ?? false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
   const [birthError, setBirthError] = useState(false);
   const [limitReached, setLimitReached] = useState(false);
 
@@ -77,6 +79,7 @@ export function ChildForm({
     }
     setSubmitting(true);
     setError(false);
+    setInvalidInput(false);
     const payload = {
       nickname,
       birthMonth,
@@ -91,6 +94,11 @@ export function ChildForm({
 
     if (result.error === "child_limit_reached") {
       setLimitReached(true);
+      setSubmitting(false);
+      return;
+    }
+    if (result.error === "invalid_input") {
+      setInvalidInput(true);
       setSubmitting(false);
       return;
     }
@@ -235,6 +243,7 @@ export function ChildForm({
             />
           </div>
 
+          {invalidInput && <p className="text-sm text-destructive">{tCommon("invalidInput")}</p>}
           {error && <p className="text-sm text-destructive">{t("errorGeneric")}</p>}
 
           <Button type="submit" className="w-full" disabled={submitting}>

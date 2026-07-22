@@ -17,7 +17,8 @@
     "loading": "Loading…",
     "comingSoon": "Coming soon.",
     "language": "Language",
-    "minutes": "{count} min"
+    "minutes": "{count} min",
+    "invalidInput": "Some of the details weren't valid. Please check your entries and try again."
   },
   "footer": {
     "tagline": "Printable developmental worksheets, every day.",

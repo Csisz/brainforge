@@ -17,7 +17,8 @@
     "loading": "Betöltés…",
     "comingSoon": "Hamarosan.",
     "language": "Nyelv",
-    "minutes": "{count} perc"
+    "minutes": "{count} perc",
+    "invalidInput": "Néhány adat érvénytelen volt. Kérjük, ellenőrizd, és próbáld újra."
   },
   "footer": {
     "tagline": "Nyomtatható fejlesztő feladatlapok minden napra.",

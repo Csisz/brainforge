@@ -60,6 +60,7 @@ export function SessionView({
   // to re-print a worksheet) must still show the full timeline, not this screen.
   const [justFinished, setJustFinished] = useState(false);
   const [error, setError] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
 
   function setEntry(index: number, patch: Partial<Entry>) {
     setEntries((prev) => ({ ...prev, [index]: { ...prev[index]!, ...patch } }));
@@ -81,6 +82,7 @@ export function SessionView({
   async function handleFinish() {
     setSubmitting(true);
     setError(false);
+    setInvalidInput(false);
     const payload: SlotFeedback[] = slots.map((slot, i) => ({
       slotIndex: i,
       slotKind: slot.kind,
@@ -89,6 +91,11 @@ export function SessionView({
       ease: entries[i]!.ease,
     }));
     const result = await submitSessionFeedback(sessionId, payload);
+    if (result.error === "invalid_input") {
+      setInvalidInput(true);
+      setSubmitting(false);
+      return;
+    }
     if (result.error) {
       setError(true);
       setSubmitting(false);
@@ -267,6 +274,7 @@ export function SessionView({
 
       {!alreadyCompleted && (
         <>
+          {invalidInput && <p className="text-sm text-destructive">{t("common.invalidInput")}</p>}
           {error && <p className="text-sm text-destructive">{t("sessionView.errorGeneric")}</p>}
           <Button size="lg" className="w-full" onClick={handleFinish} disabled={submitting}>
             {submitting ? t("sessionView.finishing") : t("sessionView.finishCta")}

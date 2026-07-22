@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getGenerator } from "@/lib/worksheets/registry";
 import { reserveGeneration } from "@/lib/entitlements/queries";
 import { freshSeed } from "@/lib/random";
+import { printWorksheetSchema, printRewardChartSchema } from "./schemas";
 import type { RewardFamily } from "@/lib/worksheets/generators/reward-chart";
 
 /**
@@ -19,13 +20,19 @@ export async function printWorksheetForChild(
   childId: string,
   locale: string,
 ): Promise<{ error?: string }> {
+  // B2: reject an unknown generatorId / bad childId here so getGenerator never
+  // throws on client-supplied input and no row is written for a garbage payload.
+  if (!printWorksheetSchema.safeParse({ generatorId, childId, locale }).success) {
+    return { error: "invalid_input" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: "not_authenticated" };
 
-  const generator = getGenerator(generatorId); // throws on unknown id (trusted catalog input)
+  const generator = getGenerator(generatorId); // validated above — a real registered id
 
   // Security A2: catalog printing counts against the weekly free cap, like any
   // other generation. Reserve atomically BEFORE the insert; if denied (over the
@@ -63,6 +70,10 @@ export async function printRewardChart(
   family: RewardFamily | null,
   locale: string,
 ): Promise<{ error?: string }> {
+  if (!printRewardChartSchema.safeParse({ childId, family, locale }).success) {
+    return { error: "invalid_input" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

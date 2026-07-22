@@ -17,9 +17,11 @@ import { Label } from "@/components/ui/label";
  */
 export function DeleteConfirm({ email, token }: { email: string; token: string }) {
   const t = useTranslations("deleteAccount");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [typed, setTyped] = useState("");
   const [error, setError] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const confirmed = typed.trim().toLowerCase() === email.toLowerCase();
@@ -27,7 +29,12 @@ export function DeleteConfirm({ email, token }: { email: string; token: string }
   function run() {
     startTransition(async () => {
       setError(false);
+      setInvalidInput(false);
       const result = await deleteAccount(typed, token);
+      if (result.error === "invalid_input") {
+        setInvalidInput(true);
+        return;
+      }
       if (result.error) {
         setError(true);
         return;
@@ -49,6 +56,7 @@ export function DeleteConfirm({ email, token }: { email: string; token: string }
           autoComplete="off"
         />
       </div>
+      {invalidInput && <p className="text-sm text-destructive">{tCommon("invalidInput")}</p>}
       {error && <p className="text-sm text-destructive">{t("error")}</p>}
       <Button variant="destructive" className="w-full" disabled={!confirmed || pending} onClick={run}>
         {pending ? t("deleting") : t("confirm")}

@@ -15,6 +15,7 @@ import { UpgradeNotice } from "@/components/plan/upgrade-notice";
  */
 export function BillingActions({ tier, configured }: { tier: string; configured: boolean }) {
   const t = useTranslations("billing");
+  const tCommon = useTranslations("common");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -50,7 +51,11 @@ export function BillingActions({ tier, configured }: { tier: string; configured:
           </Button>
         </div>
       )}
-      {error && <p className="text-sm text-destructive">{t("error")}</p>}
+      {error && (
+        <p className="text-sm text-destructive">
+          {error === "invalid_input" ? tCommon("invalidInput") : t("error")}
+        </p>
+      )}
     </div>
   );
 }

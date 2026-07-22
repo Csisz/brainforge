@@ -6,6 +6,8 @@ import { runCalibrationForSession } from "@/lib/adaptive/queries";
 import { getChild } from "@/lib/children/queries";
 import { ageFromBirthMonth } from "@/lib/children/age";
 import { EASE_SUCCESS } from "./ease";
+import { sessionFeedbackSchema } from "./schemas";
+import { zUuid } from "@/lib/validation/common";
 import type { SlotFeedback } from "./types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -17,6 +19,10 @@ export async function submitSessionFeedback(
   sessionId: string,
   entries: SlotFeedback[],
 ): Promise<{ error?: string }> {
+  if (!zUuid.safeParse(sessionId).success || !sessionFeedbackSchema.safeParse(entries).success) {
+    return { error: "invalid_input" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

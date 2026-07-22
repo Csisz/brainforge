@@ -48,6 +48,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   // One key per wizard visit — a double-submit (or a retried request) reuses it,
   // so the server returns the same session instead of creating two (B1). Success
@@ -64,6 +65,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
   async function handleSubmit() {
     setSubmitting(true);
     setError(false);
+    setInvalidInput(false);
     setRateLimited(false);
     const result = await startSession({
       childId: child.id,
@@ -78,6 +80,11 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
     });
     if (result.error === "rate_limited") {
       setRateLimited(true);
+      setSubmitting(false);
+      return;
+    }
+    if (result.error === "invalid_input") {
+      setInvalidInput(true);
       setSubmitting(false);
       return;
     }
@@ -282,6 +289,7 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
       </Card>
 
       {rateLimited && <p className="text-sm text-ink-soft">{t("rateLimited")}</p>}
+      {invalidInput && <p className="text-sm text-destructive">{tCommon("invalidInput")}</p>}
       {error && <p className="text-sm text-destructive">{t("errorGeneric")}</p>}
 
       <Button size="lg" className="w-full" onClick={handleSubmit} disabled={submitting}>

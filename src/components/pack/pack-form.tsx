@@ -35,6 +35,7 @@ export function PackForm({
   const [theme, setTheme] = useState<ThemeId>(defaultTheme);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
   const [gated, setGated] = useState(false);
   // One pack id per visit — a double-submit reuses it, so the server returns the
@@ -45,11 +46,13 @@ export function PackForm({
   function submit() {
     startTransition(async () => {
       setError(false);
+      setInvalidInput(false);
       setRateLimited(false);
       setGated(false);
       const result = await createPack({ childId, days, durationMin, theme, packId, locale });
       if (result?.gated) return setGated(true);
       if (result?.error === "rate_limited") return setRateLimited(true);
+      if (result?.error === "invalid_input") return setInvalidInput(true);
       if (result?.error) return setError(true);
       // success → the action redirects to the print document
     });
@@ -125,6 +128,7 @@ export function PackForm({
       </div>
 
       {rateLimited && <p className="text-sm text-ink-soft">{t("rateLimited")}</p>}
+      {invalidInput && <p className="text-sm text-destructive">{tCommon("invalidInput")}</p>}
       {error && <p className="text-sm text-destructive">{t("error")}</p>}
 
       <Button size="lg" className="w-full" onClick={submit} disabled={pending}>

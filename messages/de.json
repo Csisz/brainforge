@@ -17,7 +17,8 @@
     "loading": "Wird geladen…",
     "comingSoon": "Demnächst.",
     "language": "Sprache",
-    "minutes": "{count} Min."
+    "minutes": "{count} Min.",
+    "invalidInput": "Einige Angaben waren ungültig. Bitte überprüfe deine Eingaben und versuche es erneut."
   },
   "footer": {
     "tagline": "Druckbare Förder-Arbeitsblätter, jeden Tag.",

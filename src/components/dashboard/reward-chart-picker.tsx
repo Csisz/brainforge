@@ -23,6 +23,7 @@ export function RewardChartPicker({
   className?: string;
 }) {
   const t = useTranslations("collectionSheet");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -34,7 +35,10 @@ export function RewardChartPicker({
       const result = await printRewardChart(childId, family, locale);
       // Reward charts are quota-exempt, so the only expected failure is the
       // anti-abuse rate limit.
-      if (result?.error) setErrorKey(result.error === "rate_limited" ? "rateLimited" : "error");
+      if (result?.error)
+        setErrorKey(
+          result.error === "rate_limited" ? "rateLimited" : result.error === "invalid_input" ? "invalid_input" : "error",
+        );
     });
   }
 
@@ -74,7 +78,11 @@ export function RewardChartPicker({
           <span className="text-[11px] font-medium">{t("surprise")}</span>
         </button>
       </div>
-      {errorKey && <p className="text-xs text-destructive">{t(errorKey)}</p>}
+      {errorKey && (
+        <p className="text-xs text-destructive">
+          {errorKey === "invalid_input" ? tCommon("invalidInput") : t(errorKey)}
+        </p>
+      )}
     </div>
   );
 }

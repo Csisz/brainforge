@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
 import { priceIdForTier, stripeConfigured, type PurchasableTier } from "@/lib/stripe/config";
+import { purchasableTierSchema } from "./schemas";
 
 /**
  * Start a Stripe Checkout for a paid tier. The account id is stamped on the
@@ -10,6 +11,7 @@ import { priceIdForTier, stripeConfigured, type PurchasableTier } from "@/lib/st
  * subscription completed — never trusting anything the browser reports back.
  */
 export async function createCheckoutSession(tier: PurchasableTier): Promise<{ url?: string; error?: string }> {
+  if (!purchasableTierSchema.safeParse(tier).success) return { error: "invalid_input" };
   if (!stripeConfigured()) return { error: "billing_unavailable" };
 
   const supabase = await createClient();
