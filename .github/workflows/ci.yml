@@ -24,7 +24,9 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # Node 22 (matches local dev / @types/node): `npm test` uses node --test
+          # with a glob pattern, which needs Node ≥ 21.
+          node-version: "22"
           cache: npm # caches ~/.npm; `npm ci` restores from it (recommended over caching node_modules)
 
       - name: Install dependencies
