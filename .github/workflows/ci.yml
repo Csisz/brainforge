@@ -60,7 +60,10 @@ jobs:
       - name: Capture local Supabase env
         # Keys are generated fresh by the local stack, so nothing secret is
         # committed. Mirror .env.local: the app reads the new-format publishable /
-        # secret keys (falling back to the legacy JWT keys on older CLIs).
+        # secret keys (falling back to the legacy JWT keys on older CLIs). Written
+        # to BOTH a real .env.local file — the test scripts run via
+        # `tsx --env-file=.env.local`, which errors if the file is missing, and
+        # `next build` auto-loads it — and $GITHUB_ENV, for the shell step below.
         run: |
           status="$(supabase status -o json)"
           {
@@ -68,7 +71,7 @@ jobs:
             echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$status" | jq -r '.PUBLISHABLE_KEY // .ANON_KEY')"
             echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$status" | jq -r '.SECRET_KEY // .SERVICE_ROLE_KEY')"
             echo "NEXT_PUBLIC_APP_URL=http://localhost:3000"
-          } >> "$GITHUB_ENV"
+          } | tee .env.local >> "$GITHUB_ENV"
 
       - name: Wait for Auth + REST to be ready
         # `supabase start` returns when containers are healthy, but a freshly
