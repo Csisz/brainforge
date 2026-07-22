@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zUuid, zLocale, zTheme, zAvatar } from "@/lib/validation/common";
+import { zLocale, zTheme, zAvatar } from "@/lib/validation/common";
 import { isValidBirthMonth } from "@/lib/children/age";
 
 /**

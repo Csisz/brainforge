@@ -168,13 +168,46 @@ path), an anon client and a service-role client, then asserts the full
 _table × actor × operation → expected_ matrix for every sensitive table: no
 cross-tenant read/write, anon fully denied, self-access still works, and
 `subscriptions` + `generation_ledger` read-only for users (locking in A1/A2). It
-keeps two tallies — **confidentiality** (must always be 0 failures — any failure
-is a real regression) and **known gap (A3b)** — and currently exits **RED** on a
-deliberately-isolated block: cross-tenant _reference_ writes (a user creating its
-own row that references another tenant's `child_id`/`session_id`) are not yet
-rejected. That is a tracked gap, fixed in a separate change (A3b); the suite goes
-green when it lands. **CI: not wired yet (no CI workflow exists) — `test:rls` must
-join CI once CI is set up, running against real Postgres (internet-independent).**
+must exit with **0 regressions** — any cross-tenant leak is a real failure. The
+cross-tenant _reference_-write gap it originally surfaced (a user creating its own
+row that references another tenant's `child_id`/`session_id`) was closed in A3b,
+so the suite is fully green. It runs in CI against real local Postgres (see
+[Continuous integration](#continuous-integration-ci)) and can never be silently
+skipped.
+
+## Continuous integration (CI)
+
+`.github/workflows/ci.yml` runs on every push and PR to `main` and executes all
+**seven gates**, failing the workflow if any one fails:
+
+| Gate | Command | Needs real Postgres? |
+| --- | --- | --- |
+| Lint | `npm run lint` | no |
+| Typecheck | `npm run typecheck` | no |
+| Unit tests | `npm test` | no |
+| Worksheet golden | `npm run verify` | no |
+| RLS attack matrix | `npm run test:rls` | **yes** |
+| End-to-end flow | `npm run flow:test` | **yes** |
+| Production build | `npm run build` | no (and no network — fonts are self-hosted) |
+
+`test:rls` and `flow:test` need a **real Supabase stack** (Postgres + Auth +
+PostgREST — the suites sign users up and exercise RLS and security-definer RPCs),
+not a bare Postgres. CI starts one with the Supabase CLI (`supabase start`, which
+applies every migration in `supabase/migrations`) and captures the freshly
+generated keys at runtime into the job env — so the security gate is unskippable
+and reproducible.
+
+**Required secrets: none.** The DB-backed suites use the local stack's own
+generated keys (captured from `supabase status`), so no keys are committed and no
+GitHub Actions secrets need to be set for the workflow to run green. Stripe/email
+paths in `flow:test` use safe built-in test defaults; to exercise the real
+integrations you may optionally add `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+and `RESEND_API_KEY` as repository secrets and wire them into the workflow env —
+never commit real keys.
+
+The build step is deliberately network-independent: fonts are self-hosted via
+`next/font/local` (`src/app/fonts/`, downloaded once by `scripts/fetch-fonts.mjs`),
+so a networkless or clean runner builds successfully.
 
 ## Known issues (don't debug these twice)
 

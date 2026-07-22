@@ -2,26 +2,10 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Nunito, Inter, IBM_Plex_Mono } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { nunito, inter, plexMono } from "../fonts";
 import "../globals.css";
-
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["700", "800"],
-  variable: "--font-nunito",
-});
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-inter",
-});
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["500"],
-  variable: "--font-plex-mono",
-});
 
 export async function generateMetadata({
   params,

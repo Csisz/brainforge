@@ -14,5 +14,5 @@ export default async function NewSessionPage({
   setRequestLocale(locale);
   const children = await getChildren();
 
-  return <SessionWizard children={children} defaultChildId={child} />;
+  return <SessionWizard kids={children} defaultChildId={child} />;
 }

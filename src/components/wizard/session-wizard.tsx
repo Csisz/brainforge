@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 
 const DURATIONS: SessionRequest["durationMin"][] = [10, 20, 30, 45];
 
-export function SessionWizard({ children, defaultChildId }: { children: ChildRow[]; defaultChildId?: string }) {
+export function SessionWizard({ kids, defaultChildId }: { kids: ChildRow[]; defaultChildId?: string }) {
   const t = useTranslations("wizard");
   const tPack = useTranslations("pack");
   const tGoals = useTranslations("goals");
@@ -35,8 +35,8 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
   const locale = useLocale();
   const router = useRouter();
 
-  const [childId, setChildId] = useState(defaultChildId ?? children[0]?.id ?? "");
-  const child = children.find((c) => c.id === childId) ?? children[0]!;
+  const [childId, setChildId] = useState(defaultChildId ?? kids[0]?.id ?? "");
+  const child = kids.find((c) => c.id === childId) ?? kids[0]!;
   const age = useMemo(() => ageFromBirthMonth(child.birth_month), [child]);
 
   const [goals, setGoals] = useState<DevelopmentGoal[]>(["attention"]);
@@ -103,11 +103,11 @@ export function SessionWizard({ children, defaultChildId }: { children: ChildRow
         <p className="mt-1 text-ink-soft">{t("subtitle")}</p>
       </div>
 
-      {children.length > 1 && (
+      {kids.length > 1 && (
         <section className="space-y-2">
           <p className="text-sm font-medium text-ink">{t("childLabel")}</p>
           <div className="flex flex-wrap gap-2">
-            {children.map((c) => {
+            {kids.map((c) => {
               const Icon = getAvatarIcon(c.avatar);
               const selected = c.id === childId;
               return (

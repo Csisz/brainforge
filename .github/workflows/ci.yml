@@ -1,0 +1,82 @@
+name: CI
+
+# Runs every gate on push and PR to main. The DB-backed suites (test:rls,
+# flow:test) run against a REAL Supabase stack started here — no gate can be
+# silently skipped, and a failure of any step fails the workflow. The build step
+# needs no network access (fonts are self-hosted, Stability B4).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    name: gates (lint · typecheck · test · verify · test:rls · flow:test · build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm # caches ~/.npm; `npm ci` restores from it (recommended over caching node_modules)
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── Fast, DB-free gates first, for quick feedback ─────────────────────
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Worksheet golden verify
+        run: npm run verify
+
+      # ── Real Postgres + Auth + PostgREST for the DB-backed suites ─────────
+      # flow:test and test:rls need a real Supabase stack (auth signups, RLS,
+      # security-definer RPCs), not just a bare Postgres. The CLI applies every
+      # migration in supabase/migrations on start.
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.101.0
+
+      - name: Start Supabase (applies migrations)
+        run: supabase start
+
+      - name: Capture local Supabase env
+        # Keys are generated fresh by the local stack, so nothing secret is
+        # committed. Mirror .env.local: the app reads the new-format publishable /
+        # secret keys (falling back to the legacy JWT keys on older CLIs).
+        run: |
+          status="$(supabase status -o json)"
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$(echo "$status" | jq -r '.API_URL')"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$status" | jq -r '.PUBLISHABLE_KEY // .ANON_KEY')"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$status" | jq -r '.SECRET_KEY // .SERVICE_ROLE_KEY')"
+            echo "NEXT_PUBLIC_APP_URL=http://localhost:3000"
+          } >> "$GITHUB_ENV"
+
+      # ── Security regression gate — MUST run and MUST pass ─────────────────
+      - name: RLS attack matrix (test:rls)
+        run: npm run test:rls
+
+      - name: End-to-end flow test (flow:test)
+        run: npm run flow:test
+
+      # ── Production build — self-hosted fonts, no network needed ───────────
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
