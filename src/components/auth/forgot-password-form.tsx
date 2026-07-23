@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Loader2, MailCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { sendPasswordReset } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +17,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
  * recovery session and forwards to /reset-password. Always shows the "sent"
  * state, so the form never reveals whether an account exists.
  */
-export function ForgotPasswordForm() {
+/**
+ * `emailConfigured` (B6): when Resend is set up, the sendPasswordReset server
+ * action sends our branded 3-language reset email; otherwise Supabase Auth sends
+ * its own (Mailpit locally). Either way this stays anti-enumeration.
+ */
+export function ForgotPasswordForm({ emailConfigured }: { emailConfigured: boolean }) {
   const t = useTranslations("auth");
   const locale = useLocale();
 
@@ -27,10 +33,14 @@ export function ForgotPasswordForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    const supabase = createClient();
-    await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/api/auth/callback?flow=recovery&locale=${locale}`,
-    });
+    if (emailConfigured) {
+      await sendPasswordReset({ email, locale }); // always success-looking
+    } else {
+      const supabase = createClient();
+      await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/api/auth/callback?flow=recovery&locale=${locale}`,
+      });
+    }
     // Anti-enumeration: show the same confirmation regardless of the result.
     setSent(true);
     setSubmitting(false);

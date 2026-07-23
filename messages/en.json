@@ -238,7 +238,9 @@
       "passwordTooShort": "Password must be at least 6 characters.",
       "passwordMismatch": "The passwords don't match.",
       "emailInUse": "An account with this email already exists. Try logging in instead.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "emailSendFailed": "We couldn't send the email — please try again.",
+      "linkExpired": "That link has expired. Please register again to get a new confirmation email."
     }
   },
   "onboarding": {
@@ -656,6 +658,22 @@
       "body": "You asked to delete your Kalmo Kids account. This permanently removes everything — your children's profiles, every session, worksheet and piece of progress — and cannot be undone. To go ahead, confirm on the next page:",
       "button": "Permanently delete my account",
       "ignore": "If you didn't request this, just ignore this email — nothing happens and your account stays exactly as it is.",
+      "footer": "Kalmo Kids · kalmokids.com"
+    },
+    "confirmation": {
+      "subject": "Confirm your email – Kalmo Kids",
+      "heading": "Confirm your email",
+      "body": "Thanks for signing up! Tap the button to confirm your email address and you're ready to log in. The link is valid for one hour.",
+      "button": "Confirm email",
+      "ignore": "If you didn't sign up for Kalmo Kids, just ignore this email — nothing happens.",
+      "footer": "Kalmo Kids · kalmokids.com"
+    },
+    "reset": {
+      "subject": "Reset your password – Kalmo Kids",
+      "heading": "Reset your password",
+      "body": "We got a request to reset your Kalmo Kids password. Tap the button to choose a new one. The link is valid for one hour.",
+      "button": "Set a new password",
+      "ignore": "If you didn't request this, just ignore this email — your password stays the same.",
       "footer": "Kalmo Kids · kalmokids.com"
     }
   },

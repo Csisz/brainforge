@@ -263,50 +263,65 @@ covers this path with a mocked, signed event — no Stripe account needed.
 
 ## Email
 
-Two independent paths, both optional in dev:
+Transactional email has **two modes**, switched by whether Resend is configured
+(`emailConfigured()` = `RESEND_API_KEY` + `EMAIL_FROM`, validated all-or-nothing
+in `env.ts`).
 
-**Auth emails (magic links)** are sent by Supabase, not the app. Locally they go
-to Mailpit (http://localhost:54324). In production, point Supabase at Resend SMTP
-— this is dashboard configuration, not code: in the Supabase project, *Auth →
-Emails → SMTP Settings*, set host `smtp.resend.com`, port `465`, user `resend`,
-password = your Resend API key, sender = your verified domain address. (The same
-values are in the commented `[auth.email.smtp]` block in `supabase/config.toml`
-for local override.)
+**With Resend (production, B6).** The app sends every transactional email itself
+through `src/lib/email/` — an abstraction mirroring the AI layer: bounded retries,
+and it never throws (a send failure surfaces a friendly "try again", never a
+crash). Crucially this now includes the **auth** emails — signup confirmation and
+password reset — branded (paper/forest-ink/coral, Nunito, dashed-line motif) and
+**localized in all three languages from code** (`email.confirmation` /
+`email.reset` messages, rendered by `src/lib/email/auth-emails.ts`).
 
-*Branding (Sprint 7 M7a).* The magic-link template is Kalmo Kids-branded and
-**version-controlled**: `supabase/templates/magic_link.html` + the
-`[auth.email.template.magic_link]` block in `supabase/config.toml`. `config.toml`
-templates apply to **local `supabase start` only** — Supabase Cloud reads
-templates from the dashboard. So in production, replicate it once by hand:
+*How, without Supabase sending them:* the register / forgot server actions
+(`src/lib/auth/actions.ts`) create the user / recovery through the Supabase
+**admin API** (`generateLink`), which returns a `token_hash` and sends nothing.
+The app emails its own link to `/api/auth/callback?token_hash=…&type=…`, and that
+route verifies it **server-side** with `verifyOtp` — no PKCE, no URL fragment, no
+reimplemented token logic. A confirmed signup is signed straight in; a recovery
+gets the session the reset page needs.
 
-> *Auth → Emails → Templates → **Magic Link*** → set the subject to
-> `Belépési link a Kalmo Kids-hez` and paste the body of
-> `supabase/templates/magic_link.html` (it uses the standard `{{ .ConfirmationURL }}`
-> variable). Save. Repeat for any other template you enable.
+*Trade-off — why app-sent over Supabase-SMTP + dashboard templates:* Supabase
+Auth's own templates are single-language and dashboard-managed, so they cannot be
+hu/en/de. App-sending costs **one piece of link handling** (the `token_hash`
+branch above) but buys full 3-language control and the product's own branding. We
+accept that small, non-fragile duplication — verification still belongs to
+Supabase via `verifyOtp`. The two paths are mutually exclusive, so nothing
+double-sends and Supabase's own auth SMTP is not needed in production.
 
-**Known limitation:** Supabase auth templates are **single-language** — there is
-one template per type for the whole project, so the branded magic link is
-Hungarian only for now (the app is hu/en/de). Full per-locale auth email arrives
-with the Resend migration, when app-sent mail replaces Supabase-sent auth mail.
+**Without Resend (local dev).** Everything falls back to today's behavior: the
+auth pages use the client `signUp` / `resetPasswordForEmail`, and **Supabase**
+sends the email to **Mailpit** (http://localhost:54324). No keys needed to
+develop. The version-controlled magic-link template
+(`supabase/templates/magic_link.html`) stays in the repo for the still-supported
+magic-link path.
 
-**App-sent transactional email** goes through `src/lib/email/` — an abstraction
-that mirrors the AI layer: set `RESEND_API_KEY` (and optionally `EMAIL_FROM`) and
-it sends via Resend; leave it empty and `sendEmail` silently returns false. Two
-kinds today:
+**Also app-sent (unchanged):** the decorative **welcome note** after a parent's
+first child; and the **account-deletion confirmation** (Sprint 7 M7b) — a signed
+one-hour link to an in-app confirmation *page*, never a delete-on-click, gated
+server-side on both the token and the typed email (a bare GET never deletes,
+asserted by `flow:test`), localized per the account's locale.
 
-- **Welcome note** after a parent's first child — purely decorative; nothing
-  depends on it arriving.
-- **Account-deletion confirmation** (Sprint 7 M7b) — sent by
-  `requestAccountDeletion`, it carries a signed one-hour link to an in-app
-  confirmation *page* (`/[locale]/account/delete`), never a delete-on-click.
-  Deletion is finalized only by the typed-email action on that page, gated
-  server-side on both the token and the email — so a bare GET on the link never
-  deletes (asserted by `flow:test`). Because app email is best-effort, the
-  request action also returns the link so the flow works where email is not
-  configured (local dev shows it in Settings). This email is *not* decorative:
-  it is unmistakably a deletion notice (red accent, explicit erasure copy, "ignore
-  this and nothing happens"), deliberately unlike a login email. It is localized
-  per the account's locale (hu/en/de), unlike the Supabase auth templates above.
+**Env.** `RESEND_API_KEY` and `EMAIL_FROM` (e.g.
+`Kalmo Kids <noreply@kalmokids.com>`, a Resend-verified sender) — both or
+neither; a half-set pair fails validation at boot.
+
+**Legacy magic-link accounts.** Accounts from before the email+password migration
+have no password and can't log in. Preferred fix (no data loss): they use
+**Forgot password** — the recovery flow lets `updateUser` set a password on a
+previously passwordless account. To drive this per address, use the admin tool
+(addresses are arguments, never committed to the repo):
+
+```
+node --env-file=.env.local scripts/legacy-account.mjs status <email>
+node --env-file=.env.local scripts/legacy-account.mjs reset  <email>   # print a reset link to send them
+node --env-file=.env.local scripts/legacy-account.mjs delete <email>   # or wipe, so they re-register fresh
+```
+
+For production, point the env at the remote project (a `.env.prod.local` you do
+NOT commit). The two known beta addresses live in ops notes, not in code.
 
 ## Production deployment
 
@@ -316,9 +331,10 @@ Supabase Cloud.
 **1. Supabase Cloud.** Create a project. Push the schema: `supabase link
 --project-ref <ref>` then `supabase db push` (applies `supabase/migrations/`).
 In the dashboard: Auth → URL Configuration → set Site URL to your domain and add
-`https://kalmokids.com/api/auth/callback` to redirect URLs; Auth → Emails → SMTP →
-enter the Resend SMTP values (see the `[auth.email.smtp]` block in
-`supabase/config.toml`).
+`https://kalmokids.com/api/auth/callback` to redirect URLs. Auth email is sent by
+the app via Resend (B6, see [Email](#email)), so Supabase's own SMTP is optional —
+configure it (Auth → Emails → SMTP) only if you want Supabase-sent auth mail as a
+backstop.
 
 **2. Vercel.** Import the repo. Set the environment variables below (Production
 scope). Deploy — the build validates env at boot and fails fast with a readable

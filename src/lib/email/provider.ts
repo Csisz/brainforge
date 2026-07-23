@@ -33,14 +33,23 @@ export function createEmailProvider(): EmailProvider | null {
 
 /**
  * Send an email, best-effort. Returns whether it was accepted; false means it
- * was skipped or failed, and the caller must treat that as normal.
+ * was skipped or failed, and the caller must treat that as normal — this NEVER
+ * throws. Retries a transient failure a couple of times with a short backoff
+ * (bounded), since a lost confirmation email is the difference between a parent
+ * getting into the beta or not.
  */
 export async function sendEmail(msg: EmailMessage): Promise<boolean> {
   const provider = createEmailProvider();
   if (!provider) return false; // no provider configured — silently skip
-  try {
-    return await provider.send(msg);
-  } catch {
-    return false; // provider is decorative; a failure is never fatal
+
+  const attempts = 3;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      if (await provider.send(msg)) return true;
+    } catch {
+      /* transient — fall through to retry */
+    }
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 300 * (i + 1)));
   }
+  return false; // exhausted retries; the caller surfaces a friendly message
 }

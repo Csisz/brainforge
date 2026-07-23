@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Loader2, MailCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { registerWithEmail } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +19,13 @@ const MIN_PASSWORD = 6; // matches Supabase minimum_password_length
  * ON, creates NO session. On success we show a "confirm your email" state rather
  * than logging the parent in; they confirm via the emailed link, then log in.
  */
-export function RegisterForm() {
+/**
+ * `emailConfigured` (B6): when Resend is set up we hand signup to the
+ * registerWithEmail server action, which sends our branded 3-language
+ * confirmation email; otherwise we keep the original client signUp, letting
+ * Supabase send its own email (Mailpit locally). The pages decide which.
+ */
+export function RegisterForm({ emailConfigured }: { emailConfigured: boolean }) {
   const t = useTranslations("auth");
   const locale = useLocale();
 
@@ -43,6 +50,22 @@ export function RegisterForm() {
     }
 
     setSubmitting(true);
+
+    // Branded path: the server action creates the user and sends our own email.
+    // It stays anti-enumeration (a known address returns success with no email).
+    if (emailConfigured) {
+      const result = await registerWithEmail({ email, password, locale });
+      if (result.error) {
+        setErrorKey(`errors.${result.error}`);
+        setSubmitting(false);
+        return;
+      }
+      setSent(true);
+      setSubmitting(false);
+      return;
+    }
+
+    // Fallback: Supabase Auth sends the confirmation email (Mailpit locally).
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
       email,

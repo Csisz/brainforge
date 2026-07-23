@@ -15,6 +15,11 @@ import { createClient } from "@/lib/supabase/server";
  *    land on /reset-password.
  *  - neither (legacy magic-link / Google OAuth): exchange the code and continue
  *    to `next`. The magic-link path stays in the repo but is no longer primary.
+ *
+ * B6 adds a fourth: a `token_hash` link, minted by the app when it sends its own
+ * branded emails via Resend (see src/lib/auth/actions.ts). We verify it
+ * server-side with verifyOtp — no PKCE, no URL fragment — and land the parent:
+ * a confirmed signup is now signed in, a recovery gets a session for the reset.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -22,6 +27,22 @@ export async function GET(request: Request) {
   const locale = searchParams.get("locale") ?? "hu";
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/app";
+
+  // App-minted confirmation / reset link (B6): verify the token_hash server-side.
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
+  if (tokenHash && (type === "signup" || type === "recovery")) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
+    if (error) {
+      return type === "recovery"
+        ? NextResponse.redirect(`${origin}/${locale}/reset-password?error=1`)
+        : NextResponse.redirect(`${origin}/${locale}/login?error=expired`);
+    }
+    // recovery: session established, go set a new password. signup: verifyOtp
+    // signed the parent in, so take them straight into the app.
+    return NextResponse.redirect(`${origin}/${locale}${type === "recovery" ? "/reset-password" : "/app"}`);
+  }
 
   if (flow === "signup") {
     // Email is already confirmed at the verify step; no session, go log in.

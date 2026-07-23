@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
+import { emailConfigured } from "@/lib/email/config";
 import { RegisterForm } from "@/components/auth/register-form";
 
 export default async function RegisterPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -13,5 +14,5 @@ export default async function RegisterPage({ params }: { params: Promise<{ local
   } = await supabase.auth.getUser();
   if (user) redirect(`/${locale}/app`);
 
-  return <RegisterForm />;
+  return <RegisterForm emailConfigured={emailConfigured()} />;
 }

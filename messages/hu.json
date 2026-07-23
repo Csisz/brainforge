@@ -238,7 +238,9 @@
       "passwordTooShort": "A jelszónak legalább 6 karakter hosszúnak kell lennie.",
       "passwordMismatch": "A két jelszó nem egyezik.",
       "emailInUse": "Ezzel az e-mail-címmel már létezik fiók. Próbálj inkább bejelentkezni.",
-      "generic": "Hiba történt. Próbáld újra."
+      "generic": "Hiba történt. Próbáld újra.",
+      "emailSendFailed": "Nem sikerült elküldeni az e-mailt — kérjük, próbáld újra.",
+      "linkExpired": "Ez a link lejárt. Kérjük, regisztrálj újra egy új megerősítő e-mailért."
     }
   },
   "onboarding": {
@@ -656,6 +658,22 @@
       "body": "Kérted a Kalmo Kids fiókod törlését. Ez véglegesen töröl mindent — a gyerekek profiljait, minden foglalkozást, feladatlapot és haladást —, és nem vonható vissza. A folytatáshoz erősítsd meg a következő oldalon:",
       "button": "Fiók végleges törlése",
       "ignore": "Ha nem te kérted ezt, egyszerűen hagyd figyelmen kívül ezt a levelet — semmi nem történik, a fiókod pontosan úgy marad, ahogy van.",
+      "footer": "Kalmo Kids · kalmokids.com"
+    },
+    "confirmation": {
+      "subject": "Erősítsd meg az e-mail-címed – Kalmo Kids",
+      "heading": "Erősítsd meg az e-mail-címed",
+      "body": "Köszönjük, hogy regisztráltál! Kattints a gombra az e-mail-címed megerősítéséhez, és már be is jelentkezhetsz. A link egy órán át érvényes.",
+      "button": "E-mail-cím megerősítése",
+      "ignore": "Ha nem te regisztráltál a Kalmo Kids-be, nyugodtan hagyd figyelmen kívül ezt a levelet — nem történik semmi.",
+      "footer": "Kalmo Kids · kalmokids.com"
+    },
+    "reset": {
+      "subject": "Jelszó visszaállítása – Kalmo Kids",
+      "heading": "Állítsd vissza a jelszavad",
+      "body": "Kérést kaptunk a Kalmo Kids jelszavad visszaállítására. Kattints a gombra egy új jelszó megadásához. A link egy órán át érvényes.",
+      "button": "Új jelszó megadása",
+      "ignore": "Ha nem te kérted ezt, nyugodtan hagyd figyelmen kívül ezt a levelet — a jelszavad változatlan marad.",
       "footer": "Kalmo Kids · kalmokids.com"
     }
   },

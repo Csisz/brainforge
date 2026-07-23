@@ -28,7 +28,10 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [errorKey, setErrorKey] = useState<string | null>(null);
+  // An expired app-minted confirmation link (B6) lands here with ?error=expired.
+  const [errorKey, setErrorKey] = useState<string | null>(
+    searchParams.get("error") === "expired" ? "errors.linkExpired" : null,
+  );
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

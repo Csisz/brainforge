@@ -38,6 +38,18 @@ const schema = z
         if (!env[k]) ctx.addIssue({ code: z.ZodIssueCode.custom, path: [k], message: "required when any STRIPE_* is set (Stripe is all-or-nothing)" });
       }
     }
+
+    // Resend transactional email is all-or-nothing too (B6): a half-configured
+    // sender is a deployment mistake we'd rather fail at boot than discover when a
+    // signup confirmation silently doesn't send. Both absent ⇒ fall back to
+    // Supabase's built-in sender, which is fine for local dev.
+    const resendKeys = ["RESEND_API_KEY", "EMAIL_FROM"] as const;
+    const resendSet = resendKeys.filter((k) => env[k]).length;
+    if (resendSet > 0 && resendSet < resendKeys.length) {
+      for (const k of resendKeys) {
+        if (!env[k]) ctx.addIssue({ code: z.ZodIssueCode.custom, path: [k], message: "required when RESEND_API_KEY or EMAIL_FROM is set (Resend is all-or-nothing)" });
+      }
+    }
   });
 
 export type Env = z.infer<typeof schema>;
